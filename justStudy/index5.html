@@ -84,6 +84,11 @@
     </script>
     <script type="text/javascript">
 
+        //TODO 01..퍼스펙티브 변환 행렬도 바꾸고..
+        // TODO 02.. 카메라 행렬을 도입하고..
+        // TODO 03.. 재질적용 쉐이더를 자동까지 분기하고...전체 구조를 변경하자..
+        // TODO 04... API 방향을 미리 다져야겠군 -_-;;
+        // TODO 05...아..후처리...구조도 해놓고 구조변경을 해야겠군..
 
         var gl;
         function initGL(canvas) {
@@ -147,6 +152,9 @@
 
         var pMatrix=mat4.create();
         function setMatrixUniforms() {
+            // TODO 이놈도 옮겨야겠군..
+            // 이놈은 렌더 초반부에 한번만 박으면되것군..
+            mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
             gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
         }
 
@@ -170,9 +178,9 @@
 
         var time=0
         function drawScene() {
-            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight)
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-            mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
+
 
             time+=0.01
 
