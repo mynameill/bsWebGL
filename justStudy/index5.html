@@ -18,12 +18,7 @@
         vec4 temp2;
         uniform vec3 position;
         uniform vec3 rotation;
-        uniform mat4 uMVMatrix;
         uniform mat4 uPMatrix;
-
-        mat4 temp3 (mat4 a,mat4 b){
-            return a*b;
-        }
 
         vec3 rotateX(vec3 p, float t)
         {
@@ -77,7 +72,7 @@
             rotate = rotateX(aVertexPosition,rotation[0]);
             rotate = rotateY(rotate,rotation[1]);
             rotate = rotateZ(rotate,rotation[2]);
-            result = temp3(uPMatrix , uMVMatrix)* translate(position) * vec4(rotate, 1.0);
+            result = uPMatrix* translate(position) * vec4(rotate, 1.0);
             gl_Position =result;
         }
     </script>
@@ -112,7 +107,7 @@
             if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
                 alert(gl.getShaderInfoLog(shader));
                 return null;
-            }
+        }
 
             return shader;
         }
@@ -138,21 +133,14 @@
             shaderProgram.rotation= gl.getUniformLocation(shaderProgram, "rotation");
 
             shaderProgram.pMatrixUniform=gl.getUniformLocation(shaderProgram, "uPMatrix");
-            shaderProgram.mvMatrixUniform=gl.getUniformLocation(shaderProgram, "uMVMatrix");
+
 
         }
 
-        var mvMatrix=[
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        ]
 
         var pMatrix=mat4.create();
         function setMatrixUniforms() {
             gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-            gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
         }
 
 
@@ -180,12 +168,7 @@
             mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
 
             time+=0.01
-            mvMatrix=  [
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            ]
+
 
             var x=Math.sin(time ) * 1
             var y = Math.cos(time ) *1
@@ -203,12 +186,7 @@
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
 
             for(var i=0; i < 2000; i++) {
-                mvMatrix=  [
-                    1, 0, 0, 0,
-                    0, 1, 0, 0,
-                    0, 0, 1, 0,
-                    0, 0, 0, 1
-                ]
+
                 var x=Math.sin(time + i/2) * 15
                 var y = Math.cos(time + i/2) *15
                 var z =  -20 - i/7
