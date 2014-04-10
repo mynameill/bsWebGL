@@ -73,12 +73,11 @@
 
     var gl;
     function initGL(canvas) {
-        gl=canvas.getContext("experimental-webgl")||canvas.getContext('webgl')
+        gl=canvas.getContext('webgl') || canvas.getContext("experimental-webgl")
         console.log(gl)
-        gl.viewportWidth=canvas.width, gl.viewportHeight=canvas.height
         if(!gl) {
             alert('지원안되1!')
-            return false
+            return
         }
     }
 
@@ -198,9 +197,10 @@
         initGL(canvas), makeProgram(), initBuffers(),gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
         window.addEventListener('resize', hd_resize);
         function hd_resize() {
-            gl.viewportWidth=canvas.width=document.body.clientWidth, gl.viewportHeight=canvas.height=document.body.clientHeight
+            gl.viewportWidth=canvas.width=document.documentElement.clientWidth
+            gl.viewportHeight=canvas.height=document.documentElement.clientHeight
             // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
-            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+            gl.viewport(0, 0, gl.viewportWidth , gl.viewportHeight);
             resetMVP();
         }
         hd_resize(),(function loop() {requestAnimFrame(loop), drawScene()})();
