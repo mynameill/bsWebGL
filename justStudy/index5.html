@@ -80,6 +80,7 @@
         }
 
         var shaderProgram;
+
         function initShaders() {
             var fragmentShader=getShader(gl, "shader-fs"),vertexShader=getShader(gl, "shader-vs");
 
@@ -115,6 +116,8 @@
         var squareVertexPositionBuffer;
         function initBuffers() {
             squareVertexPositionBuffer=gl.createBuffer();
+            // ARRAY_BUFFER - 일반 VBO 버퍼 어트리뷰트
+            // ELEMENT_ARRAY_BUFFER - 버퍼가 정점 인덱스를 포함할떄 사용..
             gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
             var vertices=[
                 1.0, 1.0, 0.0,
@@ -123,6 +126,9 @@
                 -1.0, -1.0, 0.0
             ];
 
+            // STATIC_DRAW - 한번설정하고 변경하지 않음 (상수적 버퍼데이터라고 보면되려나)
+            // DYNAMIC_DRAW - 매번 재설정하는 VBO데이터
+            // STREAM_DRAW - 데이터를 변경하지 않으나..가끔 쓴다나 -_-;;;;
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
             squareVertexPositionBuffer.itemSize=3;
             squareVertexPositionBuffer.numItems=4;

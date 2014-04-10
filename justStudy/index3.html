@@ -144,7 +144,7 @@ function drawScene() {
         setMatrixUniforms();
         // 인덱스 버퍼순서대로 버텍스 를 그려나갑니다.
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, teapotVertexIndexBuffer);
-        gl.drawElements(gl.TRIANGLES, teapotVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.LINES, teapotVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
     }
 
 }
