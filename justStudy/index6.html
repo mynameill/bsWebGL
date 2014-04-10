@@ -173,14 +173,13 @@
 
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
 
-            for(var i=0; i < 1000; i++) {
-
-                var x=Math.sin(time + i / 2) * 30
-                var y=Math.cos(time + i / 2) * 30
-                var z=-20 - i / 10 + Math.sin(time+i)*5
+            for(var i=0; i < 3000; i++) {
+                var x=Math.sin(time + i / 5) * 30
+                var y=Math.cos(time + i / 5) * 30
+                var z=-40 - i / 10 - Math.sin(time+i)*5
                 var rx=time + i
-                var ry=time + i
-                var rz=time + i
+                var ry=time + i+1
+                var rz=time + i+2
                 gl.uniform3fv(shaderProgram.position, [x, y, z]);
                 gl.uniform3fv(shaderProgram.rotation, [rx, ry, rz]);
 
@@ -203,12 +202,8 @@
                 // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
             }
-
             hd_resize();
-
             (function loop() {requestAnimFrame(loop),drawScene()})();
-
-
         }
         window.requestAnimFrame=(function() {
             return  window.requestAnimationFrame||
@@ -218,8 +213,6 @@
                         window.setTimeout(callback, 1000 / 60);
                     };
         })();
-
-
     </script>
 </head>
 
