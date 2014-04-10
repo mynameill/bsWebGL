@@ -172,7 +172,7 @@
         IBO_RECT_Buffer.numItems = indexData.length;
     }
 
-    var max = 1400
+    var max = 100
     var color = []
     for(var i=0; i<max; i++){
         color[i] = [Math.random(),Math.random(),Math.random()]
@@ -219,7 +219,7 @@
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, IBO_RECT_Buffer);
             gl.vertexAttribPointer(PROGRAM_base.vpa, VBO_RECT_Buffer.itemSize, gl.FLOAT, false, 0, 0);
             gl.uniform4fv(PROGRAM_base.color, [color[i][0], color[i][1], color[i][2], 1]);
-            gl.drawElements(gl.LINES, IBO_RECT_Buffer.numItems, gl.UNSIGNED_SHORT, 0);
+            gl.drawElements(gl.TRIANGLES, IBO_RECT_Buffer.numItems, gl.UNSIGNED_SHORT, 0);
 
         }
 
