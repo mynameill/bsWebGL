@@ -1,30 +1,31 @@
 ﻿<html>
 <head>
-    <title>glMatrix를 일단 걷어내자..</title>
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-    </style>
-    <!--매트릭스 라이브러리 가지고옵니다-->
-    <!--
-        컴파일된 쉐이더소스를  VS, FS라함
-        VS : 한정점정보에 해당하여 여러개의 어트리 뷰트를 당연히 가짐
-        FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수있다. 프래그먼트의 위치나 다른 프래그먼트의 정보를 알수는 없다.
-    -->
-    <!--쉐이더 코드 입력합니다-->
-    <script id="shader-fs" type="x-shader/x-fragment">
+<title>glMatrix를 일단 걷어내자..</title>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<!--매트릭스 라이브러리 가지고옵니다-->
+<!--
+    컴파일된 쉐이더소스를  VS, FS라함
+    VS : 한정점정보에 해당하여 여러개의 어트리 뷰트를 당연히 가짐
+    FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수있다. 프래그먼트의 위치나 다른 프래그먼트의 정보를 알수는 없다.
+-->
+<!--쉐이더 코드 입력합니다-->
+<script id="shader-fs" type="x-shader/x-fragment">
         precision mediump float;
         varying vec4 vTexCoord;
         void main(void) {
             gl_FragColor = vec4(vTexCoord[0], vTexCoord[1], vTexCoord[2], vTexCoord[3]);
         }
 
+
 </script>
-    <!--쉐이더 코드 입력합니다-->
-    <script id="shader-vs" type="x-shader/x-vertex">
+<!--쉐이더 코드 입력합니다-->
+<script id="shader-vs" type="x-shader/x-vertex">
         attribute vec3 aVertexPosition;
         uniform vec4 aColor;
         varying vec4 vTexCoord;
@@ -52,171 +53,151 @@
             gl_Position =uPMatrix* translate(position)*rotate(rotation)*vec4(aVertexPosition, 1.0);
         }
 
+
 </script>
-    <script type="text/javascript">
-        // TODO 01..퍼스펙티브 변환 행렬도 바꾸고..
-        // TODO 02.. 카메라 행렬을 도입하고..
-        // TODO 03.. 재질적용 쉐이더를 자동까지 분기하고...전체 구조를 변경하자..
-        // TODO 04... API 방향을 미리 다져야겠군 -_-;;
-        // TODO 05...아..후처리...구조도 해놓고 구조변경을 해야겠군..
+<script type="text/javascript">
+    // TODO 01..퍼스펙티브 변환 행렬도 바꾸고..
+    // TODO 02.. 카메라 행렬을 도입하고..
+    // TODO 03.. 재질적용 쉐이더를 자동까지 분기하고...전체 구조를 변경하자..
+    // TODO 04... API 방향을 미리 다져야겠군 -_-;;
+    // TODO 05...아..후처리...구조도 해놓고 구조변경을 해야겠군..
 
-        var gl;
-        function initGL(canvas) {
-            gl=canvas.getContext('webgl')||canvas.getContext("experimental-webgl");
-            console.log(gl)
-            if(gl==undefined) return alert('지원안되!')
-            gl.viewportWidth=canvas.width, gl.viewportHeight=canvas.height;
+    var gl;
+    function initGL(canvas) {
+        gl=canvas.getContext("experimental-webgl")||canvas.getContext('webgl')
+        console.log(gl)
+        if(!gl) {
+            alert('지원안되1!')
+            return false
+        }
+    }
+
+    function compileShader($gl, $id) {
+        var t0=document.getElementById($id);
+        if(!t0) return null;
+        var str="", k=t0.firstChild;
+        while(k) {
+            if(k.nodeType==3) str+=k.textContent;
+            k=k.nextSibling;
         }
 
-        function getShader($gl, $id) {
-            var shaderScript=document.getElementById($id);
-            if(!shaderScript) return null;
-            var str="", k=shaderScript.firstChild;
-            while(k) {
-                if(k.nodeType==3) str+=k.textContent;
-                k=k.nextSibling;
-            }
+        var shader;
+        if(t0.type=="x-shader/x-vertex") shader=$gl.createShader($gl.VERTEX_SHADER);
+        else if(t0.type=="x-shader/x-fragment") shader=$gl.createShader($gl.FRAGMENT_SHADER);
+        else return null;
 
-            var shader;
-            if(shaderScript.type=="x-shader/x-fragment") shader=$gl.createShader($gl.FRAGMENT_SHADER);
-            else if(shaderScript.type=="x-shader/x-vertex") shader=$gl.createShader($gl.VERTEX_SHADER);
-            else return null;
+        $gl.shaderSource(shader, str), $gl.compileShader(shader);
 
-            $gl.shaderSource(shader, str),$gl.compileShader(shader);
+        if(!$gl.getShaderParameter(shader, $gl.COMPILE_STATUS)) return alert($gl.getShaderInfoLog(shader)), null;
+        return shader;
+    }
 
-            if(!$gl.getShaderParameter(shader, $gl.COMPILE_STATUS)) return alert($gl.getShaderInfoLog(shader)),null;
-            return shader;
+    var PROGRAM_base;
+
+    function makeProgram() {
+        var FS=compileShader(gl, "shader-fs"), VS=compileShader(gl, "shader-vs");
+
+        PROGRAM_base=gl.createProgram();
+        gl.attachShader(PROGRAM_base, VS), gl.attachShader(PROGRAM_base, FS);
+        gl.linkProgram(PROGRAM_base);
+        if(!gl.getProgramParameter(PROGRAM_base, gl.LINK_STATUS)) alert("Could not initialise shaders");
+
+        gl.useProgram(PROGRAM_base);
+
+        PROGRAM_base.vpa=gl.getAttribLocation(PROGRAM_base, "aVertexPosition");
+        gl.enableVertexAttribArray(PROGRAM_base.vpa);
+
+        PROGRAM_base.position=gl.getUniformLocation(PROGRAM_base, "position");
+        PROGRAM_base.rotation=gl.getUniformLocation(PROGRAM_base, "rotation");
+
+        PROGRAM_base.pMatrixUniform=gl.getUniformLocation(PROGRAM_base, "uPMatrix");
+        PROGRAM_base.color=gl.getUniformLocation(PROGRAM_base, "aColor");
+    }
+
+
+    var pMatrix=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+    function resetMVP() {
+        function perspective(a, b, c, d, e) {
+            a=c * Math.tan(a * Math.PI / 360), b=a * b;
+            return frustum(-b, b, -a, a, c, d, e)
+        }
+        // 잘라내야지..
+        function frustum(a, b, c, d, e, g, f) {
+            f||(f=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+            var h=b - a, i=d - c, j=g - e;
+            return f[0]=e * 2 / h, f[1]=0, f[2]=0, f[3]=0, f[4]=0, f[5]=e * 2 / i, f[6]=0, f[7]=0, f[8]=(b + a) / h, f[9]=(d + c) / i, f[10]=-(g + e) / j, f[11]= -1, f[12]=0, f[13]=0, f[14]=-(g * e * 2) / j, f[15]=0, f
         }
 
-        var shaderProgram;
+        perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
+        gl.uniformMatrix4fv(PROGRAM_base.pMatrixUniform, false, pMatrix);
+    }
 
-        function initShaders() {
-            var fragmentShader=getShader(gl, "shader-fs"),vertexShader=getShader(gl, "shader-vs");
+    var VBO_RECT_Buffer;
+    function initBuffers() {
+        VBO_RECT_Buffer=gl.createBuffer();
+        // ARRAY_BUFFER - 일반 VBO 버퍼 어트리뷰트
+        // ELEMENT_ARRAY_BUFFER - 버퍼가 정점 인덱스를 포함할떄 사용..
+        gl.bindBuffer(gl.ARRAY_BUFFER, VBO_RECT_Buffer);
+        var vertices=[1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0,-1.0, -1.0, 0.0];
+        // STATIC_DRAW - 한번설정하고 변경하지 않음 (상수적 버퍼데이터라고 보면되려나)
+        // DYNAMIC_DRAW - 매번 재설정하는 VBO데이터
+        // STREAM_DRAW - 데이터를 변경하지 않으나..가끔 쓴다나 -_-;;;;
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        VBO_RECT_Buffer.itemSize=3;
+        VBO_RECT_Buffer.numItems=4;
+    }
 
-            shaderProgram=gl.createProgram();
-            gl.attachShader(shaderProgram, vertexShader),gl.attachShader(shaderProgram, fragmentShader);
-            gl.linkProgram(shaderProgram);
-            if(!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) alert("Could not initialise shaders");
+    var time=0
+    function drawScene() {
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-            gl.useProgram(shaderProgram);
+        time+=0.02
+        var x=Math.sin(time) * 1
+        var y=Math.cos(time) * 1
+        var z=-10
+        gl.uniform3fv(PROGRAM_base.position, [x, y, z]);
 
-            shaderProgram.vpa=gl.getAttribLocation(shaderProgram, "aVertexPosition");
-            gl.enableVertexAttribArray(shaderProgram.vpa);
+        var rx=time
+        var ry=time
+        var rz=time
+        gl.uniform3fv(PROGRAM_base.rotation, [rx, ry, rz]);
 
-            shaderProgram.position=gl.getUniformLocation(shaderProgram, "position");
-            shaderProgram.rotation=gl.getUniformLocation(shaderProgram, "rotation");
+        gl.bindBuffer(gl.ARRAY_BUFFER, VBO_RECT_Buffer);
+        gl.vertexAttribPointer(PROGRAM_base.vpa, VBO_RECT_Buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, VBO_RECT_Buffer.numItems);
 
-            shaderProgram.pMatrixUniform=gl.getUniformLocation(shaderProgram, "uPMatrix");
-            shaderProgram.color=gl.getUniformLocation(shaderProgram, "aColor");
-
+        for(var i=0; i < 1000; i++) {
+            var x=Math.sin(time + i / 5) * 30
+            var y=Math.cos(time + i / 5) * 30
+            var z=-40 - i / 10 - Math.sin(time + i) * 5
+            var rx=time + i
+            var ry=time + i + 1
+            var rz=time + i + 2
+            gl.uniform3fv(PROGRAM_base.position, [x, y, z]);
+            gl.uniform3fv(PROGRAM_base.rotation, [rx, ry, rz]);
+            gl.bindBuffer(gl.ARRAY_BUFFER, VBO_RECT_Buffer);
+            gl.vertexAttribPointer(PROGRAM_base.vpa, VBO_RECT_Buffer.itemSize, gl.FLOAT, false, 0, 0);
+            gl.uniform4fv(PROGRAM_base.color, [Math.random(), Math.random(), Math.random(), 1]);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, VBO_RECT_Buffer.numItems);
         }
 
+    }
 
-        var pMatrix=[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]
-        function setMatrixUniforms() {
-            // TODO 이놈도 옮겨야겠군..
-            // 이놈은 렌더 초반부에 한번만 박으면되것군..
-            function perspective(a, b, c, d, e) {
-                a=c * Math.tan(a * Math.PI / 360),b=a * b;
-                return frustum(-b, b, -a, a, c, d, e)
-            }
-            function frustum(a, b, c, d, e, g, f) {
-                f||(f=[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
-                var h=b - a, i=d - c, j=g - e;
-                return f[0]=e * 2 / h,f[1]=0,f[2]=0,f[3]=0,f[4]=0,f[5]=e * 2 / i,f[6]=0,f[7]=0,f[8]=(b + a) / h,f[9]=(d + c) / i,f[10]=-(g + e) / j,f[11]= -1,f[12]=0,f[13]=0,f[14]=-(g * e * 2) / j,f[15]=0, f
-            }
-            perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
-            gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+    function webGLStart() {
+        var canvas=document.getElementById("lesson01-canvas")
+        initGL(canvas), makeProgram(), initBuffers(),gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
+        window.addEventListener('resize', hd_resize);
+        function hd_resize() {
+            gl.viewportWidth=canvas.width=document.body.clientWidth, gl.viewportHeight=canvas.height=document.body.clientHeight
+            // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
+            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+            resetMVP();
         }
-
-
-        // 하..버퍼가 나왔음...
-        var squareVertexPositionBuffer;
-        function initBuffers() {
-            squareVertexPositionBuffer=gl.createBuffer();
-            // ARRAY_BUFFER - 일반 VBO 버퍼 어트리뷰트
-            // ELEMENT_ARRAY_BUFFER - 버퍼가 정점 인덱스를 포함할떄 사용..
-            gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-            var vertices=[
-                1.0, 1.0, 0.0,
-                -1.0, 1.0, 0.0,
-                1.0, -1.0, 0.0,
-                -1.0, -1.0, 0.0
-            ];
-
-            // STATIC_DRAW - 한번설정하고 변경하지 않음 (상수적 버퍼데이터라고 보면되려나)
-            // DYNAMIC_DRAW - 매번 재설정하는 VBO데이터
-            // STREAM_DRAW - 데이터를 변경하지 않으나..가끔 쓴다나 -_-;;;;
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-            squareVertexPositionBuffer.itemSize=3;
-            squareVertexPositionBuffer.numItems=4;
-        }
-
-        var time=0
-        function drawScene() {
-            setMatrixUniforms();
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-            time+=0.02
-            var x=Math.sin(time) * 1
-            var y=Math.cos(time) * 1
-            var z=-10
-            gl.uniform3fv(shaderProgram.position, [x, y, z]);
-
-            var rx=time
-            var ry=time
-            var rz=time
-            gl.uniform3fv(shaderProgram.rotation, [rx, ry, rz]);
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-            gl.vertexAttribPointer(shaderProgram.vpa, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
-
-            for(var i=0; i < 3000; i++) {
-                var x=Math.sin(time + i / 5) * 30
-                var y=Math.cos(time + i / 5) * 30
-                var z=-40 - i / 10 - Math.sin(time+i)*5
-                var rx=time + i
-                var ry=time + i+1
-                var rz=time + i+2
-                gl.uniform3fv(shaderProgram.position, [x, y, z]);
-                gl.uniform3fv(shaderProgram.rotation, [rx, ry, rz]);
-
-                gl.bindBuffer(gl.ARRAY_BUFFER, squareVertexPositionBuffer);
-                gl.vertexAttribPointer(shaderProgram.vpa, squareVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
-                gl.uniform4fv(shaderProgram.color, [Math.random(), Math.random(), Math.random(), 1]);
-                gl.drawArrays(gl.TRIANGLE_STRIP, 0, squareVertexPositionBuffer.numItems);
-            }
-
-        }
-
-        function webGLStart() {
-            var canvas = document.getElementById("lesson01-canvas")
-            initGL(canvas),initShaders(),initBuffers();
-            gl.clearColor(0.0, 0.0, 0.0, 1.0),gl.enable(gl.DEPTH_TEST);
-
-            window.addEventListener('resize', hd_resize);
-            function hd_resize() {
-                gl.viewportWidth = canvas.width = document.body.clientWidth, gl.viewportHeight = canvas.height = document.body.clientHeight
-                // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
-                gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-            }
-            hd_resize();
-            (function loop() {requestAnimFrame(loop),drawScene()})();
-        }
-        window.requestAnimFrame=(function() {
-            return  window.requestAnimationFrame||
-                    window.webkitRequestAnimationFrame||
-                    window.mozRequestAnimationFrame||
-                    function(callback) {
-                        window.setTimeout(callback, 1000 / 60);
-                    };
-        })();
-    </script>
+        hd_resize(),(function loop() {requestAnimFrame(loop), drawScene()})();
+    }
+    window.requestAnimFrame=(function() {return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||function(callback) {window.setTimeout(callback, 1000 / 60);};})();
+</script>
 </head>
-
-
 <body onload="webGLStart();">
 <canvas id="lesson01-canvas" style="border: none;" width="1260" height="800"></canvas>
 </body>
