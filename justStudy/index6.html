@@ -66,6 +66,7 @@
     function initGL(canvas) {
         gl=canvas.getContext("experimental-webgl")||canvas.getContext('webgl')
         console.log(gl)
+        gl.viewportWidth=canvas.width, gl.viewportHeight=canvas.height
         if(!gl) {
             alert('지원안되1!')
             return false
