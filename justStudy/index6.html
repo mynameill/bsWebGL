@@ -196,6 +196,7 @@
     }
 
     function webGLStart() {
+        alert('돌긴하냐')
         var canvas=document.getElementById("lesson01-canvas")
         initGL(canvas), makeProgram(), initBuffers(), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
         window.addEventListener('resize', hd_resize);
