@@ -172,7 +172,7 @@
         IBO_RECT_Buffer.numItems = indexData.length;
     }
 
-    var max = 1400
+    var max = 500
     var color = []
     for(var i=0; i<max; i++){
         color[i] = [Math.random(),Math.random(),Math.random()]
@@ -202,7 +202,7 @@
         gl.drawElements(gl.TRIANGLES, IBO_RECT_Buffer.numItems, gl.UNSIGNED_SHORT, 0);
 
 
-        for(var i=0; i < 1400; i++) {
+        for(var i=0; i < max; i++) {
             var x=Math.sin(time + i / 30) * 150
             var y=Math.cos(time + i / 30) * 150
             var z=-150 - i /10 -i%140 -i + Math.cos(time + i )*100
