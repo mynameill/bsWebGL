@@ -1,16 +1,15 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>glMatrix.js를 걷어냄...</title>
-    <meta name="keywords" content="red"/>
-    <meta name="description" content="red"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <meta name="viewport"content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=medium-dpi"/>
-    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+<title>glMatrix.js를 걷어냄...</title>
+<meta name="keywords" content="red"/>
+<meta name="description" content="red"/>
+<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="format-detection" content="telephone=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
 <style>
     body {
         margin: 0;
@@ -30,6 +29,7 @@
         void main(void) {
             gl_FragColor = vec4(vTexCoord[0], vTexCoord[1], vTexCoord[2], vTexCoord[3]);
         }
+
 
 
 </script>
@@ -63,6 +63,7 @@
         }
 
 
+
 </script>
 <script type="text/javascript">
     // TODO 01..퍼스펙티브 변환 행렬도 바꾸고..
@@ -73,7 +74,7 @@
 
     var gl;
     function initGL(canvas) {
-        gl=canvas.getContext('webgl') || canvas.getContext("experimental-webgl")
+        gl=canvas.getContext('webgl')||canvas.getContext("experimental-webgl")
         console.log(gl)
         if(!gl) {
             alert('지원안되1!')
@@ -130,6 +131,7 @@
             a=c * Math.tan(a * Math.PI / 360), b=a * b;
             return frustum(-b, b, -a, a, c, d, e)
         }
+
         // 잘라내야지..
         function frustum(a, b, c, d, e, g, f) {
             f||(f=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
@@ -147,7 +149,7 @@
         // ARRAY_BUFFER - 일반 VBO 버퍼 어트리뷰트
         // ELEMENT_ARRAY_BUFFER - 버퍼가 정점 인덱스를 포함할떄 사용..
         gl.bindBuffer(gl.ARRAY_BUFFER, VBO_RECT_Buffer);
-        var vertices=[1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0,-1.0, -1.0, 0.0];
+        var vertices=[1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, 0.0];
         // STATIC_DRAW - 한번설정하고 변경하지 않음 (상수적 버퍼데이터라고 보면되려나)
         // DYNAMIC_DRAW - 매번 재설정하는 VBO데이터
         // STREAM_DRAW - 데이터를 변경하지 않으나..가끔 쓴다나 -_-;;;;
@@ -195,22 +197,23 @@
 
     function webGLStart() {
         var canvas=document.getElementById("lesson01-canvas")
-        initGL(canvas), makeProgram(), initBuffers(),gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
+        initGL(canvas), makeProgram(), initBuffers(), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
         window.addEventListener('resize', hd_resize);
         function hd_resize() {
             gl.viewportWidth=canvas.width=document.documentElement.clientWidth
             gl.viewportHeight=canvas.height=document.documentElement.clientHeight
             // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
 //            alert(gl.viewportWidth +" : " + gl.viewportHeight)
-            gl.viewport(0, 0, gl.viewportWidth , gl.viewportHeight);
+            gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
             resetMVP();
         }
-        hd_resize(),(function loop() {requestAnimFrame(loop), drawScene()})();
+
+        hd_resize(), (function loop() {requestAnimFrame(loop), drawScene()})();
     }
     window.requestAnimFrame=(function() {return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||function(callback) {window.setTimeout(callback, 1000 / 60);};})();
 </script>
 </head>
 <body onload="webGLStart();">
-<canvas id="lesson01-canvas" style="border: none;" ></canvas>
+<canvas id="lesson01-canvas" style="border: none;"></canvas>
 </body>
 </html>
