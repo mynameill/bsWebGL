@@ -73,6 +73,7 @@
     // TODO 05...아..후처리...구조도 해놓고 구조변경을 해야겠군..
 
     var gl;
+
     function initGL(canvas) {
         gl=canvas.getContext('webgl')||canvas.getContext("experimental-webgl")
         console.log(gl)
@@ -178,7 +179,7 @@
         gl.vertexAttribPointer(PROGRAM_base.vpa, VBO_RECT_Buffer.itemSize, gl.FLOAT, false, 0, 0);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, VBO_RECT_Buffer.numItems);
 
-        for(var i=0; i < 100; i++) {
+        for(var i=0; i < 1000; i++) {
             var x=Math.sin(time + i / 5) * 30
             var y=Math.cos(time + i / 5) * 30
             var z=-40 - i / 10 - Math.sin(time + i) * 5
@@ -203,7 +204,7 @@
             gl.viewportWidth=canvas.width=document.documentElement.clientWidth
             gl.viewportHeight=canvas.height=document.documentElement.clientHeight
             // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
-//            alert(gl.viewportWidth +" : " + gl.viewportHeight)
+            document.getElementById('test').innerHTML = gl.viewportWidth +" : " + gl.viewportHeight
             gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
             resetMVP();
         }
@@ -214,6 +215,7 @@
 </script>
 </head>
 <body onload="webGLStart();">
+<div id="test"></div>
 <canvas id="lesson01-canvas" style="border: none;"></canvas>
 </body>
 </html>
