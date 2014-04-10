@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-<title>조금씩 싸볼까...</title>
+<title>오브젝트 다중화</title>
 <meta name="keywords" content="red"/>
 <meta name="description" content="red"/>
 <meta charset="utf-8"/>
@@ -63,10 +63,9 @@
 
 </script>
 <script type="text/javascript">
-    // TODO 02.. 카메라 행렬을 도입하고..(일단 이거부터진행)
-    // TODO 03.. 재질적용 쉐이더를 자동까지 분기하고...전체 구조를 변경하자..
-    // TODO 04... API 방향을 미리 다져야겠군 -_-;;
-    // TODO 05...아..후처리...구조도 해놓고 구조변경을 해야겠군..
+    // TODO 01.. 오브젝트 다양화 관리
+    // TODO 02.. 재질관리도 슬 들어가고..(쉐이더 다중화 부터 가야하나 -_-;;)
+
 
     var gl;
 
@@ -123,6 +122,7 @@
 
     var pMatrix=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
     var cMatrix=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+
     function resetMVP() {
         function perspective(a, b, c, d, e) {
             a=c * Math.tan(a * Math.PI / 360), b=a * b;
@@ -143,6 +143,7 @@
 
     var VBO_RECT_Buffer;
     var IBO_RECT_Buffer;
+
     function initBuffers() {
         VBO_RECT_Buffer=gl.createBuffer();
         // ARRAY_BUFFER - 일반 VBO 버퍼 어트리뷰트
