@@ -195,10 +195,6 @@
 
     }
 
-    function test(){
-        setTimeout(webGLStart,1000)
-    }
-
     function webGLStart() {
         var canvas=document.getElementById("lesson01-canvas")
         initGL(canvas), makeProgram(), initBuffers(), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
@@ -215,9 +211,10 @@
         hd_resize(), (function loop() {requestAnimFrame(loop), drawScene()})();
     }
     window.requestAnimFrame=(function() {return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||function(callback) {window.setTimeout(callback, 1000 / 60);};})();
+    setTimeout(webGLStart,1000)
 </script>
 </head>
-<body onload="test();">
+<body>
 <div id="test"></div>
 <canvas id="lesson01-canvas" style="border: none;background:#eee" width="100" height="100"></canvas>
 </body>
