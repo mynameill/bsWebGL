@@ -220,6 +220,7 @@
             gl.vertexAttribPointer(PROGRAM_base.vpa, VBO_RECT_Buffer.itemSize, gl.FLOAT, false, 0, 0);
             gl.uniform4fv(PROGRAM_base.color, [color[i][0], color[i][1], color[i][2], 1]);
             gl.drawElements(gl.LINES, IBO_RECT_Buffer.numItems, gl.UNSIGNED_SHORT, 0);
+
         }
 
     }
