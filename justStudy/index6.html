@@ -9,6 +9,7 @@
 <meta name="format-detection" content="telephone=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=medium-dpi"/>
 <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
 <style>
     body {
@@ -200,10 +201,8 @@
         initGL(canvas), makeProgram(), initBuffers(), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
         window.addEventListener('resize', hd_resize);
         function hd_resize() {
-//            gl.viewportWidth=canvas.width=document.documentElement.clientWidth
-//            gl.viewportHeight=canvas.height=document.documentElement.clientHeight
-            gl.viewportWidth=canvas.width=window.outerWidth
-            gl.viewportHeight=canvas.height=window.outerHeight
+            gl.viewportWidth=canvas.width=document.documentElement.clientWidth
+            gl.viewportHeight=canvas.height=document.documentElement.clientHeight
             // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
             document.getElementById('test').innerHTML = gl.viewportWidth +" : " + gl.viewportHeight
             gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
