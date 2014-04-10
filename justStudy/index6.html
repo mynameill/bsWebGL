@@ -196,7 +196,6 @@
     }
 
     function webGLStart() {
-        alert('돌긴하냐')
         var canvas=document.getElementById("lesson01-canvas")
         initGL(canvas), makeProgram(), initBuffers(), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
         window.addEventListener('resize', hd_resize);
@@ -205,6 +204,7 @@
             gl.viewportHeight=canvas.height=document.documentElement.clientHeight
             // 뷰포트 설정으로 변경해줘야하는군 -_-;;;
             document.getElementById('test').innerHTML = gl.viewportWidth +" : " + gl.viewportHeight
+            alert(gl.viewportWidth +" : " + gl.viewportHeight)
             gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
             resetMVP();
         }
@@ -212,10 +212,9 @@
         hd_resize(), (function loop() {requestAnimFrame(loop), drawScene()})();
     }
     window.requestAnimFrame=(function() {return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||function(callback) {window.setTimeout(callback, 1000 / 60);};})();
-    setTimeout(webGLStart,1000)
 </script>
 </head>
-<body>
+<body onload="webGLStart();">
 <div id="test"></div>
 <canvas id="lesson01-canvas" style="border: none;background:#eee" width="100" height="100"></canvas>
 </body>
