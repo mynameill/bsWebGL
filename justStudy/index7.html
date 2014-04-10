@@ -34,14 +34,15 @@
 <script id="shader-vs" type="x-shader/x-vertex">
         attribute vec3 aVertexPosition;
         uniform vec4 aColor;
-        varying vec4 vTexCoord;
-        uniform vec3 position;
-        uniform vec3 rotation;
-        uniform mat4 uPMatrix;
+        varying vec4 vTexCoord; // 베어링은 정말 말그대로 베어링이었슴 -_-;;;;;;;;;;;;
+        uniform vec3 position; // 오브젝트 포지션
+        uniform vec3 rotation; // 오브젝트 로테이션
+        uniform mat4 uPMatrix; // 모델뷰 매트릭스
 
-        uniform vec3 uCposition;
-        uniform vec3 uCrotation;
+        uniform vec3 uCposition; // 카메라 포지션
+        uniform vec3 uCrotation; // 카메라 로테이션
 
+        // 걍 한방에 로테이션이랑 위치변환 떄림..
         mat4 cal(vec3 p,vec3 t)
         {
             float s = sin(t[0]);float c = cos(t[0]);
@@ -52,7 +53,6 @@
             mat4 m3 = mat4(c,-s,0,0, s,c,0,0, 0,0,1,0, 0,0,0,1);
             return  mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, p[0],p[1],p[2],1)*m1*m2*m3;
         }
-
 
         void main(void) {
             vTexCoord =aColor;
@@ -170,6 +170,7 @@
     }
 
     var max = 2000
+    // 오브젝트는 정말 -_- 오브젝트로 관리하는게 편할듯하고...
     var obj = []
     for(var i=0; i<max; i++){
         obj[i] = {
@@ -179,24 +180,20 @@
 
     }
     var time=0
+    // 카메라 오브젝트도 당연히 오브젝트가 되어야겠고..
     var camera = {
         x: 0,y: 0,z:0,
-        aniTest:true
+        aniTest:true // 로테이션 테스트용...임시..
     }
     function drawScene() {
         // 대충 카메라는 이렇게 박으면되것고..
         gl.uniform3fv(PROGRAM_base.cPosition, [camera.x,camera.y,camera.z]);
         if(camera.aniTest) gl.uniform3fv(PROGRAM_base.cRotation, [time, time, time]);
-
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
 
         time+=0.01
 
         for(var i=0; i < max; i++) {
-//            var x=Math.sin(time + i / 30) * 150
-//            var y=Math.cos(time + i / 30) * 150
-//            var z= Math.sin(time + i )*100+Math.cos(time + i )*100
             var rx=time + i
             var ry=time + i + 1
             var rz=time + i + 2
@@ -211,9 +208,7 @@
             gl.vertexAttribPointer(PROGRAM_base.vpa, VBO_RECT_Buffer.itemSize, gl.FLOAT, false, 0, 0);
             gl.uniform4fv(PROGRAM_base.color, [obj[i].color[0], obj[i].color[1], obj[i].color[2], 1]);
             gl.drawElements(gl.LINES, IBO_RECT_Buffer.numItems, gl.UNSIGNED_SHORT, 0);
-
         }
-
     }
 
     bs = {}
@@ -254,6 +249,7 @@
     // 초기화는 이렇게 하고...
     bs.GL.init()
     // 나머지는 통합S매서드로 전개함...
+    // bs.Gl('plane@name').S('width',100,'height',100,'rotation',180,'this') 머이런식이겠군...
 </script>
 </body>
 </html>
