@@ -9,7 +9,7 @@
 <meta name="format-detection" content="telephone=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=high-dpi"/>
+<!--<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=medium-dpi"/>-->
 <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
 <style>
     body {
@@ -141,7 +141,7 @@
             return f[0]=e * 2 / h, f[1]=0, f[2]=0, f[3]=0, f[4]=0, f[5]=e * 2 / i, f[6]=0, f[7]=0, f[8]=(b + a) / h, f[9]=(d + c) / i, f[10]=-(g + e) / j, f[11]= -1, f[12]=0, f[13]=0, f[14]=-(g * e * 2) / j, f[15]=0, f
         }
 
-        perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 500.0, pMatrix);
+        perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 2500.0, pMatrix);
         gl.uniformMatrix4fv(PROGRAM_base.pMatrixUniform, false, pMatrix);
     }
 
@@ -172,7 +172,7 @@
         IBO_RECT_Buffer.numItems = indexData.length;
     }
 
-    var max = 100
+    var max = 2000
     var color = []
     for(var i=0; i<max; i++){
         color[i] = [Math.random(),Math.random(),Math.random()]
