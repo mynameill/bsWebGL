@@ -53,13 +53,14 @@ bs(function() {
         },
         // TODO 하이라키로 전향해야함
         addTest: function($type) {
+            var a = (bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 100 : 250
             switch($type){
                 case 'rect' :
                     testObj.push({
                         type: 'rect',
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
-                        pos: [Math.random() * 250 - 125, Math.random() * 250 - 125, Math.random() * 250 - 125]
+                        pos: [Math.random() * a - a/2, Math.random() * a - a/2, Math.random() * a - a/2]
                     })
                     break
                 case 'tri' :
@@ -67,7 +68,7 @@ bs(function() {
                         type: 'tri',
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
-                        pos: [Math.random() * 250 - 125, Math.random() * 250 - 125, Math.random() * 250 - 125]
+                        pos: [Math.random() * a - a/2, Math.random() * a - a/2, Math.random() * a - a/2]
                     })
                     break
                 case 'teapot' :
@@ -75,7 +76,7 @@ bs(function() {
                         type: 'teapot',
                         typeDraw: "gl.ELEMENT_ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
-                        pos: [Math.random() * 250 - 125, Math.random() * 250 - 125, Math.random() * 250 - 125]
+                        pos: [Math.random() * a - a/2, Math.random() * a - a/2, Math.random() * a - a/2]
                     })
                     break
             }
