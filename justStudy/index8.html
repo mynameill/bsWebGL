@@ -111,17 +111,14 @@ bs(function() {
                     gl.uniform3fv($program.position, [t.pos[0], t.pos[1], t.pos[2]]);
                     gl.uniform3fv($program.rotation, [rx, ry, rz]);
                     var vbo=VBOs[t.type]
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+                    gl.vertexAttribPointer($program.vertexPositionAttribute, vbo.itemSize, gl.FLOAT, false, 0, 0);
+                    gl.uniform4fv($program.color, [t.color[0], t.color[1], t.color[2], 1]);
                     if(t.typeDraw=="gl.ELEMENT_ARRAY_BUFFER") {
                         var ibo=IBOs[t.type]
-                        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-                        gl.vertexAttribPointer($program.vertexPositionAttribute, vbo.itemSize, gl.FLOAT, false, 0, 0);
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
-                        gl.uniform4fv($program.color, [t.color[0], t.color[1], t.color[2], 1]);
                         gl.drawElements(gl.LINES, ibo.numItems, gl.UNSIGNED_SHORT, 0);
                     } else {
-                        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-                        gl.vertexAttribPointer($program.vertexPositionAttribute, vbo.itemSize, gl.FLOAT, false, 0, 0);
-                        gl.uniform4fv($program.color, [t.color[0], t.color[1], t.color[2], 1]);
                         gl.drawArrays(gl.TRIANGLE_STRIP, 0, vbo.numItems);
                     }
                 }

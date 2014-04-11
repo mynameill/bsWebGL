@@ -58,9 +58,6 @@
             vTexCoord =aColor;
             gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(position,rotation)*vec4(aVertexPosition, 1.0);
         }
-
-
-
 </script>
 <script type="text/javascript">
     // TODO 02.. 카메라 행렬을 도입하고..(일단 이거부터진행)
@@ -94,10 +91,10 @@
         else return null;
 
         $gl.shaderSource(shader, str), $gl.compileShader(shader);
-
         if(!$gl.getShaderParameter(shader, $gl.COMPILE_STATUS)) return alert($gl.getShaderInfoLog(shader)), null;
         return shader;
     }
+
 
     var PROGRAM_base;
 
@@ -143,6 +140,7 @@
 
     var VBO_RECT_Buffer;
     var IBO_RECT_Buffer;
+
     function initBuffers() {
         VBO_RECT_Buffer=gl.createBuffer();
         // ARRAY_BUFFER - 일반 VBO 버퍼 어트리뷰트
@@ -178,7 +176,6 @@
             color : [Math.random(),Math.random(),Math.random()],
             pos : [Math.random()*500-250,Math.random()*500-250,Math.random()*500-250]
         }
-
     }
     var time=0
     // 카메라 오브젝트도 당연히 오브젝트가 되어야겠고..
