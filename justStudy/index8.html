@@ -24,7 +24,7 @@ bs(function() {
     bs.get(function($data) {
         document.head.innerHTML+=$data
         bs.GL.init('canvas')
-        var max=300
+        var max= (bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 100 : 2000
         // 생성자나 이런부분들은...
         // 궁극적으로는.
         // bs.Gl('rect') 처럼 되야겠군...
