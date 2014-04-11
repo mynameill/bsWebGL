@@ -133,7 +133,7 @@ bs(function() {
         canvas.width=canvas.height=0
         gl=canvas.getContext('webgl')||canvas.getContext("experimental-webgl")
         if(!gl) return bs.Dom('<div>webGL을 지원하지 않는 환경입니다.</div>').S('<', 'body')
-        else console.log('WEBGL을 지원합니다. 초기화를 시작합니다.')
+        else console.log('WEBGL을 지원합니다. 초기화를 시작합니다.'), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
     }
 
     function resetMVP($program) {
