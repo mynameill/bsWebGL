@@ -101,6 +101,7 @@ var vertexBuffer;
 var uvBuffer;
 var indexBuffer
 function initBuffers() {
+
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     var vertices = [
@@ -209,6 +210,7 @@ function webGLStart() {
     initShaders();
     // 버퍼도 세팅해야겠습니다...쉐이더가 가지고 놀...뭐 배열값 -_-? 버그런거지용..
     initBuffers();
+
 
     // 텍스쳐를 미리 하나 세팅해보아..
     initTexture();
