@@ -109,7 +109,7 @@ bs(function() {
         blendMode: {NORMAL: 0.0,ADD: 1.0,SUBTRACT: 2.0,MULTIPLY: 3.0,DARKEN: 4.0,COLOUR_BURN: 5.0,LINEAR_BURN: 6.0,LIGHTEN: 7.0,SCREEN: 8.0,COLOUR_DODGE: 9.0,LINEAR_DODGE: 10.0,OVERLAY: 11.0,SOFT_LIGHT: 12.0,HARD_LIGHT: 13.0,VIVID_LIGHT: 14.0,LINEAR_LIGHT: 15.0,PIN_LIGHT: 16.0,DIFFERENCE: 17.0,EXCLUSION: 18.0},
         // TODO 하이라키로 전향해야함
         addTest: function($type) {
-            var a=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 50 : 200
+            var a=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 200 : 200
             var blend=bs.GL.blendMode.NORMAL
             switch($type) {
                 case 'rect' :
