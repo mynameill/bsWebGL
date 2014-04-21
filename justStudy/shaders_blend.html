@@ -1,0 +1,133 @@
+<!--
+컴파일된 쉐이더소스를  VS, FS라함
+VS : 한정점정보에 해당하여 여러개의 어트리 뷰트를 당연히 가짐
+FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수있다. 프래그먼트의 위치나 다른 프래그먼트의 정보를 알수는 없다.
+-->
+<!--쉐이더 코드 입력합니다-->
+<script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        uniform float uBlend;
+        float ADD ;float SUBTRACT ;float MULTIPLY ;float DARKEN ;float COLOUR_BURN ;float LINEAR_BURN ;float LIGHTEN ;float SCREEN ;float COLOUR_DODGE ;float LINEAR_DODGE ;float OVERLAY ;float SOFT_LIGHT ;float HARD_LIGHT ;float VIVID_LIGHT ;float LINEAR_LIGHT ;float PIN_LIGHT ;float DIFFERENCE ;float EXCLUSION ;float NORMAL ;
+        vec3 blend (vec3 src, vec3 dst)
+        {
+            if(uBlend == NORMAL) return src;
+            else if(uBlend == ADD)	return src + dst;
+            else if(uBlend == SUBTRACT)	return src - dst;
+            else if(uBlend == MULTIPLY)	return src * dst;
+            else if(uBlend == DARKEN)	return min(src, dst);
+            else if(uBlend == COLOUR_BURN)	return vec3((src.x == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.x) / src.x)),(src.y == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.y) / src.y)),(src.z == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.z) / src.z)));
+            else if(uBlend == LINEAR_BURN)	return (src + dst) - 1.0;
+            else if(uBlend == LIGHTEN)	return max(src, dst);
+            else if(uBlend == SCREEN)	return (src + dst) - (src * dst);
+            else if(uBlend == COLOUR_DODGE)	return vec3((src.x == 1.0) ? 1.0 : min(1.0, dst.x / (1.0 - src.x)),(src.y == 1.0) ? 1.0 : min(1.0, dst.y / (1.0 - src.y)),(src.z == 1.0) ? 1.0 : min(1.0, dst.z / (1.0 - src.z)));
+            else if(uBlend == LINEAR_DODGE)	return src + dst;
+            else if(uBlend == OVERLAY)	return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),(dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),(dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));
+            else if(uBlend == SOFT_LIGHT)	return vec3((src.x <= 0.5) ? (dst.x - (1.0 - 2.0 * src.x) * dst.x * (1.0 - dst.x)) : (((src.x > 0.5) && (dst.x <= 0.25)) ? (dst.x + (2.0 * src.x - 1.0) * (4.0 * dst.x * (4.0 * dst.x + 1.0) * (dst.x - 1.0) + 7.0 * dst.x)) : (dst.x + (2.0 * src.x - 1.0) * (sqrt(dst.x) - dst.x))),(src.y <= 0.5) ? (dst.y - (1.0 - 2.0 * src.y) * dst.y * (1.0 - dst.y)) : (((src.y > 0.5) && (dst.y <= 0.25)) ? (dst.y + (2.0 * src.y - 1.0) * (4.0 * dst.y * (4.0 * dst.y + 1.0) * (dst.y - 1.0) + 7.0 * dst.y)) : (dst.y + (2.0 * src.y - 1.0) * (sqrt(dst.y) - dst.y))),(src.z <= 0.5) ? (dst.z - (1.0 - 2.0 * src.z) * dst.z * (1.0 - dst.z)) : (((src.z > 0.5) && (dst.z <= 0.25)) ? (dst.z + (2.0 * src.z - 1.0) * (4.0 * dst.z * (4.0 * dst.z + 1.0) * (dst.z - 1.0) + 7.0 * dst.z)) : (dst.z + (2.0 * src.z - 1.0) * (sqrt(dst.z) - dst.z))));
+            else if(uBlend == HARD_LIGHT)	return vec3((src.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - src.x) * (1.0 - dst.x)),(src.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - src.y) * (1.0 - dst.y)),(src.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - src.z) * (1.0 - dst.z)));
+            else if(uBlend == VIVID_LIGHT)	return vec3((src.x <= 0.5) ? (1.0 - (1.0 - dst.x) / (2.0 * src.x)) : (dst.x / (2.0 * (1.0 - src.x))),(src.y <= 0.5) ? (1.0 - (1.0 - dst.y) / (2.0 * src.y)) : (dst.y / (2.0 * (1.0 - src.y))),(src.z <= 0.5) ? (1.0 - (1.0 - dst.z) / (2.0 * src.z)) : (dst.z / (2.0 * (1.0 - src.z))));
+            else if(uBlend == LINEAR_LIGHT)	return 2.0 * src + dst - 1.0;
+            else if(uBlend == PIN_LIGHT)	return vec3((src.x > 0.5) ? max(dst.x, 2.0 * (src.x - 0.5)) : min(dst.x, 2.0 * src.x),(src.x > 0.5) ? max(dst.y, 2.0 * (src.y - 0.5)) : min(dst.y, 2.0 * src.y),(src.z > 0.5) ? max(dst.z, 2.0 * (src.z - 0.5)) : min(dst.z, 2.0 * src.z));// ADD
+            else if(uBlend == DIFFERENCE)	return abs(dst - src);
+            else if(uBlend == EXCLUSION)	return src + dst - 2.0 * src * dst;
+            else return src;
+        }
+
+        void main(void) {
+             NORMAL =0.0;ADD=1.0;SUBTRACT=2.0;MULTIPLY=3.0;DARKEN=4.0;COLOUR_BURN=5.0;LINEAR_BURN =6.0;LIGHTEN =7.0;SCREEN =8.0;COLOUR_DODGE =9.0;LINEAR_DODGE =10.0;OVERLAY =11.0;SOFT_LIGHT=12.0;HARD_LIGHT =13.0;VIVID_LIGHT =14.0;LINEAR_LIGHT =15.0;PIN_LIGHT =16.0;DIFFERENCE =17.0;EXCLUSION =18.0;
+             gl_FragColor = vec4(vColor[0], vColor[1], vColor[2], vColor[3]);
+        }
+</script>
+<!--쉐이더 코드 입력합니다-->
+<script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        uniform vec4 aColor;
+        varying vec4 vColor;
+        uniform vec3 uPosition;
+        uniform vec3 uRotation;
+        uniform vec3 uCposition;
+        uniform vec3 uCrotation;
+        uniform mat4 uPMatrix;
+
+        mat4 cal(vec3 p,vec3 t)
+        {
+            float s = sin(t[0]);float c = cos(t[0]);mat4 m1 = mat4( 1,0,0,0, 0,c,-s,0, 0,s,c,0, 0,0,0,1);
+            s = sin(t[1]);c = cos(t[1]);mat4 m2 = mat4(c,0,s,0, 0,1,0,0, -s,0,c,0, 0,0,0,1);
+            s = sin(t[2]);c = cos(t[2]);mat4 m3 = mat4(c,-s,0,0, s,c,0,0, 0,0,1,0, 0,0,0,1);
+            return  mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, p[0],p[1],p[2],1)*m1*m2*m3;
+        }
+        void main(void) {
+            vColor =aColor;
+            gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
+        }
+</script>
+
+<!--쉐이더 코드 입력합니다-->
+<script id="shader-fs-bitmap" type="x-shader/x-fragment">
+
+        precision mediump float;
+        uniform sampler2D uSampler; // 샘플러 상수로 선언하고
+        varying vec2 vTextureCoord; // 텍스트 코디네이터 정보..즉 유브이가됨...
+        varying vec4 vColor;
+        uniform float uBlend;
+        float ADD ;float SUBTRACT ;float MULTIPLY ;float DARKEN ;float COLOUR_BURN ;float LINEAR_BURN ;float LIGHTEN ;float SCREEN ;float COLOUR_DODGE ;float LINEAR_DODGE ;float OVERLAY ;float SOFT_LIGHT ;float HARD_LIGHT ;float VIVID_LIGHT ;float LINEAR_LIGHT ;float PIN_LIGHT ;float DIFFERENCE ;float EXCLUSION ;float NORMAL ;
+        vec3 blend (vec3 src, vec3 dst)
+        {
+            if(uBlend == NORMAL) return src;
+            else if(uBlend == ADD)	return src + dst;
+            else if(uBlend == SUBTRACT)	return src - dst;
+            else if(uBlend == MULTIPLY)	return src * dst;
+            else if(uBlend == DARKEN)	return min(src, dst);
+            else if(uBlend == COLOUR_BURN)	return vec3((src.x == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.x) / src.x)),(src.y == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.y) / src.y)),(src.z == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.z) / src.z)));
+            else if(uBlend == LINEAR_BURN)	return (src + dst) - 1.0;
+            else if(uBlend == LIGHTEN)	return max(src, dst);
+            else if(uBlend == SCREEN)	return (src + dst) - (src * dst);
+            else if(uBlend == COLOUR_DODGE)	return vec3((src.x == 1.0) ? 1.0 : min(1.0, dst.x / (1.0 - src.x)),(src.y == 1.0) ? 1.0 : min(1.0, dst.y / (1.0 - src.y)),(src.z == 1.0) ? 1.0 : min(1.0, dst.z / (1.0 - src.z)));
+            else if(uBlend == LINEAR_DODGE)	return src + dst;
+            else if(uBlend == OVERLAY)	return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),(dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),(dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));
+            else if(uBlend == SOFT_LIGHT)	return vec3((src.x <= 0.5) ? (dst.x - (1.0 - 2.0 * src.x) * dst.x * (1.0 - dst.x)) : (((src.x > 0.5) && (dst.x <= 0.25)) ? (dst.x + (2.0 * src.x - 1.0) * (4.0 * dst.x * (4.0 * dst.x + 1.0) * (dst.x - 1.0) + 7.0 * dst.x)) : (dst.x + (2.0 * src.x - 1.0) * (sqrt(dst.x) - dst.x))),(src.y <= 0.5) ? (dst.y - (1.0 - 2.0 * src.y) * dst.y * (1.0 - dst.y)) : (((src.y > 0.5) && (dst.y <= 0.25)) ? (dst.y + (2.0 * src.y - 1.0) * (4.0 * dst.y * (4.0 * dst.y + 1.0) * (dst.y - 1.0) + 7.0 * dst.y)) : (dst.y + (2.0 * src.y - 1.0) * (sqrt(dst.y) - dst.y))),(src.z <= 0.5) ? (dst.z - (1.0 - 2.0 * src.z) * dst.z * (1.0 - dst.z)) : (((src.z > 0.5) && (dst.z <= 0.25)) ? (dst.z + (2.0 * src.z - 1.0) * (4.0 * dst.z * (4.0 * dst.z + 1.0) * (dst.z - 1.0) + 7.0 * dst.z)) : (dst.z + (2.0 * src.z - 1.0) * (sqrt(dst.z) - dst.z))));
+            else if(uBlend == HARD_LIGHT)	return vec3((src.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - src.x) * (1.0 - dst.x)),(src.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - src.y) * (1.0 - dst.y)),(src.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - src.z) * (1.0 - dst.z)));
+            else if(uBlend == VIVID_LIGHT)	return vec3((src.x <= 0.5) ? (1.0 - (1.0 - dst.x) / (2.0 * src.x)) : (dst.x / (2.0 * (1.0 - src.x))),(src.y <= 0.5) ? (1.0 - (1.0 - dst.y) / (2.0 * src.y)) : (dst.y / (2.0 * (1.0 - src.y))),(src.z <= 0.5) ? (1.0 - (1.0 - dst.z) / (2.0 * src.z)) : (dst.z / (2.0 * (1.0 - src.z))));
+            else if(uBlend == LINEAR_LIGHT)	return 2.0 * src + dst - 1.0;
+            else if(uBlend == PIN_LIGHT)	return vec3((src.x > 0.5) ? max(dst.x, 2.0 * (src.x - 0.5)) : min(dst.x, 2.0 * src.x),(src.x > 0.5) ? max(dst.y, 2.0 * (src.y - 0.5)) : min(dst.y, 2.0 * src.y),(src.z > 0.5) ? max(dst.z, 2.0 * (src.z - 0.5)) : min(dst.z, 2.0 * src.z));// ADD
+            else if(uBlend == DIFFERENCE)	return abs(dst - src);
+            else if(uBlend == EXCLUSION)	return src + dst - 2.0 * src * dst;
+            else return src;
+        }
+
+        void main(void) {
+             NORMAL =0.0;ADD=1.0;SUBTRACT=2.0;MULTIPLY=3.0;DARKEN=4.0;COLOUR_BURN=5.0;LINEAR_BURN =6.0;LIGHTEN =7.0;SCREEN =8.0;COLOUR_DODGE =9.0;LINEAR_DODGE =10.0;OVERLAY =11.0;SOFT_LIGHT=12.0;HARD_LIGHT =13.0;VIVID_LIGHT =14.0;LINEAR_LIGHT =15.0;PIN_LIGHT =16.0;DIFFERENCE =17.0;EXCLUSION =18.0;
+             vec4 dst = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+	         vec4 src = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+	         vec3 colour = clamp(blend(src.xyz, dst.xyz), 0.0, 1.0);
+	         gl_FragColor.xyz = colour;
+	         gl_FragColor.w = src.w*vColor[3];
+        }
+</script>
+<!--쉐이더 코드 입력합니다-->
+<script id="shader-vs-bitmap" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec2 aTextureCoord;
+        varying vec2 vTextureCoord;
+
+        uniform vec4 aColor;
+        varying vec4 vColor;
+        uniform vec3 uPosition;
+        uniform vec3 uRotation;
+        uniform vec3 uCposition;
+        uniform vec3 uCrotation;
+        uniform mat4 uPMatrix;
+
+        mat4 cal(vec3 p,vec3 t)
+        {
+            float s = sin(t[0]);float c = cos(t[0]);mat4 m1 = mat4( 1,0,0,0, 0,c,-s,0, 0,s,c,0, 0,0,0,1);
+            s = sin(t[1]);c = cos(t[1]);mat4 m2 = mat4(c,0,s,0, 0,1,0,0, -s,0,c,0, 0,0,0,1);
+            s = sin(t[2]);c = cos(t[2]);mat4 m3 = mat4(c,-s,0,0, s,c,0,0, 0,0,1,0, 0,0,0,1);
+            return  mat4(1,0,0,0, 0,1,0,0, 0,0,1,0, p[0],p[1],p[2],1)*m1*m2*m3;
+        }
+        void main(void) {
+          vColor =aColor;
+          vTextureCoord = aTextureCoord;
+          gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
+        }
+</script>
