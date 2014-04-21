@@ -37,6 +37,12 @@
     <option>DIFFERENCE</option>
     <option>EXCLUSION</option>
 </select>
+<select id="filterMode" style="position:absolute;top:50px;height:50px">
+    <option>NORMAL</option>
+    <option>GRAY</option>
+    <option>SEPIA</option>
+    <option>INVERT</option>
+</select>
 
 <div id="test" style="position:absolute; left: 300px;color:#ffffff">'ADWS - 카메라 변경/ space 애니 온오프'</div>
 
@@ -85,6 +91,10 @@ bs(function() {
             var t=this.selectedOptions[0].innerHTML
             for(var i=0; i < max; i++) testObj[i].blendMode=bs.GL.blendMode[t]
         }, 'height', 50, 'font-size', 30)
+        bs.Dom('#filterMode').S('change', function($e) {
+            var t=this.selectedOptions[0].innerHTML
+            bs.GL.filter = bs.GL.POST_EFFECT[t]
+        }, 'height', 50, 'font-size', 30)
 
     }, 'shaders_blend.html')
 
@@ -108,6 +118,13 @@ bs(function() {
         camera: {
             x: 0, y: 0, z: 0,
             aniTest: true
+        },
+        filter : 0.0,
+        POST_EFFECT : {
+            NORMAL:0.0,
+            GRAY : 1.0,
+            SEPIA : 2.0,
+            INVERT: 3.0
         },
         blendMode: {NORMAL: 0.0,ADD: 1.0,SUBTRACT: 2.0,MULTIPLY: 3.0,DARKEN: 4.0,COLOUR_BURN: 5.0,LINEAR_BURN: 6.0,LIGHTEN: 7.0,SCREEN: 8.0,COLOUR_DODGE: 9.0,LINEAR_DODGE: 10.0,OVERLAY: 11.0,SOFT_LIGHT: 12.0,HARD_LIGHT: 13.0,VIVID_LIGHT: 14.0,LINEAR_LIGHT: 15.0,PIN_LIGHT: 16.0,DIFFERENCE: 17.0,EXCLUSION: 18.0},
         // TODO 하이라키로 전향해야함
@@ -270,6 +287,7 @@ bs(function() {
                 gl.uniform3fv(currentProgram.rotation, [0,0,0]);
                 gl.uniform4fv(currentProgram.color, [1,1,1,1]);
                 gl.uniform1f(currentProgram.time, time%1000);
+                gl.uniform1f(currentProgram.filter, bs.GL.filter);
 
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, rttTexture);
@@ -394,7 +412,7 @@ bs(function() {
         program.blend=gl.getUniformLocation(program, "uBlend");
     }
     function setFilterPrograms() {
-        var program=makeProgram('filterProgram', VSs['shader-vs-filter'], FSs['shader-fs-filter'])
+        var program=makeProgram('filterProgram', VSs['shader-vs-bitmap'], FSs['shader-fs-filter'])
         program.vertexPositionAttribute=gl.getAttribLocation(program, "aVertexPosition");
         program.textureCoordAttribute=gl.getAttribLocation(program, "aTextureCoord");
         program.position=gl.getUniformLocation(program, "uPosition");
@@ -405,6 +423,7 @@ bs(function() {
         program.color=gl.getUniformLocation(program, "aColor");
         program.samplerUniform=gl.getUniformLocation(program, "uSampler");
         program.time=gl.getUniformLocation(program, "uTime");
+        program.filter=gl.getUniformLocation(program, "uFilter");
     }
 
     function makeProgram($name, $vs, $fs) {
