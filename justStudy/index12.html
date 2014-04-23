@@ -16,35 +16,46 @@
     <script src="http://projectbs.github.io/bsJS/bs/bsjs.js"></script>
 </head>
 <body style="overflow:hidden">
-<select id="blendMode" style="position:absolute">
-    <option>NORMAL</option>
-    <option>ADD</option>
-    <option>SUBTRACT</option>
-    <option>MULTIPLY</option>
-    <option>DARKEN</option>
-    <option>COLOUR_BURN</option>
-    <option>LINEAR_BURN</option>
-    <option>LIGHTEN</option>
-    <option>SCREEN</option>
-    <option>COLOUR_DODGE</option>
-    <option>LINEAR_DODGE</option>
-    <option>OVERLAY</option>
-    <option>SOFT_LIGHT</option>
-    <option>HARD_LIGHT</option>
-    <option>VIVID_LIGHT</option>
-    <option>LINEAR_LIGHT</option>
-    <option>PIN_LIGHT</option>
-    <option>DIFFERENCE</option>
-    <option>EXCLUSION</option>
-</select>
-<select id="filterMode" style="position:absolute;top:50px;height:50px">
-    <option>NORMAL</option>
-    <option>GRAY</option>
-    <option>SEPIA</option>
-    <option>INVERT</option>
-</select>
+<div style="position:absolute; height:50px;background:#fff;font-size:30px">블렌드모드
+    <select id="blendMode" style="font-size:20px">
+        <option>NORMAL</option>
+        <option>ADD</option>
+        <option>SUBTRACT</option>
+        <option>MULTIPLY</option>
+        <option>DARKEN</option>
+        <option>COLOUR_BURN</option>
+        <option>LINEAR_BURN</option>
+        <option>LIGHTEN</option>
+        <option>SCREEN</option>
+        <option>COLOUR_DODGE</option>
+        <option>LINEAR_DODGE</option>
+        <option>OVERLAY</option>
+        <option>SOFT_LIGHT</option>
+        <option>HARD_LIGHT</option>
+        <option>VIVID_LIGHT</option>
+        <option>LINEAR_LIGHT</option>
+        <option>PIN_LIGHT</option>
+        <option>DIFFERENCE</option>
+        <option>EXCLUSION</option>
+    </select>
+</div>
+<div style="position:absolute;top:50px; height:50px;background:#fff;font-size:30px">프레그먼트필터
+    <select id="filterMode" style="font-size:20px">
+        <option>NORMAL</option>
+        <option>GRAY</option>
+        <option>SEPIA</option>
+        <option>INVERT</option>
+        <option>PIXEL</option>
+        <option>BLUR</option>
+        <option>SHARPEN</option>
+        <option>SHARPENESS</option>
+        <option>EDGE</option>
+        <option>EDGE2</option>
+        <option>EMBOSS</option>
 
-<div id="test" style="position:absolute; left: 300px;color:#ffffff">'ADWS - 카메라 변경/ space 애니 온오프'</div>
+    </select>
+</div>
+<div id="test" style="position:absolute; left: 360px;color:#ffffff">'space 애니 온오프'</div>
 
 <canvas id="canvas" style="border: none;background:#eee"></canvas>
 <script>
@@ -80,21 +91,22 @@ bs(function() {
         window.addEventListener('keydown', hd_keydown);
         function hd_keydown($e) {
             var camera=bs.GL.camera
-            if($e.keyCode==65) camera.x--
-            if($e.keyCode==68) camera.x++
-            if($e.keyCode==87) camera.y++
-            if($e.keyCode==83) camera.y--
+//            if($e.keyCode==65) camera.x--
+//            if($e.keyCode==68) camera.x++
+//            if($e.keyCode==87) camera.y++
+//            if($e.keyCode==83) camera.y--
             if($e.keyCode==32) camera.aniTest= !camera.aniTest
 
         }
+
         bs.Dom('#blendMode').S('change', function($e) {
             var t=this.selectedOptions[0].innerHTML
             for(var i=0; i < max; i++) testObj[i].blendMode=bs.GL.blendMode[t]
-        }, 'height', 50, 'font-size', 30)
+        })
         bs.Dom('#filterMode').S('change', function($e) {
             var t=this.selectedOptions[0].innerHTML
-            bs.GL.filter = bs.GL.POST_EFFECT[t]
-        }, 'height', 50, 'font-size', 30)
+            bs.GL.filter=bs.GL.POST_EFFECT[t]
+        })
 
     }, 'shaders_blend.html')
 
@@ -117,16 +129,24 @@ bs(function() {
     bs.GL={
         camera: {
             x: 0, y: 0, z: 0,
-            aniTest: true
+            aniTest: false
         },
-        filter : 0.0,
-        POST_EFFECT : {
-            NORMAL:0.0,
-            GRAY : 1.0,
-            SEPIA : 2.0,
-            INVERT: 3.0
+        filter: 0.0,
+        POST_EFFECT: {
+            NORMAL: 0.0,
+            GRAY: 1.0,
+            SEPIA: 2.0,
+            INVERT: 3.0,
+            PIXEL: 4.0,
+            BLUR: 5.0,
+            // CONVOLUTION
+            SHARPEN: 6.0,
+            SHARPENESS: 7.0,
+            EDGE: 8.0,
+            EDGE2: 9.0,
+            EMBOSS: 10.0
         },
-        blendMode: {NORMAL: 0.0,ADD: 1.0,SUBTRACT: 2.0,MULTIPLY: 3.0,DARKEN: 4.0,COLOUR_BURN: 5.0,LINEAR_BURN: 6.0,LIGHTEN: 7.0,SCREEN: 8.0,COLOUR_DODGE: 9.0,LINEAR_DODGE: 10.0,OVERLAY: 11.0,SOFT_LIGHT: 12.0,HARD_LIGHT: 13.0,VIVID_LIGHT: 14.0,LINEAR_LIGHT: 15.0,PIN_LIGHT: 16.0,DIFFERENCE: 17.0,EXCLUSION: 18.0},
+        blendMode: {NORMAL: 0.0, ADD: 1.0, SUBTRACT: 2.0, MULTIPLY: 3.0, DARKEN: 4.0, COLOUR_BURN: 5.0, LINEAR_BURN: 6.0, LIGHTEN: 7.0, SCREEN: 8.0, COLOUR_DODGE: 9.0, LINEAR_DODGE: 10.0, OVERLAY: 11.0, SOFT_LIGHT: 12.0, HARD_LIGHT: 13.0, VIVID_LIGHT: 14.0, LINEAR_LIGHT: 15.0, PIN_LIGHT: 16.0, DIFFERENCE: 17.0, EXCLUSION: 18.0},
         // TODO 하이라키로 전향해야함
         addTest: function($type) {
             var a=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 500 : 200
@@ -138,7 +158,7 @@ bs(function() {
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
                         alpha: Math.random(),
-                        pos: [Math.random() * a - a / 2, Math.random() * a - a / 2, Math.random() * a - a / 2],
+                        pos: [Math.sin(testObj.length) * 8, Math.cos(testObj.length) * 8,-10-1.8 * testObj.length],
                         material: null,
                         blendMode: blend
                     }
@@ -151,7 +171,7 @@ bs(function() {
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
                         alpha: Math.random(),
-                        pos: [Math.random() * a - a / 2, Math.random() * a - a / 2, Math.random() * a - a / 2],
+                        pos: [Math.sin(testObj.length) *8, Math.cos(testObj.length) *8, -10-1.8 * testObj.length],
                         material: null,
                         blendMode: blend
                     }
@@ -164,7 +184,7 @@ bs(function() {
                         typeDraw: "gl.ELEMENT_ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
                         alpha: Math.random(),
-                        pos: [Math.random() * a - a / 2, Math.random() * a - a / 2, Math.random() * a - a / 2],
+                        pos: [Math.sin(testObj.length) * 55, Math.cos(testObj.length) * 55, -50 - 0.8 * testObj.length],
                         material: null,
                         blendMode: blend
                     }
@@ -200,9 +220,9 @@ bs(function() {
             var time=0
             var camera=bs.GL.camera
 
-            function drawFrame(){
+            function drawFrame() {
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-                resetMVP(currentProgram)
+                resetMVP(currentProgram,0)
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
                 time+=0.01
@@ -223,7 +243,7 @@ bs(function() {
                     gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);
 
                     gl.uniform3fv(currentProgram.cPosition, [camera.x, camera.y, camera.z]);
-                    if(camera.aniTest) gl.uniform3fv(currentProgram.cRotation, [time, time, time]);
+                    if(camera.aniTest) gl.uniform3fv(currentProgram.cRotation, [0, 0, time]);
 
                     gl.uniform3fv(currentProgram.position, [t.pos[0], t.pos[1], t.pos[2]]);
                     gl.uniform3fv(currentProgram.rotation, [rx, ry, rz]);
@@ -249,7 +269,6 @@ bs(function() {
                         gl.bindTexture(gl.TEXTURE_2D, t.material.texture);
                         gl.uniform1i(currentProgram.samplerUniform, 0);
 
-
                         if(t.typeDraw=="gl.ELEMENT_ARRAY_BUFFER") {
                             var uvbo=UVBOs[t.type]
                             gl.bindBuffer(gl.ARRAY_BUFFER, uvbo);
@@ -266,7 +285,6 @@ bs(function() {
                             gl.drawElements(gl.TRIANGLE_STRIP, ibo.numItems, gl.UNSIGNED_SHORT, 0);
                         }
                     }
-
                 }
             }
 
@@ -277,22 +295,86 @@ bs(function() {
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
                 gl.useProgram(currentProgram=PROGRAMs['filterProgram']);
-                resetMVP(currentProgram)
+                resetMVP(currentProgram,1)
 
                 gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
                 gl.enableVertexAttribArray(currentProgram.vertexPositionAttribute);
                 gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);
                 gl.uniform3fv(currentProgram.cPosition, [camera.x, camera.y, camera.z]);
-                gl.uniform3fv(currentProgram.position, [0,0,-2.5]);
-                gl.uniform3fv(currentProgram.rotation, [0,0,0]);
-                gl.uniform4fv(currentProgram.color, [1,1,1,1]);
-                gl.uniform1f(currentProgram.time, time%1000);
+                gl.uniform3fv(currentProgram.position, [0, 0, -2.5]);
+                gl.uniform3fv(currentProgram.rotation, [0, 0, 0]);
+                gl.uniform4fv(currentProgram.color, [1, 1, 1, 1]);
+                gl.uniform1f(currentProgram.time, time % 1000);
                 gl.uniform1f(currentProgram.filter, bs.GL.filter);
+
+                if(bs.GL.filter==bs.GL.POST_EFFECT.PIXEL) {
+                    currentProgram.pixelSize=gl.getUniformLocation(currentProgram, "pixelSize");
+                    currentProgram.dimensions=gl.getUniformLocation(currentProgram, "dimensions");
+                    gl.uniform2f(currentProgram.pixelSize, 2, 2);
+                    gl.uniform4fv(currentProgram.dimensions, new Float32Array([10000, 100, 10, 10]));
+                }
+                if(bs.GL.filter==bs.GL.POST_EFFECT.BLUR) {
+                    currentProgram.blur=gl.getUniformLocation(currentProgram, "blur");
+                    gl.uniform1f(currentProgram.blur, 1 / 1024);
+                }
+                if(bs.GL.filter==bs.GL.POST_EFFECT.SHARPEN) {
+                    var data=[
+                        -1, -1, -1,
+                        -1, 16, -1,
+                        -1, -1, -1
+                    ];
+                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
+                    gl.uniform1fv(currentProgram.kernelLocation, data);
+                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
+                }
+                if(bs.GL.filter==bs.GL.POST_EFFECT.SHARPENESS) {
+                    var data=[
+                        -1, -1, -1,
+                        -1, 5, -1,
+                        -1, -1, -1
+                    ];
+                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
+                    gl.uniform1fv(currentProgram.kernelLocation, data);
+                    currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
+                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
+                }
+                if(bs.GL.filter==bs.GL.POST_EFFECT.EDGE) {
+                    var data=[
+                        -0.125, -0.125, -0.125,
+                        -0.125, 1, -0.125,
+                        -0.125, -0.125, -0.125
+                    ];
+                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
+                    gl.uniform1fv(currentProgram.kernelLocation, data);
+                    currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
+                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
+                }
+                if(bs.GL.filter==bs.GL.POST_EFFECT.EDGE2) {
+                    var data=[
+                        -1, -1, -1,
+                        -1, 8, -1,
+                        -1, -1, -1
+                    ];
+                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
+                    gl.uniform1fv(currentProgram.kernelLocation, data);
+                    currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
+                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
+                }
+                if(bs.GL.filter==bs.GL.POST_EFFECT.EMBOSS) {
+                    var data=[
+                        -2, -1, 0,
+                        -1, 1, 1,
+                        0, 1, 2
+                    ];
+                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
+                    gl.uniform1fv(currentProgram.kernelLocation, data);
+                    currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
+                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
+                }
 
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, rttTexture);
                 gl.uniform1i(currentProgram.samplerUniform, 0);
-
 
                 var vbo=VBOs['rect']
                 gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
@@ -309,13 +391,13 @@ bs(function() {
             (function loop() {requestAnimFrame(loop), drawScene()})();
         }
     }
-    function setFrameBuffer(){
-        rttFramebuffer = gl.createFramebuffer();
+    function setFrameBuffer() {
+        rttFramebuffer=gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, rttFramebuffer);
-        rttFramebuffer.width = 512;
-        rttFramebuffer.height = 512;
+        rttFramebuffer.width=1024;
+        rttFramebuffer.height=1024;
 
-        rttTexture = gl.createTexture();
+        rttTexture=gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, rttTexture);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -323,7 +405,7 @@ bs(function() {
 
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, rttFramebuffer.width, rttFramebuffer.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
 
-        var renderbuffer = gl.createRenderbuffer();
+        var renderbuffer=gl.createRenderbuffer();
         gl.bindRenderbuffer(gl.RENDERBUFFER, renderbuffer);
         gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, rttFramebuffer.width, rttFramebuffer.height);
 
@@ -334,6 +416,7 @@ bs(function() {
         gl.bindRenderbuffer(gl.RENDERBUFFER, null);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
+
     function initTexture($src) {
         var texture;
         texture=gl.createTexture();
@@ -365,7 +448,7 @@ bs(function() {
         else console.log('WEBGL을 지원합니다. 초기화를 시작합니다.'), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
     }
 
-    function resetMVP($program) {
+    function resetMVP($program,$render) {
         function perspective(a, b, c, d, e) {
             a=c * Math.tan(a * Math.PI / 360), b=a * b;
             return frustum(-b, b, -a, a, c, d, e)
@@ -377,8 +460,9 @@ bs(function() {
             var h=b - a, i=d - c, j=g - e;
             return f[0]=e * 2 / h, f[1]=0, f[2]=0, f[3]=0, f[4]=0, f[5]=e * 2 / i, f[6]=0, f[7]=0, f[8]=(b + a) / h, f[9]=(d + c) / i, f[10]=-(g + e) / j, f[11]= -1, f[12]=0, f[13]=0, f[14]=-(g * e * 2) / j, f[15]=0, f
         }
-
-        perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
+        // TODO여기를 분기해야하나 -_-;;
+        if($render) perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 2000.0, pMatrix);
+        perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 2000.0, pMatrix);
     }
 
     function lightTest() {
@@ -411,6 +495,7 @@ bs(function() {
         program.samplerUniform=gl.getUniformLocation(program, "uSampler");
         program.blend=gl.getUniformLocation(program, "uBlend");
     }
+
     function setFilterPrograms() {
         var program=makeProgram('filterProgram', VSs['shader-vs-bitmap'], FSs['shader-fs-filter'])
         program.vertexPositionAttribute=gl.getAttribLocation(program, "aVertexPosition");
