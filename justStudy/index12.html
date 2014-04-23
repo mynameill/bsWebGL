@@ -55,8 +55,7 @@
 
     </select>
 </div>
-<div id="test" style="position:absolute; left: 360px;color:#ffffff">'space 애니 온오프'</div>
-
+<div id="test" style="position:absolute; left: 360px;color:#ffffff;background:#000">'space 애니 온오프'</div>
 <canvas id="canvas" style="border: none;background:#eee"></canvas>
 <script>
 var testObj=[]
@@ -435,7 +434,7 @@ bs(function() {
         canvas=document.getElementById($id)
         canvas.width=canvas.height=0
         gl=canvas.getContext('webgl')||canvas.getContext("experimental-webgl")
-        if(!gl) return bs.Dom('<div>webGL을 지원하지 않는 환경입니다.</div>').S('<', 'body')
+        if(!gl) return bs.Dom('<div>webGL을 지원하지 않는 환경입니다.</div>').S('<', 'body','position','absolute','top',200)
         else console.log('WEBGL을 지원합니다. 초기화를 시작합니다.'), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
     }
 
