@@ -159,7 +159,7 @@ bs(function() {
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
                         alpha: Math.random(),
-                        pos: [Math.sin(testObj.length) * 8, Math.cos(testObj.length) * 8,-10-1.8 * testObj.length],
+                        pos: [Math.sin(testObj.length) * 8, Math.cos(testObj.length) * 8, -10 - 1.8 * testObj.length],
                         material: null,
                         blendMode: blend
                     }
@@ -172,7 +172,7 @@ bs(function() {
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
                         alpha: Math.random(),
-                        pos: [Math.sin(testObj.length) *8, Math.cos(testObj.length) *8, -10-1.8 * testObj.length],
+                        pos: [Math.sin(testObj.length) * 8, Math.cos(testObj.length) * 8, -10 - 1.8 * testObj.length],
                         material: null,
                         blendMode: blend
                     }
@@ -318,55 +318,45 @@ bs(function() {
                     currentProgram.blur=gl.getUniformLocation(currentProgram, "blur");
                     gl.uniform1f(currentProgram.blur, 1 / 1024);
                 }
-                if(bs.GL.filter==bs.GL.POST_EFFECT.SHARPEN) {
-                    var data=[
-                        -1, -1, -1,
-                        -1, 16, -1,
-                        -1, -1, -1
-                    ];
-                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
-                    gl.uniform1fv(currentProgram.kernelLocation, data);
-                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
-                }
-                if(bs.GL.filter==bs.GL.POST_EFFECT.SHARPENESS) {
-                    var data=[
-                        0,-1, 0,
-                        -1, 5,-1,
-                        0,-1, 0
-                    ];
-                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
-                    gl.uniform1fv(currentProgram.kernelLocation, data);
-                    currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
-                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
-                }
-                if(bs.GL.filter==bs.GL.POST_EFFECT.EDGE) {
-                    var data=[
-                        -0.125, -0.125, -0.125,
-                        -0.125, 1, -0.125,
-                        -0.125, -0.125, -0.125
-                    ];
-                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
-                    gl.uniform1fv(currentProgram.kernelLocation, data);
-                    currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
-                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
-                }
-                if(bs.GL.filter==bs.GL.POST_EFFECT.EDGE2) {
-                    var data=[
-                        -1, -1, -1,
-                        -1, 8, -1,
-                        -1, -1, -1
-                    ];
-                    currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
-                    gl.uniform1fv(currentProgram.kernelLocation, data);
-                    currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
-                    gl.uniform2f(currentProgram.u_textureSize, 1024, 1024);
-                }
-                if(bs.GL.filter==bs.GL.POST_EFFECT.EMBOSS) {
-                    var data=[
-                        -2, -1, 0,
-                        -1, 1, 1,
-                        0, 1, 2
-                    ];
+                if(bs.GL.filter>=6) {
+                    var data
+                    switch(bs.GL.filter){
+                        case 6.0 :
+                            data=[
+                                -1, -1, -1,
+                                -1, 16, -1,
+                                -1, -1, -1
+                            ];
+                            break
+                        case 7.0 :
+                            data=[
+                                0, -1, 0,
+                                -1, 5, -1,
+                                0, -1, 0
+                            ];
+                            break
+                        case 8.0 :
+                            data=[
+                                -0.125, -0.125, -0.125,
+                                -0.125, 1, -0.125,
+                                -0.125, -0.125, -0.125
+                            ];
+                            break
+                        case 9.0 :
+                            data=[
+                                -1, -1, -1,
+                                -1, 8, -1,
+                                -1, -1, -1
+                            ];
+                            break
+                        case 10.0 :
+                            data=[
+                                -2, -1, 0,
+                                -1, 1, 1,
+                                0, 1, 2
+                            ];
+                            break
+                    }
                     currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
                     gl.uniform1fv(currentProgram.kernelLocation, data);
                     currentProgram.u_textureSize=gl.getUniformLocation(currentProgram, "u_textureSize");
