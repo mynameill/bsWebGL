@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>후처리 대충 각이나오는군...필터도 맘대로 작성할수있게되었다!!!</title>
+    <title>프레그먼트필터연구....</title>
     <meta name="keywords" content="red"/>
     <meta name="description" content="red"/>
     <meta charset="utf-8"/>
@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="viewport"
-          content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=midium-dpi"/>
+          content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=high-dpi"/>
     <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
     <style>body { margin: 0; padding: 0; }</style>
     <script src="http://projectbs.github.io/bsJS/bs/bsjs.js"></script>
@@ -117,6 +117,7 @@ bs(function() {
 
     var VBOs={}, IBOs={}, VBOs={}, UVBOs={}, VSs={}, FSs={}, PROGRAMs={};
     var pMatrix=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+
     var directional={
         color: [0.5, 0.5, 0.5],
         position: [10, 10, 4]
@@ -222,7 +223,7 @@ bs(function() {
 
             function drawFrame() {
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
-                resetMVP(currentProgram,0)
+                resetMVP(currentProgram)
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
                 time+=0.01
@@ -295,13 +296,13 @@ bs(function() {
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
                 gl.useProgram(currentProgram=PROGRAMs['filterProgram']);
-                resetMVP(currentProgram,1)
+                resetMVP(currentProgram)
 
                 gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
                 gl.enableVertexAttribArray(currentProgram.vertexPositionAttribute);
                 gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);
-                gl.uniform3fv(currentProgram.cPosition, [camera.x, camera.y, camera.z]);
-                gl.uniform3fv(currentProgram.position, [0, 0, -2.5]);
+                gl.uniform3fv(currentProgram.cPosition, [camera.x, camera.y, -2]);
+                gl.uniform3fv(currentProgram.position, [0, 0, 0]);
                 gl.uniform3fv(currentProgram.rotation, [0, 0, 0]);
                 gl.uniform4fv(currentProgram.color, [1, 1, 1, 1]);
                 gl.uniform1f(currentProgram.time, time % 1000);
@@ -329,9 +330,9 @@ bs(function() {
                 }
                 if(bs.GL.filter==bs.GL.POST_EFFECT.SHARPENESS) {
                     var data=[
-                        -1, -1, -1,
-                        -1, 5, -1,
-                        -1, -1, -1
+                        0,-1, 0,
+                        -1, 5,-1,
+                        0,-1, 0
                     ];
                     currentProgram.kernelLocation=gl.getUniformLocation(currentProgram, "u_kernel[0]");
                     gl.uniform1fv(currentProgram.kernelLocation, data);
@@ -448,7 +449,7 @@ bs(function() {
         else console.log('WEBGL을 지원합니다. 초기화를 시작합니다.'), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
     }
 
-    function resetMVP($program,$render) {
+    function resetMVP($program) {
         function perspective(a, b, c, d, e) {
             a=c * Math.tan(a * Math.PI / 360), b=a * b;
             return frustum(-b, b, -a, a, c, d, e)
@@ -460,8 +461,7 @@ bs(function() {
             var h=b - a, i=d - c, j=g - e;
             return f[0]=e * 2 / h, f[1]=0, f[2]=0, f[3]=0, f[4]=0, f[5]=e * 2 / i, f[6]=0, f[7]=0, f[8]=(b + a) / h, f[9]=(d + c) / i, f[10]=-(g + e) / j, f[11]= -1, f[12]=0, f[13]=0, f[14]=-(g * e * 2) / j, f[15]=0, f
         }
-        // TODO여기를 분기해야하나 -_-;;
-        if($render) perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 2000.0, pMatrix);
+
         perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 2000.0, pMatrix);
     }
 
