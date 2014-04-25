@@ -197,9 +197,9 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
             else if(uFilter == INVERT)	gl_FragColor.rgb = mix( (vec3(1)-gl_FragColor.rgb) * gl_FragColor.a, gl_FragColor.rgb, 1.0 - 1.0);
             else if(uFilter == SEPIA) gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb * sepiaMatrix, 1.0);
             else if(uFilter == PIXEL) {
-                vec2 coord = vTextureCoord;
+                vec2 coord = redVcode;
                 vec2 size = dimensions.xy/pixelSize;
-                vec2 color = floor( ( vTextureCoord * size ) ) / size + pixelSize/dimensions.xy * 0.5;
+                vec2 color = floor( ( redVcode * size ) ) / size + pixelSize/dimensions.xy * 0.5;
                 gl_FragColor = texture2D(uSampler, color);
             }
              else if(uFilter > PIXEL ) {
