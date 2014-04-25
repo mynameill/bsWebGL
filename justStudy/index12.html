@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <title>프레그먼트필터연구....</title>
@@ -61,6 +61,7 @@
 var testObj=[]
 bs(function() {
     bs.get(function($data) {
+        console.log($data)
         document.head.innerHTML+=$data
         bs.GL.init('canvas')
         var max=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 100 : 1000
@@ -212,8 +213,8 @@ bs(function() {
             setFrameBuffer();
             console.log(VBOs, IBOs), console.log(VSs, FSs), console.log(PROGRAMs)
             bs.WIN.sizer(function(w, h) {
-                gl.viewportWidth=canvas.width=document.documentElement.clientWidth
-                gl.viewportHeight=canvas.height=document.documentElement.clientHeight
+                gl.viewportWidth=canvas.width=w
+                gl.viewportHeight=canvas.height=h
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
             })
             var max=0

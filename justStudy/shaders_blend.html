@@ -37,6 +37,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
              NORMAL =0.0;ADD=1.0;SUBTRACT=2.0;MULTIPLY=3.0;DARKEN=4.0;COLOUR_BURN=5.0;LINEAR_BURN =6.0;LIGHTEN =7.0;SCREEN =8.0;COLOUR_DODGE =9.0;LINEAR_DODGE =10.0;OVERLAY =11.0;SOFT_LIGHT=12.0;HARD_LIGHT =13.0;VIVID_LIGHT =14.0;LINEAR_LIGHT =15.0;PIN_LIGHT =16.0;DIFFERENCE =17.0;EXCLUSION =18.0;
              gl_FragColor = vec4(vColor[0], vColor[1], vColor[2], vColor[3]);
         }
+
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs" type="x-shader/x-vertex">
@@ -60,6 +61,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
             vColor =aColor;
             gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
         }
+
 </script>
 
 <!--쉐이더 코드 입력합니다-->
@@ -103,6 +105,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 	         gl_FragColor.xyz = colour;
 	         gl_FragColor.w = src.w*vColor[3];
         }
+
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs-bitmap" type="x-shader/x-vertex">
@@ -132,8 +135,8 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           vTextureCoord = aTextureCoord;
           gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
         }
-</script>
 
+</script>
 
 
 <!--걍필터 테스트-->
@@ -174,7 +177,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
             EMBOSS = 10.0;
 
             vec4 prev = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)); // 샘플러에서 받아오고 저장함..
-            prev = vec4(prev.rgba * vColor); // 컬러랑 더해줌
+            //prev = vec4(prev.rgba * vColor); // 컬러랑 더해줌
             gl_FragColor = prev; // 프레그먼크 컬러내보냄
 
             if(uFilter == GRAY) gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.2126*gl_FragColor.r + 0.7152*gl_FragColor.g + 0.0722*gl_FragColor.b), 1.0);
@@ -232,4 +235,19 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
             }
             else gl_FragColor = prev;
         }
+
+</script>
+
+<!--쉐이더 코드 입력합니다-->
+<script id="shader-vs-filter" type="x-shader/x-vertex">
+        attribute vec3 aVertexPosition;
+        attribute vec2 aTextureCoord;
+        varying vec2 vTextureCoord;
+ uniform vec4 aColor;
+        varying vec4 vColor;
+        void main(void) {
+          vTextureCoord = aTextureCoord;
+          gl_Position =vec4(aVertexPosition, 1.0);
+        }
+
 </script>
