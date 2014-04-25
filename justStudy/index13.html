@@ -1,7 +1,7 @@
 ﻿﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>프레그먼트필터연구....</title>
+    <title>버텍스필터시작....</title>
     <meta name="keywords" content="red"/>
     <meta name="description" content="red"/>
     <meta charset="utf-8"/>
@@ -55,11 +55,16 @@
         <option>EMBOSS</option>
 
     </select>
+    <div style="background:#fff">
+        버텍스 필터테스트(웨이브)<input type="checkbox" id="waveTest" checked="yes">
+    </div>
+
 </div>
 <div id="test" style="position:absolute; left: 360px;color:#ffffff;background:#000">'space 애니 온오프'</div>
 <canvas id="canvas" style="border: none;background:#eee"></canvas>
 <script>
 var testObj=[]
+var useWave = 1.0
 bs(function() {
     bs.get(function($data) {
         document.head.innerHTML+=$data
@@ -109,6 +114,11 @@ bs(function() {
             console.log(t)
             bs.GL.filter=bs.GL.POST_EFFECT[t]
         })
+        bs.Dom('#waveTest').S('change', function($e) {
+            if(this.checked)  useWave = 1.0
+            else useWave = 0.0
+        })
+
 
     }, 'shaders_blend.html')
 
@@ -308,6 +318,11 @@ bs(function() {
                 gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);
                 gl.uniform4fv(currentProgram.color, [1, 1, 1, 1]);
                 gl.uniform1f(currentProgram.filter, bs.GL.filter);
+                gl.uniform1f(currentProgram.time, time);
+
+                // 버텍스 필터 온오프테스트
+                currentProgram.useWave=gl.getUniformLocation(currentProgram, "uUseWave");
+                gl.uniform1f(currentProgram.useWave, useWave);
 
                 if(bs.GL.filter==bs.GL.POST_EFFECT.PIXEL) {
                     currentProgram.pixelSize=gl.getUniformLocation(currentProgram, "pixelSize");
@@ -315,13 +330,16 @@ bs(function() {
                     gl.uniform2f(currentProgram.pixelSize, 2, 2);
                     gl.uniform4fv(currentProgram.dimensions, new Float32Array([10000, 100, 10, 10]));
                 }
-                if(bs.GL.filter==bs.GL.POST_EFFECT.BLUR) {
-                    currentProgram.blur=gl.getUniformLocation(currentProgram, "blur");
-                    gl.uniform1f(currentProgram.blur, 1 / 1024);
-                }
-                if(bs.GL.filter>=6) {
+                if(bs.GL.filter>=5) {
                     var data
                     switch(bs.GL.filter){
+                        case 5.0 :
+                            data=[
+                                0.045, 0.122, 0.045,
+                                0.122, 0.332, 0.122,
+                                0.045, 0.122, 0.045
+                            ];
+                            break
                         case 6.0 :
                             data=[
                                 -1, -1, -1,
@@ -496,6 +514,7 @@ bs(function() {
         program.color=gl.getUniformLocation(program, "aColor");
         program.samplerUniform=gl.getUniformLocation(program, "uSampler");
         program.filter=gl.getUniformLocation(program, "uFilter");
+        program.time=gl.getUniformLocation(program, "uTime");
     }
 
     function makeProgram($name, $vs, $fs) {
