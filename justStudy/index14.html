@@ -170,7 +170,7 @@ bs(function() {
                         type: 'rect',
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
-                        alpha: Math.random(),
+                        alpha: 1,
                         pos: [Math.sin(testObj.length) * 8, Math.cos(testObj.length) * 8, -10 - 1.8 * testObj.length],
                         material: null,
                         blendMode: blend
@@ -183,7 +183,7 @@ bs(function() {
                         type: 'tri',
                         typeDraw: "gl.ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
-                        alpha: Math.random(),
+                        alpha: 1,
                         pos: [Math.sin(testObj.length) * 8, Math.cos(testObj.length) * 8, -10 - 1.8 * testObj.length],
                         material: null,
                         blendMode: blend
@@ -196,7 +196,7 @@ bs(function() {
                         type: 'teapot',
                         typeDraw: "gl.ELEMENT_ARRAY_BUFFER",
                         color: [Math.random(), Math.random(), Math.random()],
-                        alpha: Math.random(),
+                        alpha: 1,
                         pos: [Math.sin(testObj.length) * 55, Math.cos(testObj.length) * 55, -50 - 0.8 * testObj.length],
                         material: null,
                         blendMode: blend
@@ -246,7 +246,7 @@ bs(function() {
                 time+=0.01
                 for(var i=0, len=testObj.length; i < len; i++) {
                     // 블렌딩모드는 매 객체 마다 달라질수 있으니....음...매번 비교분석해야하는군?
-//                    gl.disable(gl.DEPTH_TEST);
+                    gl.enable(gl.DEPTH_TEST);
                     gl.enable(gl.BLEND);
                     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // 알파블렌딩 기본
 
@@ -629,23 +629,37 @@ bs(function() {
             var v1 = [];
             var v2 = [];
             var normal = [];
-            v1[x] = vs[3*ind[i+1]+x] - vs[3*ind[i]+x];
-            v1[y] = vs[3*ind[i+1]+y] - vs[3*ind[i]+y];
-            v1[z] = vs[3*ind[i+1]+z] - vs[3*ind[i]+z];
-            v2[x] = vs[3*ind[i+2]+x] - vs[3*ind[i+1]+x];
-            v2[y] = vs[3*ind[i+2]+y] - vs[3*ind[i+1]+y];
-            v2[z] = vs[3*ind[i+2]+z] - vs[3*ind[i+1]+z];
+            //p1 - p0
+//            v1[x] = vs[3*ind[i+1]+x] - vs[3*ind[i]+x];
+//            v1[y] = vs[3*ind[i+1]+y] - vs[3*ind[i]+y];
+//            v1[z] = vs[3*ind[i+1]+z] - vs[3*ind[i]+z];
+//            // p0 - p1
+//            v2[x] = vs[3*ind[i+2]+x] - vs[3*ind[i+1]+x];
+//            v2[y] = vs[3*ind[i+2]+y] - vs[3*ind[i+1]+y];
+//            v2[z] = vs[3*ind[i+2]+z] - vs[3*ind[i+1]+z];
+            //p2 - p1
+            v1[x] = vs[3*ind[i+2]+x] - vs[3*ind[i+1]+x];
+            v1[y] = vs[3*ind[i+2]+y] - vs[3*ind[i+1]+y];
+            v1[z] = vs[3*ind[i+2]+z] - vs[3*ind[i+1]+z];
+//            p0 - p1
+            v2[x] = vs[3*ind[i]+x] - vs[3*ind[i+1]+x];
+            v2[y] = vs[3*ind[i]+y] - vs[3*ind[i+1]+y];
+            v2[z] = vs[3*ind[i]+z] - vs[3*ind[i+1]+z];
+            //cross product by Sarrus Rule
             normal[x] = v1[y]*v2[z] - v1[z]*v2[y];
             normal[y] = v1[z]*v2[x] - v1[x]*v2[z];
             normal[z] = v1[x]*v2[y] - v1[y]*v2[x];
-            for(j=0;j<3;j++){
+
+//            ns[3*ind[i]+x] += normal[x];
+//            ns[3*ind[i]+y] += normal[y];
+//            ns[3*ind[i]+z] += normal[z];
+            for(j=0;j<3;j++){ //update the normals of that triangle: sum of vectors
                 ns[3*ind[i+j]+x] =  ns[3*ind[i+j]+x] + normal[x];
                 ns[3*ind[i+j]+y] =  ns[3*ind[i+j]+y] + normal[y];
                 ns[3*ind[i+j]+z] =  ns[3*ind[i+j]+z] + normal[z];
             }
         }
-        //normalize the result
-        for(var i=0;i<vs.length;i=i+3){ //the increment here is because each vertex occurs with an offset of 3 in the array (due to x, y, z contiguous values)
+        for(var i=0;i<vs.length;i=i+3){
 
             var nn=[];
             nn[x] = ns[i+x];

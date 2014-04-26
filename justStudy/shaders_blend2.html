@@ -115,8 +115,8 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 	         vec4 src = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
 	         vec3 colour = clamp(blend(src.xyz, dst.xyz), 0.0, 1.0);
 	         gl_FragColor.xyz = colour;
-	         gl_FragColor.w = src.w*vColor[3];
 	         gl_FragColor = gl_FragColor*vLightColor*lambertTerm;
+	         gl_FragColor.w = src.w*vColor[3];
         }
 
 </script>
