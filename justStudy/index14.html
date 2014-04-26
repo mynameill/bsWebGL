@@ -94,6 +94,8 @@ bs(function() {
             else bs.GL.addTest('teapot').material=mats[t]
         }
 
+        testObj[2].pos = [0,0,-100]
+
         window.addEventListener('keydown', hd_keydown);
         function hd_keydown($e) {
             var camera=bs.GL.camera
@@ -283,7 +285,7 @@ bs(function() {
                             gl.drawArrays(gl.TRIANGLE_STRIP, 0, vbo.numItems);
                         }
                     } else {
-                        gl.uniform3fv(currentProgram.lightDirection, [Math.sin(time*5), Math.cos(time*5), 0.1]);
+                        gl.uniform3fv(currentProgram.lightDirection, [Math.sin(time*5), Math.cos(time*5), Math.sin(time*2)]);
 //                        gl.uniform3fv(currentProgram.lightDirection, [0.5, 0.5, 1.0]);
 
 
