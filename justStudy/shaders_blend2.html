@@ -12,26 +12,8 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
         float ADD ;float SUBTRACT ;float MULTIPLY ;float DARKEN ;float COLOUR_BURN ;float LINEAR_BURN ;float LIGHTEN ;float SCREEN ;float COLOUR_DODGE ;float LINEAR_DODGE ;float OVERLAY ;float SOFT_LIGHT ;float HARD_LIGHT ;float VIVID_LIGHT ;float LINEAR_LIGHT ;float PIN_LIGHT ;float DIFFERENCE ;float EXCLUSION ;float NORMAL ;
         vec3 blend (vec3 src, vec3 dst)
         {
-            if(uBlend == NORMAL) return src;
-            else if(uBlend == ADD)	return src + dst;
-            else if(uBlend == SUBTRACT)	return src - dst;
-            else if(uBlend == MULTIPLY)	return src * dst;
-            else if(uBlend == DARKEN)	return min(src, dst);
-            else if(uBlend == COLOUR_BURN)	return vec3((src.x == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.x) / src.x)),(src.y == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.y) / src.y)),(src.z == 0.0) ? 0.0 : (1.0 - ((1.0 - dst.z) / src.z)));
-            else if(uBlend == LINEAR_BURN)	return (src + dst) - 1.0;
-            else if(uBlend == LIGHTEN)	return max(src, dst);
-            else if(uBlend == SCREEN)	return (src + dst) - (src * dst);
-            else if(uBlend == COLOUR_DODGE)	return vec3((src.x == 1.0) ? 1.0 : min(1.0, dst.x / (1.0 - src.x)),(src.y == 1.0) ? 1.0 : min(1.0, dst.y / (1.0 - src.y)),(src.z == 1.0) ? 1.0 : min(1.0, dst.z / (1.0 - src.z)));
-            else if(uBlend == LINEAR_DODGE)	return src + dst;
-            else if(uBlend == OVERLAY)	return vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)),(dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)),(dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));
-            else if(uBlend == SOFT_LIGHT)	return vec3((src.x <= 0.5) ? (dst.x - (1.0 - 2.0 * src.x) * dst.x * (1.0 - dst.x)) : (((src.x > 0.5) && (dst.x <= 0.25)) ? (dst.x + (2.0 * src.x - 1.0) * (4.0 * dst.x * (4.0 * dst.x + 1.0) * (dst.x - 1.0) + 7.0 * dst.x)) : (dst.x + (2.0 * src.x - 1.0) * (sqrt(dst.x) - dst.x))),(src.y <= 0.5) ? (dst.y - (1.0 - 2.0 * src.y) * dst.y * (1.0 - dst.y)) : (((src.y > 0.5) && (dst.y <= 0.25)) ? (dst.y + (2.0 * src.y - 1.0) * (4.0 * dst.y * (4.0 * dst.y + 1.0) * (dst.y - 1.0) + 7.0 * dst.y)) : (dst.y + (2.0 * src.y - 1.0) * (sqrt(dst.y) - dst.y))),(src.z <= 0.5) ? (dst.z - (1.0 - 2.0 * src.z) * dst.z * (1.0 - dst.z)) : (((src.z > 0.5) && (dst.z <= 0.25)) ? (dst.z + (2.0 * src.z - 1.0) * (4.0 * dst.z * (4.0 * dst.z + 1.0) * (dst.z - 1.0) + 7.0 * dst.z)) : (dst.z + (2.0 * src.z - 1.0) * (sqrt(dst.z) - dst.z))));
-            else if(uBlend == HARD_LIGHT)	return vec3((src.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - src.x) * (1.0 - dst.x)),(src.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - src.y) * (1.0 - dst.y)),(src.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - src.z) * (1.0 - dst.z)));
-            else if(uBlend == VIVID_LIGHT)	return vec3((src.x <= 0.5) ? (1.0 - (1.0 - dst.x) / (2.0 * src.x)) : (dst.x / (2.0 * (1.0 - src.x))),(src.y <= 0.5) ? (1.0 - (1.0 - dst.y) / (2.0 * src.y)) : (dst.y / (2.0 * (1.0 - src.y))),(src.z <= 0.5) ? (1.0 - (1.0 - dst.z) / (2.0 * src.z)) : (dst.z / (2.0 * (1.0 - src.z))));
-            else if(uBlend == LINEAR_LIGHT)	return 2.0 * src + dst - 1.0;
-            else if(uBlend == PIN_LIGHT)	return vec3((src.x > 0.5) ? max(dst.x, 2.0 * (src.x - 0.5)) : min(dst.x, 2.0 * src.x),(src.x > 0.5) ? max(dst.y, 2.0 * (src.y - 0.5)) : min(dst.y, 2.0 * src.y),(src.z > 0.5) ? max(dst.z, 2.0 * (src.z - 0.5)) : min(dst.z, 2.0 * src.z));// ADD
-            else if(uBlend == DIFFERENCE)	return abs(dst - src);
-            else if(uBlend == EXCLUSION)	return src + dst - 2.0 * src * dst;
-            else return src;
+        // 일단 컬러는 블렌딩 처리에서 뺌
+            return src;
         }
         void main(void) {
              NORMAL =0.0;ADD=1.0;SUBTRACT=2.0;MULTIPLY=3.0;DARKEN=4.0;COLOUR_BURN=5.0;LINEAR_BURN =6.0;LIGHTEN =7.0;SCREEN =8.0;COLOUR_DODGE =9.0;LINEAR_DODGE =10.0;OVERLAY =11.0;SOFT_LIGHT=12.0;HARD_LIGHT =13.0;VIVID_LIGHT =14.0;LINEAR_LIGHT =15.0;PIN_LIGHT =16.0;DIFFERENCE =17.0;EXCLUSION =18.0;
