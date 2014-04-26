@@ -169,25 +169,12 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
         uniform float u_kernel[9];
 
         void main(void) {
-            NORMAL = 0.0
-            GRAY = 1.0;
-            SEPIA = 2.0;
-            INVERT = 3.0;
-            PIXEL = 4.0;
-            BLUR = 5.0;
-            SHAPEN = 6.0;
-            SHAPENESS = 7.0;
-            EDGE = 8.0;
-            EDGE2 = 9.0;
-            EMBOSS = 10.0;
-
+            NORMAL = 0.0,GRAY = 1.0,SEPIA = 2.0,INVERT = 3.0,PIXEL = 4.0,BLUR = 5.0,SHAPEN = 6.0,SHAPENESS = 7.0,EDGE = 8.0,EDGE2 = 9.0,EMBOSS = 10.0;
             vec2 redVcode;
             if(uUseWave == 1.0){
-              redVcode.s = vTextureCoord.s + (sin(uTime+vTextureCoord.t*35.0)*0.015)+sin(uTime)/25.0;
-              redVcode.t = vTextureCoord.t + (cos(uTime+vTextureCoord.s*35.0)*0.015)+cos(uTime)/25.0;
-            }else{
-              redVcode = vTextureCoord;
-            }
+                redVcode.s = vTextureCoord.s + (sin(uTime+vTextureCoord.t*35.0)*0.015)+sin(uTime)/25.0;
+                redVcode.t = vTextureCoord.t + (cos(uTime+vTextureCoord.s*35.0)*0.015)+cos(uTime)/25.0;
+            }else  redVcode = vTextureCoord;
             vec4 prev = texture2D(uSampler, redVcode); // 샘플러에서 받아오고 저장함..
             //prev = vec4(prev.rgba * vColor); // 컬러랑 더해줌
             gl_FragColor = prev; // 프레그먼크 컬러내보냄
