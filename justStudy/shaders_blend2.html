@@ -169,7 +169,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
         uniform float u_kernel[9];
 
         void main(void) {
-            NORMAL = 0.0;
+            NORMAL = 0.0
             GRAY = 1.0;
             SEPIA = 2.0;
             INVERT = 3.0;
@@ -183,10 +183,10 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 
             vec2 redVcode;
             if(uUseWave == 1.0){
-            redVcode.s = vTextureCoord.s + (sin(uTime+vTextureCoord.t*35.0)*0.015)+sin(uTime)/25.0;
-            redVcode.t = vTextureCoord.t + (cos(uTime+vTextureCoord.s*35.0)*0.015)+cos(uTime)/25.0;
+              redVcode.s = vTextureCoord.s + (sin(uTime+vTextureCoord.t*35.0)*0.015)+sin(uTime)/25.0;
+              redVcode.t = vTextureCoord.t + (cos(uTime+vTextureCoord.s*35.0)*0.015)+cos(uTime)/25.0;
             }else{
-            redVcode = vTextureCoord;
+              redVcode = vTextureCoord;
             }
             vec4 prev = texture2D(uSampler, redVcode); // 샘플러에서 받아오고 저장함..
             //prev = vec4(prev.rgba * vColor); // 컬러랑 더해줌
@@ -212,23 +212,8 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
                  texture2D(uSampler, redVcode + onePixel * vec2(-1,  1)) * u_kernel[6] +
                  texture2D(uSampler, redVcode + onePixel * vec2( 0,  1)) * u_kernel[7] +
                  texture2D(uSampler, redVcode + onePixel * vec2( 1,  1)) * u_kernel[8] ;
-                float kernelWeight =
-                 u_kernel[0] +
-                 u_kernel[1] +
-                 u_kernel[2] +
-                 u_kernel[3] +
-                 u_kernel[4] +
-                 u_kernel[5] +
-                 u_kernel[6] +
-                 u_kernel[7] +
-                 u_kernel[8] ;
-
-                if (kernelWeight <= 0.0) {
-                 kernelWeight = 1.0;
-                }
-
-                // Divide the sum by the weight but just use rgb
-                // we'll set alpha to 1.0
+                float kernelWeight =u_kernel[0] +u_kernel[1] +u_kernel[2] +u_kernel[3] +u_kernel[4] +u_kernel[5] +u_kernel[6] +u_kernel[7] +u_kernel[8] ;
+                if (kernelWeight <= 0.0) kernelWeight = 1.0;
                 gl_FragColor = vec4((colorSum / kernelWeight).rgb, 1.0);
             }
             else gl_FragColor = prev;
