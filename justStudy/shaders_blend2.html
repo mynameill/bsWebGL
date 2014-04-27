@@ -139,7 +139,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           vColor =aColor;
           vLightColor =aLightColor;
           vTextureCoord = aTextureCoord;
-          vec3 N = normalize(vec3(uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexNormal, 1.0)));
+          vec3 N = normalize(vec3(mat4(1,0,0,0,     0,1,0,0,          0,0,1,0,          0,0,0,1)*vec4(aVertexNormal, 1.0)));
           vec3 LD = normalize(uLightDirection);
           lambertTerm = dot(N,-LD);
           gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
@@ -181,7 +181,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           // 퐁쉐이더는-_- 당최 감이안오는군..
           // 음...가만보니..기본 노말정보를 미리 버텍스쉐이더에서 날려놓고...
           // 스페큘라관련 노말정보와 따로 관리해야....구현이되것군 -_-
-          vec3 N = normalize(vec3(uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexNormal, 1.0)));
+          vec3 N = normalize(vec3(mat4(1,0,0,0,     0,1,0,0,          0,0,1,0,          0,0,0,1)*vec4(aVertexNormal, 0.1)));
           vec3 LD = normalize(uLightDirection);
           lambertTerm = dot(N,-LD);
 
