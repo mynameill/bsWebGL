@@ -184,7 +184,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           lambertTerm = dot(N,-LD);
 
           vec3 EYE = normalize(vec3(uPMatrix*vec4(aVertexPosition, 1.0)));
-          vec3 REFLECT = reflect(LD,N);
+          vec3 REFLECT = reflect(-N,LD);
           float specular= max(dot(REFLECT,EYE),1.0);
 
           vec4 lightLevel = vec4(specular,specular, specular, 1.0);
