@@ -190,7 +190,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           float dot = dot(REFLECT,EYE);
           float max = max(dot,0.0);
           float specular= pow(max,1.0);
-          vec4 sColor = vec4(1.0, 3.0, 1.0, 1.0)*specular;
+          vec4 sColor = vec4(1.0, 3.0, 1.0, 1.0)*vec4(specular,specular,specular,1.0);
           vLightColor = aLightColor+sColor;
 
           }else{
