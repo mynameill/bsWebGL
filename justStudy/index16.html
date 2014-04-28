@@ -228,7 +228,7 @@ var  PROGRAMs={};
                         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
                         gl.drawElements(debugMode, ibo.numItems, gl.UNSIGNED_SHORT, 0);
                     } else {
-                        gl.uniform3fv(currentProgram.lightDirection, [Math.sin(time * 5), Math.cos(time * 5), Math.sin(time * 2)]);
+                        gl.uniform3fv(currentProgram.lightDirection, [Math.sin(time * 2), Math.cos(time * 2), Math.sin(time * 2)]);
 //                        gl.uniform3fv(currentProgram.lightDirection, [0.5, 0.5, 1.0]);
                         // 샘플러 등록
                         gl.activeTexture(gl.TEXTURE0);

@@ -178,16 +178,13 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           vTextureCoord = aTextureCoord;
 
           vec4 vertex = uPMatrix*vec4(aVertexPosition, 1.0);
-          // 퐁쉐이더는-_- 당최 감이안오는군..
-          // 음...가만보니..기본 노말정보를 미리 버텍스쉐이더에서 날려놓고...
-          // 스페큘라관련 노말정보와 따로 관리해야....구현이되것군 -_-
-         vec3 N = normalize(vec3(uPMatrix*vec4(aVertexNormal, 1.0)));
+          vec3 N = normalize(vec3(uPMatrix*vec4(aVertexNormal, 1.0)));
           vec3 LD = normalize(uLightDirection);
           lambertTerm = dot(N,-LD);
 
-          vec3 EYE = normalize(-vec3(vertex.xyz));
+          vec3 EYE = normalize(vec3(uPMatrix*vertex));
           vec3 REFLECT = reflect(LD,N);
-          float specular= pow(max(dot(REFLECT,EYE),0.0),1.0);
+          float specular= pow(max(dot(REFLECT,EYE),0.0),10.0);
 
           vec4 sprcularColor = vec4(1.0,2.0,2.0,1.0);
           sprcularColor = sprcularColor*specular;
