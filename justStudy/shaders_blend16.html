@@ -41,7 +41,6 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs" type="x-shader/x-vertex">
-     precision mediump float;
         attribute vec3 aVertexPosition;
         uniform vec4 aColor;
         varying vec4 vColor;
@@ -67,7 +66,9 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-fs-bitmap" type="x-shader/x-fragment">
-     precision mediump float;
+#ifdef GL_ES
+precision highp float;
+#endif
         uniform sampler2D uSampler; // 샘플러 상수로 선언하고
         varying vec2 vTextureCoord; // 텍스트 코디네이터 정보..즉 유브이가됨...
         varying vec4 vColor;
@@ -110,7 +111,9 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs-bitmap" type="x-shader/x-vertex">
-     precision mediump float;
+#ifdef GL_ES
+precision highp float;
+#endif
         attribute vec3 aVertexPosition;
         attribute vec2 aTextureCoord;
         attribute vec3 aVertexNormal;
@@ -149,7 +152,9 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs-bitmap-phong" type="x-shader/x-vertex">
-     precision mediump float;
+#ifdef GL_ES
+precision highp float;
+#endif
         attribute vec3 aVertexPosition;
         attribute vec2 aTextureCoord;
         attribute vec3 aVertexNormal;
@@ -179,12 +184,19 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
         void main(void) {
           vColor =aColor;
           vTextureCoord = aTextureCoord;
+
           vec3 N = normalize(vec3(uPMatrix*vec4(aVertexNormal, 1.0)));
           vec3 LD = normalize(uLightDirection);
           lambertTerm = dot(N,-LD);
 
-        vLightColor = aLightColor;
+      vec3 EYE = normalize(vec3(uPMatrix*vec4(aVertexPosition, 1.0)));
+          vec3 REFLECT = reflect(LD,N);
+          float specular= pow(max(dot(REFLECT,EYE),0.0),0.5);
 
+
+          vec4 sColor = vec4(1.0*specular, 1.0*specular, 1.0*specular, 1.0);
+          vLightColor = aLightColor+sColor;
+          vLightColor.a = 1.0;
 
           gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
         }
