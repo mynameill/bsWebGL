@@ -193,12 +193,10 @@ precision highp float;
           vec3 EYE = normalize(aVertexPosition);
           vec3 REFLECT = reflect(LD,N);
           float dot = dot(REFLECT,EYE);
-           float max = max(dot,0.0);
+          float max = max(dot,0.0);
           float specular= pow(max,1.0);
-
-
           vec4 sColor = vec4(1.0, 1.0, 1.0, 1.0);
-          vLightColor = aLightColor+sColor;
+          vLightColor = vec4(1.0,1.0,1.0,1.0)+sColor;
           vLightColor.a = 1.0;
           }else{
           vLightColor = aLightColor;
