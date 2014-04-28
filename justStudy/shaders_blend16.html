@@ -139,9 +139,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           vColor =aColor;
           vLightColor =aLightColor;
           vTextureCoord = aTextureCoord;
-          vec4 imsiN = vec4(aVertexNormal, 0.1);
-          vec4 imsi = uPMatrix*imsiN;
-          vec3 N = normalize(vec3(imsi.x,imsi.y, imsi.z ));
+          vec3 N = normalize(vec3(uPMatrix*vec4(aVertexNormal, 1.0)));
           vec3 LD = normalize(uLightDirection);
           lambertTerm = dot(N,-LD);
           gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
