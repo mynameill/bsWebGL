@@ -188,7 +188,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 
           vec4 sColor = vec4(1.0, 2.0, 2.0, 1.0);
           sColor = sColor*specular;
-          vLightColor = aLightColor*sColor;
+          vLightColor = sColor;
           vLightColor.a = 1.0;
 
           gl_Position =uPMatrix*cal(uCposition,uCrotation)*cal(uPosition,uRotation)*vec4(aVertexPosition, 1.0);
