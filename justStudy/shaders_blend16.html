@@ -41,6 +41,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs" type="x-shader/x-vertex">
+     precision mediump float;
         attribute vec3 aVertexPosition;
         uniform vec4 aColor;
         varying vec4 vColor;
@@ -66,9 +67,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-fs-bitmap" type="x-shader/x-fragment">
-#ifdef GL_ES
-precision highp float;
-#endif
+     precision mediump float;
         uniform sampler2D uSampler; // 샘플러 상수로 선언하고
         varying vec2 vTextureCoord; // 텍스트 코디네이터 정보..즉 유브이가됨...
         varying vec4 vColor;
@@ -111,9 +110,7 @@ precision highp float;
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs-bitmap" type="x-shader/x-vertex">
-#ifdef GL_ES
-precision highp float;
-#endif
+     precision mediump float;
         attribute vec3 aVertexPosition;
         attribute vec2 aTextureCoord;
         attribute vec3 aVertexNormal;
@@ -152,9 +149,7 @@ precision highp float;
 </script>
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-vs-bitmap-phong" type="x-shader/x-vertex">
-#ifdef GL_ES
-precision highp float;
-#endif
+     precision mediump float;
         attribute vec3 aVertexPosition;
         attribute vec2 aTextureCoord;
         attribute vec3 aVertexNormal;
@@ -195,11 +190,11 @@ precision highp float;
           float dot = dot(REFLECT,EYE);
           float max = max(dot,0.0);
           float specular= pow(max,1.0);
-          vec4 sColor = vec4(1.0, 1.0, 1.0, 1.0);
-          vLightColor = vec4(1.0,1.0,1.0,1.0)+sColor;
-          vLightColor.a = 1.0;
+          vec4 sColor = vec4(1.0, 3.0, 1.0, 1.0)*specular;
+          vLightColor = aLightColor+sColor;
+
           }else{
-          vLightColor = aLightColor;
+            vLightColor = aLightColor;
           }
 
 
