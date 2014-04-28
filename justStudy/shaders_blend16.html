@@ -67,8 +67,8 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-fs-bitmap" type="x-shader/x-fragment">
         precision mediump float;
-        uniform sampler2D uSampler; // 샘플러 상수로 선언하고
-        varying vec2 vTextureCoord; // 텍스트 코디네이터 정보..즉 유브이가됨...
+        uniform sampler2D uSampler;
+        varying vec2 vTextureCoord;
         varying vec4 vColor;
         varying vec4 vLightColor;
         varying float lambertTerm;
@@ -149,8 +149,8 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-fs-filter" type="x-shader/x-fragment">
         precision mediump float;
-        uniform sampler2D uSampler; // 샘플러 상수로 선언하고
-        varying vec2 vTextureCoord; // 텍스트 코디네이터 정보..즉 유브이가됨...
+        uniform sampler2D uSampler;
+        varying vec2 vTextureCoord;
         varying vec4 vColor;
 
         uniform float uFilter;
