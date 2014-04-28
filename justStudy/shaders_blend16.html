@@ -177,17 +177,15 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           vColor =aColor;
           vTextureCoord = aTextureCoord;
 
-
           vec3 N = normalize(vec3(uPMatrix*vec4(aVertexNormal, 1.0)));
           vec3 LD = normalize(uLightDirection);
           lambertTerm = dot(N,-LD);
 
           vec3 EYE = normalize(vec3(uPMatrix*vec4(aVertexPosition, 1.0)));
           vec3 REFLECT = reflect(LD,N);
-          float specular= pow(max(dot(REFLECT,EYE),0.0),1.0);
+          float specular= max(dot(REFLECT,EYE),1.0);
 
-          vec4 sColor = vec4(1.0* specular, 2.0* specular, 2.0* specular, 1.0);
-
+          vec4 sColor = vec4(1.0*specular, 2.0*specular, 2.0*specular, 1.0);
           vLightColor = aLightColor+sColor;
           vLightColor.a = 1.0;
 
