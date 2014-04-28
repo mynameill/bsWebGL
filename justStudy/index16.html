@@ -95,7 +95,7 @@ bs(function() {
         bs.Dom('#lightMode').S('change', function($e) {
             var t=this.selectedOptions[0].innerHTML
             if(t=="고라이드") t = PROGRAMs['bitmapProgram']
-            if(t=="퐁") t = PROGRAMs['bitmapPhongProgram']
+            if(t=="퐁") t = PROGRAMs['bitmapProgram']
             for(var i=0; i < max; i++) testObj[i].material.program=t
         })
     }, 'shaders_blend16.html')
@@ -174,7 +174,7 @@ var  PROGRAMs={};
             checkWebGL($canvasID)
             setBaseBuffers();
             setBitmapPrograms();
-            setBitmapPhongPrograms();
+//            setBitmapPhongPrograms();
             setBasePrograms();
             setFilterPrograms();
 
@@ -344,8 +344,7 @@ var  PROGRAMs={};
         texture.image.src=$src
         return {
             texture: texture,
-//            program: PROGRAMs['bitmapProgram']
-            program: PROGRAMs['bitmapPhongProgram']
+            program: PROGRAMs['bitmapProgram']
         };
     }
 
