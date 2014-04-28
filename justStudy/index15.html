@@ -51,12 +51,12 @@ bs(function() {
         var t=0
         for(var i=0; i < max; i++) {
             t=Math.floor(i % 7)
-            if(i % 6==0)  bs.GL.addTest('tri').material=mats[t]
-            else if(i % 6==1) bs.GL.addTest('rect').material=mats[t]
-            else if(i % 6==2)  bs.GL.addTest('teapot').material=mats[t]
-            else if(i % 6==3) bs.GL.addTest('tri').material=mats[t]
-            else if(i % 6==4)  bs.GL.addTest('rect').material=mats[t]
-            else bs.GL.addTest('teapot').material=mats[t]
+            if(i % 6==0)  bs.GL.Geo('tri').material=mats[t]
+            else if(i % 6==1) bs.GL.Geo('rect').material=mats[t]
+            else if(i % 6==2)  bs.GL.Geo('teapot').material=mats[t]
+            else if(i % 6==3) bs.GL.Geo('tri').material=mats[t]
+            else if(i % 6==4)  bs.GL.Geo('rect').material=mats[t]
+            else bs.GL.Geo('teapot').material=mats[t]
         }
 
         testObj[2].pos=[0, 0, -100]
@@ -106,7 +106,7 @@ bs(function() {
         },
         blendMode: {NORMAL: 0.0, ADD: 1.0, SUBTRACT: 2.0, MULTIPLY: 3.0, DARKEN: 4.0, COLOUR_BURN: 5.0, LINEAR_BURN: 6.0, LIGHTEN: 7.0, SCREEN: 8.0, COLOUR_DODGE: 9.0, LINEAR_DODGE: 10.0, OVERLAY: 11.0, SOFT_LIGHT: 12.0, HARD_LIGHT: 13.0, VIVID_LIGHT: 14.0, LINEAR_LIGHT: 15.0, PIN_LIGHT: 16.0, DIFFERENCE: 17.0, EXCLUSION: 18.0},
         // TODO 하이라키로 전향해야함
-        addTest: function($type) {
+        Geo: function($type) {
             var a=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 500 : 200
             var blend=bs.GL.blendMode.NORMAL
             switch($type) {
@@ -167,45 +167,46 @@ bs(function() {
                 gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
                 setFrameBuffer();
             })
+
             var max=0
             var time=0
-            var camera=bs.GL.camera
+            var c=bs.GL.camera
 
             function drawFrame() {
-//                lightColor.color = [Math.sin(time),Math.cos(time),Math.cos(time),1]
-                gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
                 resetMVP(currentProgram)
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
                 time+=0.01
+                gl.enable(gl.DEPTH_TEST);
                 for(var i=0, len=testObj.length; i < len; i++) {
-                    // 블렌딩모드는 매 객체 마다 달라질수 있으니....음...매번 비교분석해야하는군?
-                    gl.enable(gl.DEPTH_TEST);
-                    gl.enable(gl.BLEND);
-                    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // 알파블렌딩 기본
 
                     var t=testObj[i]
-                    var rx=time + i
-                    var ry=time + i + 1
-                    var rz=time + i + 2
+                    var rx=time + i,ry=time + i + 1,rz=time + i + 2
                     gl.useProgram(currentProgram=t.material.program);
+                    // 퍼스펙티브 매트릭스
                     gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
-
-                    gl.uniform3fv(currentProgram.cPosition, [camera.x, camera.y, camera.z]);
-                    if(camera.aniTest) gl.uniform3fv(currentProgram.cRotation, [0, 0, time]);
-
+                    // 카메라 설정
+                    gl.uniform3fv(currentProgram.cPosition, [c.x, c.y, c.z]);
+                    if(c.aniTest) gl.uniform3fv(currentProgram.cRotation, [0, 0, time]);
+                    // 오브젝트 포지션 로테이션설정
                     gl.uniform3fv(currentProgram.position, [t.pos[0], t.pos[1], t.pos[2]]);
                     gl.uniform3fv(currentProgram.rotation, [rx, ry, rz]);
-
+                    // 저컬러는 틴트로 사용되것고..
                     gl.uniform4fv(currentProgram.color, [t.color[0], t.color[1], t.color[2], t.alpha]);
+                    // 블렌딩모드는 매 객체 마다 달라질수 있으니....음...매번 비교분석해야하는군?
+                    gl.enable(gl.BLEND);
+                    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // 알파블렌딩 기본
                     gl.uniform1f(currentProgram.blend, t.blendMode);
+                    // 라이트 설정
                     gl.uniform4fv(currentProgram.lightColor, lightColor.color);
+                    //                lightColor.color = [Math.sin(time),Math.cos(time),Math.cos(time),0.01]
 
-                    var vbo=VBOs[t.type]
+                    // 지오 메트리 버텍스 버퍼는 일단 무조건 사용하게되니 걍 박고
+                    var vbo=VBOs[t.type], uvbo, ibo,vnbo
                     gl.enableVertexAttribArray(currentProgram.vertexPositionAttribute);
                     gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
                     gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, vbo.itemSize, gl.FLOAT, false, 0, 0);
 
+                    // TODO 프로그램렌더분기는 좀더 다양해 질수 있을듯함(먼가 꼬여있기도 하네 ㅋㅋㅋ)
                     if(t.material.program==PROGRAMs['colorProgram']) {
                         if(t.typeDraw=="gl.ELEMENT_ARRAY_BUFFER") {
                             var ibo=IBOs[t.type]
@@ -222,9 +223,9 @@ bs(function() {
                         gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);
                         gl.enableVertexAttribArray(currentProgram.vertexNormalAttribute);
                         if(t.typeDraw=="gl.ELEMENT_ARRAY_BUFFER") {
-                            var uvbo=UVBOs[t.type]
-                            var vnbo=VNBOs[t.type]
-                            var ibo=IBOs[t.type]
+                            uvbo=UVBOs[t.type]
+                            vnbo=VNBOs[t.type]
+                            ibo=IBOs[t.type]
                             gl.bindBuffer(gl.ARRAY_BUFFER, uvbo);
                             gl.vertexAttribPointer(currentProgram.textureCoordAttribute, uvbo.itemSize, gl.FLOAT, false, 0, 0);
                             gl.bindBuffer(gl.ARRAY_BUFFER, vnbo);
@@ -232,8 +233,8 @@ bs(function() {
                             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
                             gl.drawElements(gl.TRIANGLES, ibo.numItems, gl.UNSIGNED_SHORT, 0);
                         } else {
-                            var uvbo=UVBOs[t.type]
-                            var ibo=IBOs[t.type]
+                            uvbo=UVBOs[t.type]
+                            ibo=IBOs[t.type]
                             gl.bindBuffer(gl.ARRAY_BUFFER, uvbo);
                             gl.vertexAttribPointer(currentProgram.textureCoordAttribute, uvbo.itemSize, gl.FLOAT, false, 0, 0);
                             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
@@ -244,13 +245,12 @@ bs(function() {
             }
 
             function drawScene() {
+                gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, preFramebuffer);
                 drawFrame()
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-                gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
                 gl.useProgram(currentProgram=PROGRAMs['filterProgram']);
+
                 gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
                 gl.enableVertexAttribArray(currentProgram.vertexPositionAttribute);
                 gl.enableVertexAttribArray(currentProgram.textureCoordAttribute);
@@ -258,10 +258,11 @@ bs(function() {
                 gl.uniform1f(currentProgram.filter, bs.GL.filter);
                 gl.uniform1f(currentProgram.time, time);
 
-                // 버텍스 필터 온오프테스트
+                // 버텍스 필터 값 밀어넣기
                 currentProgram.useWave=gl.getUniformLocation(currentProgram, "uUseWave");
                 gl.uniform1f(currentProgram.useWave, useWave);
 
+                // 프레그먼트 필터 값 밀어넣기
                 if(bs.GL.filter==bs.GL.POST_EFFECT.PIXEL) {
                     currentProgram.pixelSize=gl.getUniformLocation(currentProgram, "pixelSize");
                     currentProgram.dimensions=gl.getUniformLocation(currentProgram, "dimensions");
@@ -284,10 +285,12 @@ bs(function() {
                     gl.uniform2f(currentProgram.u_textureSize, canvas.width, canvas.height);
                 }
 
+                // 텍스쳐 활성화하고 샘플러등록
                 gl.activeTexture(gl.TEXTURE0);
                 gl.bindTexture(gl.TEXTURE_2D, preTexture);
                 gl.uniform1i(currentProgram.samplerUniform, 0);
 
+                // 그려
                 var vbo=VBOs['rect'],uvbo=UVBOs['rect'],ibo=IBOs['rect']
                 gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
                 gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, vbo.itemSize, gl.FLOAT, false, 0, 0);
@@ -296,7 +299,6 @@ bs(function() {
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
                 gl.drawElements(gl.TRIANGLE_STRIP, ibo.numItems, gl.UNSIGNED_SHORT, 0);
             }
-
             window.requestAnimFrame=(function() {return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||function(callback) {window.setTimeout(callback, 1000 / 60);};})();
             (function loop() {requestAnimFrame(loop), drawScene()})();
         }
