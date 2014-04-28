@@ -80,12 +80,12 @@ bs(function() {
         var t=0
         for(var i=0; i < max; i++) {
             t=Math.floor(i % 7)
-            if(i % 6==0)  bs.GL.addTest('tri').material=mats[t]
-            else if(i % 6==1) bs.GL.addTest('rect').material=mats[t]
-            else if(i % 6==2)  bs.GL.addTest('teapot').material=mats[t]
-            else if(i % 6==3) bs.GL.addTest('tri').material=mats[t]
-            else if(i % 6==4)  bs.GL.addTest('rect').material=mats[t]
-            else bs.GL.addTest('teapot').material=mats[t]
+            if(i % 6==0)  bs.GL.Geo('tri').material=mats[t]
+            else if(i % 6==1) bs.GL.Geo('rect').material=mats[t]
+            else if(i % 6==2)  bs.GL.Geo('teapot').material=mats[t]
+            else if(i % 6==3) bs.GL.Geo('tri').material=mats[t]
+            else if(i % 6==4)  bs.GL.Geo('rect').material=mats[t]
+            else bs.GL.Geo('teapot').material=mats[t]
         }
 
         window.addEventListener('keydown', hd_keydown);
@@ -149,7 +149,7 @@ bs(function() {
         },
         blendMode: {NORMAL: 0.0, ADD: 1.0, SUBTRACT: 2.0, MULTIPLY: 3.0, DARKEN: 4.0, COLOUR_BURN: 5.0, LINEAR_BURN: 6.0, LIGHTEN: 7.0, SCREEN: 8.0, COLOUR_DODGE: 9.0, LINEAR_DODGE: 10.0, OVERLAY: 11.0, SOFT_LIGHT: 12.0, HARD_LIGHT: 13.0, VIVID_LIGHT: 14.0, LINEAR_LIGHT: 15.0, PIN_LIGHT: 16.0, DIFFERENCE: 17.0, EXCLUSION: 18.0},
         // TODO 하이라키로 전향해야함
-        addTest: function($type) {
+        Geo: function($type) {
             var a=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 500 : 200
             var blend=bs.GL.blendMode.NORMAL
             switch($type) {

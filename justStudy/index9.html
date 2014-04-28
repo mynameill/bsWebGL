@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=high-dpi"/>
     <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
     <style>body { margin: 0; padding: 0; }</style>
-    <script src="http://projectbs.github.io/bsJS/bsjs.0.3.js"></script>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.4.js"></script>
 </head>
 <body>
 <div id="test"></div>
@@ -30,11 +30,11 @@ bs(function() {
         // bs.Gl('rect') 처럼 되야겠군...
         for(var i=0; i < max; i++) {
             if(i % 3==0) {
-                bs.GL.addTest('rect')
+                bs.GL.Geo('rect')
             } else if(i % 3==1) {
-                bs.GL.addTest('tri')
+                bs.GL.Geo('tri')
             } else {
-                bs.GL.addTest('teapot')
+                bs.GL.Geo('teapot')
             }
         }
     }, 'shaders.html')
@@ -53,7 +53,7 @@ bs(function() {
             aniTest: true
         },
         // TODO 하이라키로 전향해야함
-        addTest: function($type) {
+        Geo: function($type) {
             var a = (bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 100 : 250
             switch($type){
                 case 'rect' :

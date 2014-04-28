@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,target-densitydpi=high-dpi"/>
     <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
     <style>body { margin: 0; padding: 0; }</style>
-    <script src="http://projectbs.github.io/bsJS/bsjs.0.3.js"></script>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.4.js"></script>
 </head>
 <body>
 <div id="test"></div>
@@ -40,12 +40,12 @@ bs(function() {
         var t = 0
         for(var i=0; i < max; i++) {
             t = Math.floor(i%7)
-            if(i % 6==0)  bs.GL.addTest('tri').material=mats[t]
-            else if(i % 6==1) bs.GL.addTest('rect').material=mats[t]
-            else if(i % 6==2)  bs.GL.addTest('teapot').material=mats[t]
-            else if(i % 6==3) bs.GL.addTest('tri').material=mats[t]
-            else if(i % 6==4)  bs.GL.addTest('rect').material=mats[t]
-            else bs.GL.addTest('teapot').material=mats[t]
+            if(i % 6==0)  bs.GL.Geo('tri').material=mats[t]
+            else if(i % 6==1) bs.GL.Geo('rect').material=mats[t]
+            else if(i % 6==2)  bs.GL.Geo('teapot').material=mats[t]
+            else if(i % 6==3) bs.GL.Geo('tri').material=mats[t]
+            else if(i % 6==4)  bs.GL.Geo('rect').material=mats[t]
+            else bs.GL.Geo('teapot').material=mats[t]
         }
 
         window.addEventListener('keydown', hd_keydown);
@@ -74,7 +74,7 @@ bs(function() {
             aniTest: true
         },
         // TODO 하이라키로 전향해야함
-        addTest: function($type) {
+        Geo: function($type) {
             var a=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? 100 : 250
             switch($type) {
                 case 'rect' :
