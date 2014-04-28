@@ -192,10 +192,11 @@ precision highp float;
   if(lambertTerm > 0.0) {
           vec3 EYE = normalize(aVertexPosition);
           vec3 REFLECT = reflect(LD,N);
-          float specular= pow(max(dot(REFLECT,EYE),0.0),0.5);
+          float dot = dot(REFLECT,EYE);
+          float specular= pow(max(dot,0.0),1.0);
 
 
-          vec4 sColor = vec4(1.0*specular, 1.0*specular, 1.0*specular, 1.0);
+          vec4 sColor = vec4(1.0, 1.0, 1.0, 1.0);
           vLightColor = aLightColor+sColor;
           vLightColor.a = 1.0;
           }else{
