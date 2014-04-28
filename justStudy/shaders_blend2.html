@@ -189,22 +189,17 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
         uniform sampler2D uSampler; // 샘플러 상수로 선언하고
         varying vec2 vTextureCoord; // 텍스트 코디네이터 정보..즉 유브이가됨...
         varying vec4 vColor;
-
         uniform float uFilter;
         float NORMAL; float GRAY; float SEPIA; float INVERT; float PIXEL;float BLUR; float SHAPEN;float SHAPENESS;float EDGE;float EDGE2;float EMBOSS;
         const mat3 sepiaMatrix = mat3(0.3588, 0.7044, 0.1368, 0.2990, 0.5870, 0.1140, 0.2392, 0.4696, 0.0912);
-
         uniform float uTime;
         uniform float uUseWave;
-
         // 픽셀
         uniform vec4 dimensions;
         uniform vec2 pixelSize;
-
         // 컨볼루션
         uniform vec2 u_textureSize;
         uniform float u_kernel[9];
-
         void main(void) {
             NORMAL = 0.0,GRAY = 1.0,SEPIA = 2.0,INVERT = 3.0,PIXEL = 4.0,BLUR = 5.0,SHAPEN = 6.0,SHAPENESS = 7.0,EDGE = 8.0,EDGE2 = 9.0,EMBOSS = 10.0;
             vec2 redVcode;
@@ -227,8 +222,16 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
              else if(uFilter > PIXEL ) {
                 vec2 onePixel = vec2(1.0, 1.0) / u_textureSize;
                 vec4 colorSum =
-                 texture2D(uSampler, redVcode + onePixel * vec2(-1, -1)) * u_kernel[0] +texture2D(uSampler, redVcode + onePixel * vec2( 0, -1)) * u_kernel[1] +texture2D(uSampler, redVcode + onePixel * vec2( 1, -1)) * u_kernel[2] +texture2D(uSampler, redVcode + onePixel * vec2(-1,  0)) * u_kernel[3] +texture2D(uSampler, redVcode + onePixel * vec2( 0,  0)) * u_kernel[4] +texture2D(uSampler, redVcode + onePixel * vec2( 1,  0)) * u_kernel[5] +texture2D(uSampler, redVcode + onePixel * vec2(-1,  1)) * u_kernel[6] +texture2D(uSampler, redVcode + onePixel * vec2( 0,  1)) * u_kernel[7] +texture2D(uSampler, redVcode + onePixel * vec2( 1,  1)) * u_kernel[8] ;
-                float kernelWeight =u_kernel[0] +u_kernel[1] +u_kernel[2] +u_kernel[3] +u_kernel[4] +u_kernel[5] +u_kernel[6] +u_kernel[7] +u_kernel[8] ;
+                 texture2D(uSampler, redVcode + onePixel * vec2(-1, -1)) * u_kernel[0] +
+                 texture2D(uSampler, redVcode + onePixel * vec2( 0, -1)) * u_kernel[1] +
+                 texture2D(uSampler, redVcode + onePixel * vec2( 1, -1)) * u_kernel[2] +
+                 texture2D(uSampler, redVcode + onePixel * vec2(-1,  0)) * u_kernel[3] +
+                 texture2D(uSampler, redVcode + onePixel * vec2( 0,  0)) * u_kernel[4] +
+                 texture2D(uSampler, redVcode + onePixel * vec2( 1,  0)) * u_kernel[5] +
+                 texture2D(uSampler, redVcode + onePixel * vec2(-1,  1)) * u_kernel[6] +
+                 texture2D(uSampler, redVcode + onePixel * vec2( 0,  1)) * u_kernel[7] +
+                 texture2D(uSampler, redVcode + onePixel * vec2( 1,  1)) * u_kernel[8];
+                float kernelWeight =u_kernel[0] +u_kernel[1] +u_kernel[2] +u_kernel[3] +u_kernel[4] +u_kernel[5] +u_kernel[6] +u_kernel[7] +u_kernel[8];
                 if (kernelWeight <= 0.0) kernelWeight = 1.0;
                 gl_FragColor = vec4((colorSum / kernelWeight).rgb, 1.0);
             }
