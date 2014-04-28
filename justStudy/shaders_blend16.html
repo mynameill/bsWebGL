@@ -141,7 +141,7 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
           vTextureCoord = aTextureCoord;
           vec4 imsiN = vec4(aVertexNormal, 0.1);
           vec4 imsi = uPMatrix*imsiN;
-          vec3 N = vec3(imsi);
+          vec3 N = vec3(imsi[0],imsi[1],imsi[2] );
           N = normalize(N);
           vec3 LD = normalize(uLightDirection);
           lambertTerm = dot(N,-LD);
