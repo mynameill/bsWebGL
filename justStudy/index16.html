@@ -31,8 +31,8 @@
     </div>
     <div style="background:#fff;">광원
         <select id="lightMode" style="font-size:20px">
-            <option>퐁</option>
             <option>고라이드</option>
+            <option>퐁</option>
         </select>
     </div>
 </div>
@@ -95,7 +95,7 @@ bs(function() {
         bs.Dom('#lightMode').S('change', function($e) {
             var t=this.selectedOptions[0].innerHTML
             if(t=="고라이드") t = PROGRAMs['bitmapProgram']
-            if(t=="퐁") t = PROGRAMs['bitmapProgram']
+            if(t=="퐁") t = PROGRAMs['bitmapPhongProgram']
             for(var i=0; i < max; i++) testObj[i].material.program=t
         })
     }, 'shaders_blend16.html')
@@ -174,7 +174,7 @@ var  PROGRAMs={};
             checkWebGL($canvasID)
             setBaseBuffers();
             setBitmapPrograms();
-//            setBitmapPhongPrograms();
+            setBitmapPhongPrograms();
             setBasePrograms();
             setFilterPrograms();
 
