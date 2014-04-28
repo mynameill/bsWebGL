@@ -205,36 +205,11 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
         void main(void) {
             NORMAL = 0.0,GRAY = 1.0,SEPIA = 2.0,INVERT = 3.0,PIXEL = 4.0,BLUR = 5.0,SHAPEN = 6.0,SHAPENESS = 7.0,EDGE = 8.0,EDGE2 = 9.0,EMBOSS = 10.0;
             vec2 redVcode;
-        redVcode = vTextureCoord;
+             redVcode = vTextureCoord;
             vec4 prev = texture2D(uSampler, redVcode); // 샘플러에서 받아오고 저장함..
             //prev = vec4(prev.rgba * vColor); // 컬러랑 더해줌
             gl_FragColor = prev; // 프레그먼크 컬러내보냄
-            if(uFilter == GRAY) gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.2126*gl_FragColor.r + 0.7152*gl_FragColor.g + 0.0722*gl_FragColor.b), 1.0);
-            else if(uFilter == INVERT)	gl_FragColor.rgb = mix( (vec3(1)-gl_FragColor.rgb) * gl_FragColor.a, gl_FragColor.rgb, 1.0 - 1.0);
-            else if(uFilter == SEPIA) gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb * sepiaMatrix, 1.0);
-            else if(uFilter == PIXEL) {
-                vec2 coord = redVcode;
-                vec2 size = dimensions.xy/pixelSize;
-                vec2 color = floor( ( redVcode * size ) ) / size + pixelSize/dimensions.xy * 0.5;
-                gl_FragColor = texture2D(uSampler, color);
-            }
-             else if(uFilter > PIXEL ) {
-                vec2 onePixel = vec2(1.0, 1.0) / u_textureSize;
-                vec4 colorSum =
-                 texture2D(uSampler, redVcode + onePixel * vec2(-1, -1)) * u_kernel[0] +
-                 texture2D(uSampler, redVcode + onePixel * vec2( 0, -1)) * u_kernel[1] +
-                 texture2D(uSampler, redVcode + onePixel * vec2( 1, -1)) * u_kernel[2] +
-                 texture2D(uSampler, redVcode + onePixel * vec2(-1,  0)) * u_kernel[3] +
-                 texture2D(uSampler, redVcode + onePixel * vec2( 0,  0)) * u_kernel[4] +
-                 texture2D(uSampler, redVcode + onePixel * vec2( 1,  0)) * u_kernel[5] +
-                 texture2D(uSampler, redVcode + onePixel * vec2(-1,  1)) * u_kernel[6] +
-                 texture2D(uSampler, redVcode + onePixel * vec2( 0,  1)) * u_kernel[7] +
-                 texture2D(uSampler, redVcode + onePixel * vec2( 1,  1)) * u_kernel[8];
-                float kernelWeight =u_kernel[0] +u_kernel[1] +u_kernel[2] +u_kernel[3] +u_kernel[4] +u_kernel[5] +u_kernel[6] +u_kernel[7] +u_kernel[8];
-                if (kernelWeight <= 0.0) kernelWeight = 1.0;
-                gl_FragColor = vec4((colorSum / kernelWeight).rgb, 1.0);
-            }
-            else gl_FragColor = prev;
+
         }
 </script>
 
