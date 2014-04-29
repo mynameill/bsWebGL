@@ -242,7 +242,7 @@ var PROGRAMs={};
                 gl.bindFramebuffer(gl.FRAMEBUFFER, mouseFramebuffer);
                 var color=new Uint8Array(1 * 1 * 4);
                 color[3]=1
-                gl.readPixels($e.x, canvas.height - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
+                gl.readPixels($e.x, gl.viewportHeight - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
                 prevMouseTarget = pickColorSet[color[0]][color[1]][color[2]]
                 if(prevMouseTarget){
                     prevMouseTarget.pos=[Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50]
@@ -259,7 +259,7 @@ var PROGRAMs={};
                 gl.bindFramebuffer(gl.FRAMEBUFFER, mouseFramebuffer);
                 var color=new Uint8Array(1 * 1 * 4);
                 color[3]=1
-                gl.readPixels($e.x, canvas.height - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
+                gl.readPixels($e.x, gl.viewportHeight - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
                 if(prevMouseTarget) prevMouseTarget.alpha = 1
                 prevMouseTarget = pickColorSet[color[0]][color[1]][color[2]]
                 if(prevMouseTarget) prevMouseTarget.alpha =0.5
