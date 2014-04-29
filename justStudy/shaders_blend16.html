@@ -5,7 +5,10 @@ FS : 레스터화된 픽셀포인트에 작용하며 정점값을 보간할수�
 -->
 <!--쉐이더 코드 입력합니다-->
 <script id="shader-fs" type="x-shader/x-fragment">
-        precision mediump float;
+
+#ifdef GL_ES
+precision highp float;
+#endif
         varying vec4 vColor;
         varying vec4 vLightColor;
         uniform float uBlend;

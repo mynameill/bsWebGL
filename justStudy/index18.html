@@ -37,7 +37,7 @@
         </select>
     </div>
     <div style="background:#fff;">최종선택정보
-        <div id="selectInfo">
+        <div id="selectInfo" >
             <li>tet</li>
             <li>test</li>
             <li>test</li>
@@ -73,11 +73,11 @@ bs(function() {
         var t=0
         for(var i=0; i < max; i++) {
             t=Math.floor(i % 7)
-            if(i % 6==0)  bs.GL.Geo('tri').material=mats[t]
-            else if(i % 6==1) bs.GL.Geo('rect').material=mats[t]
+            if(i % 6==0)  bs.GL.Geo('teapot').material=mats[t]
+            else if(i % 6==1) bs.GL.Geo('teapot').material=mats[t]
             else if(i % 6==2)  bs.GL.Geo('teapot').material=mats[t]
-            else if(i % 6==3) bs.GL.Geo('tri').material=mats[t]
-            else if(i % 6==4)  bs.GL.Geo('rect').material=mats[t]
+            else if(i % 6==3) bs.GL.Geo('teapot').material=mats[t]
+            else if(i % 6==4)  bs.GL.Geo('teapot').material=mats[t]
             else bs.GL.Geo('teapot').material=mats[t]
         }
 
@@ -128,15 +128,15 @@ var PROGRAMs={};
 
     (function() {
         var r=0, g=0, b=0;
-        var step=0
+        var step = 0
         setUniqueColor=function() {
-            if(step==0) {
-                if(b < 255) b++
-                else b=0, g++, step=1
+            if(step==0){
+                if(b<255) b++
+                else b=0,g++, step=1
             } else if(step==1) {
-                if(b < 255) b++
+                if(b<255) b++
                 else {
-                    if(g < 255) g++, b=0
+                    if(g<255) g++, b=0
                     else b=0
                 }
             }
@@ -204,7 +204,7 @@ var PROGRAMs={};
                         type: 'teapot',
                         color: [Math.random(), Math.random(), Math.random()],
                         alpha: 1,
-                        pos: [Math.sin(testObj.length) * 55, Math.cos(testObj.length) * 55, -10 - 0.3 * testObj.length],
+                        pos: [Math.sin(testObj.length) * 55, Math.cos(testObj.length) * 55, -10 - 2 * testObj.length],
                         material: null,
                         blendMode: blend
                     }
@@ -215,7 +215,7 @@ var PROGRAMs={};
             if(!pickColorSet[col.r])  pickColorSet[col.r]={}
             if(!pickColorSet[col.r][col.g])  pickColorSet[col.r][col.g]={}
             if(!pickColorSet[col.r][col.g][col.b])  pickColorSet[col.r][col.g][col.b]={}
-            pickColorSet[col.r][col.g][col.b]=obj
+            pickColorSet[col.r][col.g][col.b] = obj
             obj._pickColor=col;
             testObj.push(obj)
 
@@ -243,16 +243,16 @@ var PROGRAMs={};
                 var color=new Uint8Array(1 * 1 * 4);
                 color[3]=1
                 gl.readPixels($e.x, canvas.height - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
-                prevMouseTarget=pickColorSet[color[0]][color[1]][color[2]]
-                if(prevMouseTarget) {
+                prevMouseTarget = pickColorSet[color[0]][color[1]][color[2]]
+                if(prevMouseTarget){
                     prevMouseTarget.pos=[Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50]
                     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-                    var str=""
-                    str+="<li>pos : " + prevMouseTarget.pos + "</li>"
-                    str+="<li>alpha : " + prevMouseTarget.alpha + "</li>"
-                    str+="<li>type : " + prevMouseTarget.type + "</li>"
-                    bs.Dom('#selectInfo').S('html', str, 'font-size', 11)
+                    var str = ""
+                    str += "<li>pos : "+prevMouseTarget.pos+"</li>"
+                    str += "<li>alpha : "+prevMouseTarget.alpha+"</li>"
+                    str += "<li>type : "+prevMouseTarget.type+"</li>"
+                    bs.Dom('#selectInfo').S('html',str,'font-size',11)
                 }
             })
             bs.Dom('canvas').S('mousemove', function($e) {
@@ -260,9 +260,9 @@ var PROGRAMs={};
                 var color=new Uint8Array(1 * 1 * 4);
                 color[3]=1
                 gl.readPixels($e.x, canvas.height - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
-                if(prevMouseTarget) prevMouseTarget.alpha=1
-                prevMouseTarget=pickColorSet[color[0]][color[1]][color[2]]
-                if(prevMouseTarget) prevMouseTarget.alpha=0.5
+                if(prevMouseTarget) prevMouseTarget.alpha = 1
+                prevMouseTarget = pickColorSet[color[0]][color[1]][color[2]]
+                if(prevMouseTarget) prevMouseTarget.alpha =0.5
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             })
 
@@ -281,6 +281,7 @@ var PROGRAMs={};
 
                 if(bs.KEY.downed.q) c.rotationY+=Math.PI / 180
                 if(bs.KEY.downed.e) c.rotationY-=Math.PI / 180
+
 
 
                 resetMVP(currentProgram)
@@ -344,10 +345,12 @@ var PROGRAMs={};
                 }
 
 
-            }
 
+
+            }
             function drawMouse() {
                 // 마우스 구해!
+                debugMode=gl[bs.GL.debug]
                 gl.useProgram(currentProgram=PROGRAMs['colorProgram']);
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 gl.enable(gl.DEPTH_TEST);
@@ -375,15 +378,17 @@ var PROGRAMs={};
                     gl.drawElements(debugMode, ibo.numItems, gl.UNSIGNED_SHORT, 0);
                 }
             }
-
             function drawScene() {
-                var targetBuffer=mouseFramebuffer
-                var targetTexture=mouseTexture
+                var targetBuffer
+                var targetTexture
+
+                targetBuffer = mouseFramebuffer
+                targetTexture = mouseTexture
                 gl.bindFramebuffer(gl.FRAMEBUFFER, targetBuffer);
                 drawMouse()
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                targetBuffer=preFramebuffer
-                targetTexture=preTexture
+                targetBuffer = preFramebuffer
+                targetTexture = preTexture
                 gl.bindFramebuffer(gl.FRAMEBUFFER, targetBuffer);
                 drawFrame()
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -641,9 +646,15 @@ var PROGRAMs={};
     ///////////////////
     function setBaseBuffers() {
         var vs, is, cs
-        vs=[-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0]
+        vs=[ -1.0,  -1.0,  0.0,
+            1.0,  -1.0,  0.0,
+            1.0, 1.0,  0.0,
+            -1.0, 1.0,  0.0]
         is=[0, 1, 2, 0, 2, 3]
-        cs=[0, 0, 1, 0, 1, 1, 0, 1]
+        cs=[0.0, 0.0,
+            1.0, 0.0,
+            1.0, 1.0,
+            0.0, 1.0]
         makeBuffers('rect', vs, 3, is, 1, cs, 2)
         vs=[0, 1, 0, -1, -1, 0, 1, -1, 0]
         is=[0, 1, 2]
