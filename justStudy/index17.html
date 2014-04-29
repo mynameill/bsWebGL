@@ -1,7 +1,7 @@
 ﻿﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>모바일 쉐이더 작성 제한을 테스트해보자</title>
+    <title>마우스시전</title>
     <meta name="keywords" content="redcamel, webgl, bsjs"/>
     <meta name="description" content="redcamel, webgl, bsjs"/>
     <meta charset="utf-8"/>
@@ -36,7 +36,10 @@
         </select>
     </div>
 </div>
-<div id="test" style="position:absolute; left: 360px;color:#ffffff;background:#000">'space 애니 온오프'</div>
+<div id="test" style="position:absolute; left: 360px;color:#ffffff;background:#000">
+    <li>'AD WS RF 카메라이동'</li>
+    <li>'QE 카메라회전'</li>
+</div>
 <canvas id="canvas" style="border: none;background:#eee"></canvas>
 <script>
 var testObj=[]
@@ -70,15 +73,22 @@ bs(function() {
 
         testObj[2].pos=[0, 0, -100]
 
-        window.addEventListener('keydown', hd_keydown);
-        function hd_keydown($e) {
+        bs.Dom('body').S('mousemove',function($e){
             var camera=bs.GL.camera
-//            if($e.keyCode==65) camera.x--
-//            if($e.keyCode==68) camera.x++
-//            if($e.keyCode==87) camera.y++
-//            if($e.keyCode==83) camera.y--
-            if($e.keyCode==32) camera.aniTest= !camera.aniTest
-        }
+//            var a = $e.lx/1000
+//            var b = $e.ly/1000
+//            camera.rotationZ =a
+//            camera.rotationX =b
+        })
+
+
+        bs.Dom('body').S('mousedown',function($e){
+            var camera=bs.GL.camera
+//            var a = $e.lx/1000
+//            var b = $e.ly/1000
+//            camera.rotationZ =a
+//            camera.rotationX =b
+        })
 
         for(var i in bs.GL.blendMode) bs.Dom('#blendMode').S('html+','<option>'+i+'</option>');
         bs.Dom('#blendMode').S('@options')[0].selected = 'selected'
@@ -105,8 +115,6 @@ var  PROGRAMs={};
     var canvas, gl;
     var VBOs={}, IBOs={}, VBOs={}, UVBOs={}, VNBOs={}, VSs={}, FSs={}
 
-
-
     var pMatrix=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
     var lightColor={ color: [1.0, 1, 1, 1],position: [10, 10, 4]}
     var currentProgram
@@ -114,7 +122,16 @@ var  PROGRAMs={};
     var preTexture;
 
     bs.GL={
-        camera: {x: 0, y: 0, z: 0, aniTest: false},
+        camera: {
+            x: 0, y: 0, z: -100,
+            rotationX:0, rotationY:0, rotationZ:0
+        },
+        cameraController : {
+            //TODO
+            basic : {},
+            ISO : {},
+            walker : {}
+        },
         debug : "TRIANGLES",
 //        debug : "LINES",
         filter: 0.0,
@@ -189,6 +206,17 @@ var  PROGRAMs={};
             var c=bs.GL.camera
             var debugMode
             function drawFrame() {
+                if(bs.KEY.downed.w) c.z++
+                if(bs.KEY.downed.s) c.z--
+                if(bs.KEY.downed.a) c.x++
+                if(bs.KEY.downed.d) c.x--
+                if(bs.KEY.downed.r) c.y--
+                if(bs.KEY.downed.f) c.y++
+
+                if(bs.KEY.downed.q) c.rotationY+=Math.PI/180
+                if(bs.KEY.downed.e) c.rotationY-=Math.PI/180
+
+
                 resetMVP(currentProgram)
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 time+=0.01
@@ -202,7 +230,7 @@ var  PROGRAMs={};
                     gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
                     // 카메라 설정
                     gl.uniform3fv(currentProgram.cPosition, [c.x, c.y, c.z]);
-                    if(c.aniTest) gl.uniform3fv(currentProgram.cRotation, [0, 0, time]);
+                    gl.uniform3fv(currentProgram.cRotation, [c.rotationX, c.rotationY, c.rotationZ]);
                     // 오브젝트 포지션 로테이션설정
                     gl.uniform3fv(currentProgram.position, [t.pos[0], t.pos[1], t.pos[2]]);
                     gl.uniform3fv(currentProgram.rotation, [rx, ry, rz]);
