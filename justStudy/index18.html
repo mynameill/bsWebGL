@@ -260,8 +260,11 @@ var PROGRAMs={};
             })
             bs.Dom('canvas').S('mouseup', function($e) {
                 mouseDowned = false
-                prevMouseTarget.alpha =1
-                prevMouseTarget = null
+                if(prevMouseTarget){
+                    prevMouseTarget.alpha =1
+                    prevMouseTarget = null
+                }
+
             })
             bs.Dom('canvas').S('mousemove', function($e) {
                 gl.bindFramebuffer(gl.FRAMEBUFFER, mouseFramebuffer);
