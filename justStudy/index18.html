@@ -306,6 +306,7 @@ var PROGRAMs={};
                 time+=0.01
                 gl.enable(gl.DEPTH_TEST);
                 debugMode=gl[bs.GL.debug]
+                c.z = 500 * Math.sin(time/5)
                 for(var i=0, len=testObj.length; i < len; i++) {
                     var t=testObj[i]
                     var rx=i, ry=i + 1, rz=i
