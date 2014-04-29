@@ -1,7 +1,7 @@
 ﻿﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>마우스시전</title>
+    <title>카메라 이동</title>
     <meta name="keywords" content="redcamel, webgl, bsjs"/>
     <meta name="description" content="redcamel, webgl, bsjs"/>
     <meta charset="utf-8"/>
@@ -42,6 +42,8 @@
 </div>
 <canvas id="canvas" style="border: none;background:#eee"></canvas>
 <script>
+//TODO 카메라 바보같이 짜놨군 -_-
+//카메라는 1개니까 걍 CPU에서 계산해서 한방에 넘겨도 될듯..그럼...지퓨부하도 주는거 아닌가?
 var testObj=[]
 var useWave=0
 bs(function() {
@@ -123,7 +125,7 @@ var  PROGRAMs={};
 
     bs.GL={
         camera: {
-            x: 0, y: 0, z: -100,
+            x: 0, y: 0, z: 0,
             rotationX:0, rotationY:0, rotationZ:0
         },
         cameraController : {
@@ -224,7 +226,7 @@ var  PROGRAMs={};
                 debugMode =gl[bs.GL.debug]
                 for(var i=0, len=testObj.length; i < len; i++) {
                     var t=testObj[i]
-                    var rx=time + i,ry=time + i + 1,rz=time + i + 2
+                    var rx= i,ry=i + 1,rz=i
                     gl.useProgram(currentProgram=t.material.program);
                     // 퍼스펙티브 매트릭스
                     gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
