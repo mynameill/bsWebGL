@@ -125,6 +125,7 @@ var PROGRAMs={};
     var setUniqueColor;
     var pickColorSet={};
     var prevMouseTarget
+    var mouseDowned = false;
 
     (function() {
         var r=0, g=0, b=0;
@@ -237,15 +238,17 @@ var PROGRAMs={};
                 setFrameBuffer();
                 setMouseBuffer();
             })
-
+            var color=new Uint8Array(1 * 1 * 4);
             bs.Dom('canvas').S('mousedown', function($e) {
+                mouseDowned = true
                 gl.bindFramebuffer(gl.FRAMEBUFFER, mouseFramebuffer);
                 var color=new Uint8Array(1 * 1 * 4);
                 color[3]=1
                 gl.readPixels($e.x, gl.viewportHeight - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
                 prevMouseTarget = pickColorSet[color[0]][color[1]][color[2]]
+                prevMouseTarget.alpha = 0.5
                 if(prevMouseTarget){
-                    prevMouseTarget.pos=[Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50]
+//                    prevMouseTarget.pos=[Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50]
                     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
                     var str = ""
@@ -255,14 +258,25 @@ var PROGRAMs={};
                     bs.Dom('#selectInfo').S('html',str,'font-size',11)
                 }
             })
+            bs.Dom('canvas').S('mouseup', function($e) {
+                mouseDowned = false
+                prevMouseTarget.alpha =1
+                prevMouseTarget = null
+            })
             bs.Dom('canvas').S('mousemove', function($e) {
                 gl.bindFramebuffer(gl.FRAMEBUFFER, mouseFramebuffer);
-                var color=new Uint8Array(1 * 1 * 4);
+
+                // TODO 축에 맞춰서 할려면 어떻게 계산해야하지!!!!
                 color[3]=1
                 gl.readPixels($e.x, gl.viewportHeight - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
-                if(prevMouseTarget) prevMouseTarget.alpha = 1
-                prevMouseTarget = pickColorSet[color[0]][color[1]][color[2]]
-                if(prevMouseTarget) prevMouseTarget.alpha =0.5
+                if(prevMouseTarget) {
+                    if(mouseDowned) {
+                        var dx = $e.mx
+                        var dy = $e.my
+                        prevMouseTarget.pos[0] += dx/(bs.GL.camera.z-prevMouseTarget.pos[2])*Math.sqrt(bs.GL.camera.z-prevMouseTarget.pos[2]*2)
+                        prevMouseTarget.pos[1] += -dy/(bs.GL.camera.z-prevMouseTarget.pos[2])*Math.sqrt(bs.GL.camera.z-prevMouseTarget.pos[2]*2)
+                    }
+                }
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             })
 
