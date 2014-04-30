@@ -37,7 +37,7 @@
         </select>
     </div>
     <div style="background:#fff;">최종선택정보
-        <div id="selectInfo" >
+        <div id="selectInfo">
             <li>tet</li>
             <li>test</li>
             <li>test</li>
@@ -124,19 +124,19 @@ var PROGRAMs={};
     var setUniqueColor;
     var pickColorSet={};
     var prevMouseTarget
-    var mouseDowned = false;
+    var mouseDowned=false;
 
     (function() {
         var r=0, g=0, b=0;
-        var step = 0
+        var step=0
         setUniqueColor=function() {
-            if(step==0){
-                if(b<255) b++
-                else b=0,g++, step=1
+            if(step==0) {
+                if(b < 255) b++
+                else b=0, g++, step=1
             } else if(step==1) {
-                if(b<255) b++
+                if(b < 255) b++
                 else {
-                    if(g<255) g++, b=0
+                    if(g < 255) g++, b=0
                     else b=0
                 }
             }
@@ -215,7 +215,7 @@ var PROGRAMs={};
             if(!pickColorSet[col.r])  pickColorSet[col.r]={}
             if(!pickColorSet[col.r][col.g])  pickColorSet[col.r][col.g]={}
             if(!pickColorSet[col.r][col.g][col.b])  pickColorSet[col.r][col.g][col.b]={}
-            pickColorSet[col.r][col.g][col.b] = obj
+            pickColorSet[col.r][col.g][col.b]=obj
             obj._pickColor=col;
             testObj.push(obj)
 
@@ -239,29 +239,29 @@ var PROGRAMs={};
             })
             var color=new Uint8Array(1 * 1 * 4);
             bs.Dom('canvas').S('mousedown', function($e) {
-                mouseDowned = true
+                mouseDowned=true
                 gl.bindFramebuffer(gl.FRAMEBUFFER, mouseFramebuffer);
                 var color=new Uint8Array(1 * 1 * 4);
                 color[3]=1
                 gl.readPixels($e.x, gl.viewportHeight - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
-                prevMouseTarget = pickColorSet[color[0]][color[1]][color[2]]
-                prevMouseTarget.alpha = 0.5
-                if(prevMouseTarget){
+                prevMouseTarget=pickColorSet[color[0]][color[1]][color[2]]
+                prevMouseTarget.alpha=0.5
+                if(prevMouseTarget) {
 //                    prevMouseTarget.pos=[Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50]
                     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-                    var str = ""
-                    str += "<li>pos : "+prevMouseTarget.pos+"</li>"
-                    str += "<li>alpha : "+prevMouseTarget.alpha+"</li>"
-                    str += "<li>type : "+prevMouseTarget.type+"</li>"
-                    bs.Dom('#selectInfo').S('html',str,'font-size',11)
+                    var str=""
+                    str+="<li>pos : " + prevMouseTarget.pos + "</li>"
+                    str+="<li>alpha : " + prevMouseTarget.alpha + "</li>"
+                    str+="<li>type : " + prevMouseTarget.type + "</li>"
+                    bs.Dom('#selectInfo').S('html', str, 'font-size', 11)
                 }
             })
             bs.Dom('canvas').S('mouseup', function($e) {
-                mouseDowned = false
-                if(prevMouseTarget){
-                    prevMouseTarget.alpha =1
-                    prevMouseTarget = null
+                mouseDowned=false
+                if(prevMouseTarget) {
+                    prevMouseTarget.alpha=1
+                    prevMouseTarget=null
                 }
 
             })
@@ -273,10 +273,10 @@ var PROGRAMs={};
                 gl.readPixels($e.x, gl.viewportHeight - $e.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, color)
                 if(prevMouseTarget) {
                     if(mouseDowned) {
-                        var dx = $e.mx
-                        var dy = $e.my
-                        prevMouseTarget.pos[0] += dx/(bs.GL.camera.z-prevMouseTarget.pos[2])*Math.sqrt(bs.GL.camera.z-prevMouseTarget.pos[2]*2)
-                        prevMouseTarget.pos[1] += -dy/(bs.GL.camera.z-prevMouseTarget.pos[2])*Math.sqrt(bs.GL.camera.z-prevMouseTarget.pos[2]*2)
+                        var dx=$e.mx
+                        var dy=$e.my
+                        prevMouseTarget.pos[0]+=dx / (bs.GL.camera.z - prevMouseTarget.pos[2]) * Math.sqrt(bs.GL.camera.z - prevMouseTarget.pos[2] * 2)
+                        prevMouseTarget.pos[1]+=-dy / (bs.GL.camera.z - prevMouseTarget.pos[2]) * Math.sqrt(bs.GL.camera.z - prevMouseTarget.pos[2] * 2)
                     }
                 }
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -299,13 +299,12 @@ var PROGRAMs={};
                 if(bs.KEY.downed.e) c.rotationY-=Math.PI / 180
 
 
-
                 resetMVP(currentProgram)
                 gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
                 time+=0.01
                 gl.enable(gl.DEPTH_TEST);
                 debugMode=gl[bs.GL.debug]
-                c.z = 500 * Math.sin(time/5)
+                c.z=500 * Math.sin(time / 5)
 
                 for(var i=0, len=testObj.length; i < len; i++) {
                     var t=testObj[i]
@@ -363,9 +362,8 @@ var PROGRAMs={};
                 }
 
 
-
-
             }
+
             function drawMouse() {
                 // 마우스 구해!
                 debugMode=gl[bs.GL.debug]
@@ -396,17 +394,18 @@ var PROGRAMs={};
                     gl.drawElements(debugMode, ibo.numItems, gl.UNSIGNED_SHORT, 0);
                 }
             }
+
             function drawScene() {
                 var targetBuffer
                 var targetTexture
 
-                targetBuffer = mouseFramebuffer
-                targetTexture = mouseTexture
+                targetBuffer=mouseFramebuffer
+                targetTexture=mouseTexture
                 gl.bindFramebuffer(gl.FRAMEBUFFER, targetBuffer);
                 drawMouse()
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                targetBuffer = preFramebuffer
-                targetTexture = preTexture
+                targetBuffer=preFramebuffer
+                targetTexture=preTexture
                 gl.bindFramebuffer(gl.FRAMEBUFFER, targetBuffer);
                 drawFrame()
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -563,6 +562,19 @@ var PROGRAMs={};
         canvas.width=canvas.height=0
         gl=canvas.getContext('webgl')||canvas.getContext("experimental-webgl")||canvas.getContext("webkit-3d")||canvas.getContext("moz-webgl")
 //        gl.antialias=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? false : true
+        console.log(window.WebGLRenderingContext)
+//        console.log(navigator.product)
+//        console.log(navigator.userAgent)
+
+        console.log(gl.getContextAttributes()) // 현재 컨텍스트 활성화 정보 알아오는게고..
+        console.log(gl.getParameter(gl.VERSION))
+        console.log(gl.getParameter(gl.SHADING_LANGUAGE_VERSION))
+        console.log(gl.getParameter(gl.VENDOR))
+        console.log(gl.getParameter(gl.RENDERER))
+        console.log(gl.getContextAttributes().antialias ? 'Available' : 'Not available')
+
+
+        // 이걸 일일이 다찍어보면서 체크해야 크로노스...썅ㅁㄴ러ㅣ;ㅓㅏㅁㄴㅇㄹ
         if(!gl) return bs.Dom('<div>webGL을 지원하지 않는 환경입니다.</div>').S('<', 'body', 'position', 'absolute', 'top', 200)
         else console.log('WEBGL을 지원합니다. 초기화를 시작합니다.'), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
     }
@@ -664,10 +676,10 @@ var PROGRAMs={};
     ///////////////////
     function setBaseBuffers() {
         var vs, is, cs
-        vs=[ -1.0,  -1.0,  0.0,
-            1.0,  -1.0,  0.0,
-            1.0, 1.0,  0.0,
-            -1.0, 1.0,  0.0]
+        vs=[ -1.0, -1.0, 0.0,
+            1.0, -1.0, 0.0,
+            1.0, 1.0, 0.0,
+            -1.0, 1.0, 0.0]
         is=[0, 1, 2, 0, 2, 3]
         cs=[0.0, 0.0,
             1.0, 0.0,
