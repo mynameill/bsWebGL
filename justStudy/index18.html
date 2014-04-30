@@ -562,7 +562,7 @@ var PROGRAMs={};
         canvas=document.getElementById($id)
         canvas.width=canvas.height=0
         gl=canvas.getContext('webgl')||canvas.getContext("experimental-webgl")||canvas.getContext("webkit-3d")||canvas.getContext("moz-webgl")
-        gl.antialias=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? false : true
+//        gl.antialias=(bs.DETECT.device=='tablet'||bs.DETECT.device=='mobile') ? false : true
         if(!gl) return bs.Dom('<div>webGL을 지원하지 않는 환경입니다.</div>').S('<', 'body', 'position', 'absolute', 'top', 200)
         else console.log('WEBGL을 지원합니다. 초기화를 시작합니다.'), gl.clearColor(0.0, 0.0, 0.0, 1.0), gl.enable(gl.DEPTH_TEST);
     }
