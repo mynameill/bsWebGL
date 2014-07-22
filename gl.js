@@ -216,8 +216,9 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		if(arg.length%2) return k == null ? console.log('존재하지않는 값입니다!') : ((typeof this[k] == 'function') ? this[k]() : this[k])
 		return this
 	}
+	//TODO parent처리와 각종 child관련 매서드 추가해야됨
 	function parent(v){v == 'root' ? (GL.children.push(this)) : v.children.push(this)}
-	function addChild(v){this ==GL ? GL.children.push(v) : this.children.push(v)}
+	function child(v){this == GL ? GL.children.push(v) : this.children.push(v)}
 	var GL, baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}}, msgF=' 아이디를 가진 캔버스가없습니다. 생성후 시도하세요!!', msgF2='WEBGL을 지원하지 않는 브라우져입니다'
 	window.BGL=GL={
 		init:function($id){
@@ -338,7 +339,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			fn['setEvent']=function($type, v){
 				if(v) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
 				else return this.evt[$type];
-			}, fn['<']=parent, fn['>']=addChild,fn['setRotationByMat4']=function(m){this.x = m[12],this.y = m[13],this.z = m[14],this.rotationX = -Math.atan2(m[6],m[10]),this.rotationY = Math.asin(m[2]),this.rotationZ = -Math.atan2(m[1],m[0])}
+			}, fn['<']=parent, fn['>']=child,fn['setRotationByMat4']=function(m){this.x = m[12],this.y = m[13],this.z = m[14],this.rotationX = -Math.atan2(m[6],m[10]),this.rotationY = Math.asin(m[2]),this.rotationZ = -Math.atan2(m[1],m[0])}
 			// TODO fn['filter'], fn['blendMode']
 			return function($k){ return VBs[$k] ? new Mesh($k) : null}
 		})(),
@@ -419,7 +420,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		debug:{triangles:0, particles:0, particlesType:0, fps:0, aFps:0, _tfps:0, frame:0},
 		fog:{use:0,density:1.0,r:255.0,g:255.0,b:255.0}
 	},
-	GL['skybox']=function($t){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=addChild,
+	GL['skybox']=function($t){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child,
 	mat4=GL.mat4,
 	mat4.create=function(){var r=new Float32Array(16);return r[0]=1, r[1]=0, r[2]=0, r[3]=0, r[4]=0, r[5]=1, r[6]=0, r[7]=0, r[8]=0, r[9]=0, r[10]=1, r[11]=0, r[12]=0, r[13]=0, r[14]=0, r[15]=1, r},
 	mat4.identity=function(t){return t[0]=1, t[1]=0, t[2]=0, t[3]=0, t[4]=0, t[5]=1, t[6]=0, t[7]=0, t[8]=0, t[9]=0, t[10]=1, t[11]=0, t[12]=0, t[13]=0, t[14]=0, t[15]=1, t},
