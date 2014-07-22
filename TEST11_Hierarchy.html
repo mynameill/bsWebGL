@@ -1,0 +1,76 @@
+﻿﻿<html lang="ko">
+<head>
+    <title>Hierarchy Draft Demo</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs"/>
+    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
+
+        p, li, div, b {
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+<script>
+    bs.debug(0), bs.repository('./');
+    bs(function(){
+        bs.require(function(data){
+            bs.GL=data.GL
+            var BGL=bs.GL
+            bs.js(function(){
+                if(BGL.init('glCanvas')) inits()
+                else console.log('초기화 실패')
+                function inits(){
+                    var map=bs.GL.Material('sky').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+                    bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
+                    var cubeMap=bs.GL.Material('cube').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+                    var colorLight2=bs.GL.Material('colorLight').S('r', 255, 'g', 255, 'b', 255),colorLight3=bs.GL.Material('colorLight').S('r', 255, 'g', Math.random(), 'b', 255)
+                    var i=BGL.mobile ? 40 : 200
+                    while(i--)
+                        bs.GL.Mesh('box').S(
+                                '<', 'root',
+                                'material', cubeMap,
+                                'scaleX', 50, 'scaleY', 50, 'scaleZ', 50,
+                                'z', bs.rand(-1000, 1000), 'y', bs.rand(-1000, 1000), 'x', bs.rand(-1000, 1000),
+                                'rotationX', Math.random()*Math.PI*2, 'rotationY', Math.random()*Math.PI*2, 'rotationZ', Math.random()*Math.PI*2,
+                                '>', bs.GL.Mesh('box').S('material', colorLight2, 'scaleX', 25, 'scaleY', 25, 'scaleZ', 25, 'z', 0, 'x', -100, 'y', 0,
+                                        '>', bs.GL.Mesh('box').S('material', colorLight3, 'scaleX', 15, 'scaleY', 15, 'scaleZ', 15, 'z', 0, 'x', 100, 'y', 100,
+                                                '>', bs.GL.Mesh('box').S('material', colorLight3, 'scaleX', 15, 'scaleY', 15, 'scaleZ', 15, 'z', 0, 'x', 100, 'y', 100, 'rotationZ', 20,
+                                                        '>', bs.GL.Mesh('box').S('material', colorLight3, 'scaleX', 15, 'scaleY', 15, 'scaleZ', 15, 'z', 0, 'x', -100, 'y', 100)
+                                                    )
+                                            )
+                                    ),
+                                '>', bs.GL.Mesh('box').S('material', colorLight2, 'scaleX', 25, 'scaleY', 25, 'scaleZ', 25, 'z', 0, 'x', 100, 'y', 0))
+                    var time=0
+                    bs.ANI.ani({
+                        ANI:function(){
+                            time+=0.01
+                            var list=bs.GL.S('children'), i=list.length, t0,t1,j
+                            while(i--){
+                                t0=list[i],t0.rotationY+=0.001*5,t0.rotationX+=0.001*5,t0.rotationZ+=0.001*5
+                                j=t0.children.length
+                                while(j--) t1=t0.children[j], t1.rotationY+=0.001*15, t1.rotationX+=0.001*15, t1.rotationZ+=0.001*15
+                            }
+                            bs.GL.directionalLight.direction=[ Math.sin(time) == 0 ? 0.01 : Math.sin(time*2), Math.cos(time) == 0 ? 0.01 : Math.cos(time*1), -0.5]
+                        }
+                    })
+                }
+            }, 'shaders.js')
+        }, 'gl.js')
+    })
+</script>
+</body>
+</html>

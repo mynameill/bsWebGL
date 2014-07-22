@@ -1,0 +1,91 @@
+
+<div style="width:100%;">
+    <div style="background:#111;color:#888;margin:10px;padding:8px; width:230px; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333;float:right">
+        <div class="meshInfo">Mesh Click - View Mesh Info</div>
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333;float:right">
+             <b style="color:#fff;line-height:25px">filter</b>
+            <li>use <input type="checkbox" class="filter"></li>
+            <li>mono <input type="checkbox" class="filter"> / sepia <input
+                    type="checkbox" class="filter"> / invert <input type="checkbox" class="filter"></li>
+            <li> use Bloom <input type="checkbox" class="filter"></li>
+            <li> use FXAA <input type="checkbox" class="filter"></li>
+            <li> use Anaglyph(adapt Only) <input type="checkbox" class="filter"></li>
+            <li class="filter"> adapt List</li>
+        </div>
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333;float:right">
+            <b style="color:#fff;line-height:25px">camera controller</b>
+            <li>fov : 10 - 70<input type="range" name="fov" min="10" max="70" class="controller"></li>
+            <li>near : 1 - 1000~<input type="range" name="near" min="1" max="1000" class="controller"></li>
+            <li>far : 1 - 10000~<input type="range" name="far" min="1" max="10000" class="controller"></li>
+            <li>스피드관련과 포지선/로테이션설정부분다시짜야함</li>
+            <li>speed : 1 - 10~<input type="range" name="speed" min="1" max="10" class="controller"></li>
+            <li>distance : 1 - 5000~<input type="range" name="distance" min="1" max="5000" class="controller"></li>
+
+        </div>
+    </div>
+    <div style="background:#111;color:#888;margin:10px;padding:8px; width:230px; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333;">
+        <div style="background:#111;color:#888;;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333;">
+               <b style="color:#fff;line-height:25px">FPS</b>
+            <li class="fps"></li>
+        </div>
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
+               <b style="color:#fff;line-height:25px">ambient</b>
+            <li>R: 0 - 255<input type="range" name="r" min="0" max="255" class="ambient"></li>
+            <li>G: 0 - 255<input type="range" name="g" min="0" max="255" class="ambient"></li>
+            <li>B: 0 - 255<input type="range" name="b" min="0" max="255" class="ambient"></li>
+            <li>Intensity<input type="range" name="intensity" min="0" max="1" class="ambient"></li>
+        </div>
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
+               <b style="color:#fff;line-height:25px">directional</b>
+            <li>R: 0 - 255<input type="range" name="r" min="0" max="255" class="directional"></li>
+            <li>G: 0 - 255<input type="range" name="g" min="0" max="255" class="directional"></li>
+            <li>B: 0 - 255<input type="range" name="b" min="0" max="255" class="directional"></li>
+            <li>Intensity<input type="range" name="intensity" min="0" max="1" class="directional"></li>
+        </div>
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
+               <b style="color:#fff;line-height:25px">skybox</b>
+            <li>use <input type="checkbox" checked="true" class="skybox">
+                <select class="skybox">
+                    <option>type1</option>
+                    <option>type2</option>
+                    <option>type3</option>
+                </select>
+
+            <li>Scale : 10 - 10000<input type="range" name="scale" min="10" max="10000" class="skybox"></li>
+            </li>
+        </div>
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
+               <b style="color:#fff;line-height:25px">material</b>
+            <select class="material">
+                <option>random</option>
+                <option>color</option>
+                <option>colorLight</option>
+                <option>toon</option>
+                <option>toonLight</option>
+                <option>bitmap</option>
+                <option>bitmapLight</option>
+                <option>bitmapLight - with Normal</option>
+                <option>environment</option>
+                <option>cube</option>
+            </select>
+
+        </div>
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
+               <b style="color:#fff;line-height:25px">geometry</b>
+            <select class="geometry">
+                <option>random</option>
+                <option>rect</option>
+                <option>tri</option>
+                <option>sphere</option>
+                <option>cube</option>
+                <option>teapot</option>
+            </select>
+
+        </div>
+
+
+        <div style="background:#111;color:#888;margin-top:10px;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
+            <a href="https://github.com/projectBS/bsWebGL" target="_blank">https://github.com/projectBS/bsWebGL</a>
+        </div>
+    </div>
+</div>

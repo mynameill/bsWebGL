@@ -1,0 +1,160 @@
+﻿﻿
+<html lang="ko">
+<head>
+    <title>Text Draft Demo</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs"/>
+    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
+
+        p, li, div, b {
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+</head>
+<body>
+<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+<div id="tester" style="position:absolute;top:0px; padding: 10px">
+    <div style="background:#111;color:#888;padding:8px; width:100%; ;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
+        <textArea style="width:200px;height:200px" id="_text"></textArea>
+        <li>size - <input type="range" name="r" min="11" max="50" id="_size"></li>
+        <li>lineHeight - <input type="range" name="r" min="11" max="50" id="_lineHeight"></li>
+        <li>align - <select id="_align">
+            <option>left</option>
+            <option>center</option>
+            <option>right</option>
+        </select>
+        </li>
+        <li>textBaseline - <select id="_textBaseline">
+            <option>top</option>
+            <option>bottom</option>
+            <option>middle</option>
+            <option>alphabetic</option>
+            <option>hanging</option>
+        </select>
+        </li>
+        <li>fontStyle - <select id="_fontStyle">
+            <option>normal</option>
+            <option>italic</option>
+            <option>oblique</option>
+        </select>
+        </li>
+        <li>fontWeight - <select id="_fontWeight">
+            <option>normal</option>
+            <option>bold</option>
+            <option>bolder</option>
+            <option>lighter</option>
+            <option>100</option>
+            <option>200</option>
+            <option>300</option>
+            <option>400</option>
+            <option>500</option>
+            <option>600</option>
+            <option>700</option>
+            <option>800</option>
+            <option>900</option>
+        </select>
+        </li>
+        <li>color - <input type="color" id="_color"></li>
+        <li>bgColor - <input type="color" id="_bgColor"> use - <input type="checkbox" id="_useBgColor"></li>
+        <input type="file" id="_myFile" name="myFile"/>
+    </div>
+</div>
+<script>
+    bs.debug(0), bs.repository('./');
+    bs(function(){
+        bs.require(function(data){
+            bs.GL=data.GL
+            var BGL=bs.GL
+            bs.js(function(){
+                bs.Dom('#_myFile').S('change',function(e){
+                    console.log(e.event.target.files);
+                })
+
+                var textMat
+                if(BGL.init('glCanvas')) inits()
+                else console.log('초기화 실패')
+                function inits(){
+                    var map=bs.GL.Material('sky').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+                    bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
+                    bs.GL.controller.S('distance', 1000)
+                    function setDesign(){
+                        textMat=bs.GL.Material('text')
+                        textMat.S('font', '나눔고딕', 'fontWeight', '900', 'align', 'center', 'size', 35, 'text', '하여가 [이방원] 이런들 어떠하고 저런들 어떠하리 만수산 드렁칡이 얽혀진들 어떠하리 우리도 이같이 얽어져 백년까지 누리리라 단심가 [정몽주]이 몸이 죽고 죽어 일백 번 고쳐 죽어백골이 진토되어 넋이라도 있고 없고임 향한 일편 단심, 가실 줄이 있으랴')
+//                        var rect=bs.GL.Mesh('rect').S('<', 'root', 'material', bs.GL.Material('color'), 'scaleX', 512, 'scaleY', 512,'scaleZ', 512,'z',-10)
+                        var rect=bs.GL.Mesh('rect').S('<', 'root', 'material', textMat, 'scaleX', 512, 'scaleY', 512, 'scaleZ', 512)
+                    }
+
+                    setDesign()
+                    function propertyTest(){
+                        bs.Css('li').S('margin-top', 10)
+                        bs.Dom('#_text').S('@value', textMat.S('text'), 'input', function(){
+                            textMat.S('text', this.value)
+                        })
+                        console.log(textMat.S('size'))
+                        bs.Dom('#_size').S('@value', textMat.S('size'), 'change', function(){
+                            textMat.S('size', this.value)
+                        })
+                        bs.Dom('#_lineHeight').S('@value', textMat.S('lineHeight'), 'change', function(){
+                            textMat.S('lineHeight', this.value)
+                        })
+                        bs.Dom('#_align').S('@value', textMat.S('align'), 'change', function(){
+                            console.log(this.selectedIndex)
+                            textMat.S('align', this.options[this.selectedIndex].value)
+                        })
+                        bs.Dom('#_textBaseline').S('@value', textMat.S('textBaseline'), 'change', function(){
+                            console.log(this.selectedIndex)
+                            textMat.S('textBaseline', this.options[this.selectedIndex].value)
+                        })
+                        bs.Dom('#_fontStyle').S('@value', textMat.S('fontStyle'), 'change', function(){
+                            console.log(this.selectedIndex)
+                            textMat.S('fontStyle', this.options[this.selectedIndex].value)
+                        })
+                        bs.Dom('#_fontWeight').S('@value', textMat.S('fontWeight'), 'change', function(){
+                            console.log(this.selectedIndex)
+                            textMat.S('fontWeight', this.options[this.selectedIndex].value)
+                        })
+                        bs.Dom('#_color').S('@value', textMat.S('color'), 'change', function(){
+                            console.log(this.value)
+                            textMat.S('color', this.value)
+                        })
+                        bs.Dom('#_bgColor').S('@value', textMat.S('bgColor'), 'change', function(){
+                            console.log(this.value)
+                            textMat.S('bgColor', this.value)
+                        })
+                        bs.Dom('#_useBgColor').S('down', function(){
+                            textMat.S('useBgColor', !this.checked)
+                        })
+                    }
+
+                    propertyTest()
+                    function test2(){
+                        var i=100, size=bs.rand(11, 50)
+                        var colors=['#000000', '#11ee22', '#882255', '#11ee22', '#882255', '#11ee22']
+                        while(i--){
+                            size=Math.random()*30+11
+                            var t=bs.GL.Material('text').S('text', i+'하여가 [이방원] 이런들 어떠하고 저런들 어떠하리 만수산 드렁칡이 얽혀진들 어떠하리 우리도 이같이 얽어져 백년까지 누리리라 단심가 [정몽주]이 몸이 죽고 죽어 일백 번 고쳐 죽어백골이 진토되어 넋이라도 있고 없고임 향한 일편 단심, 가실 줄이 있으랴')
+                            t.S('size', size, 'lineHeight', 30, 'align', 'right', 'color', colors[Math.floor(Math.random()*3)])
+                            bs.GL.Mesh('box').S('<', 'root', 'material', t, 'scaleX', 256, 'scaleY', 256, 'scaleZ', 256, 'x', bs.rand(-2000, 2000), 'y', bs.rand(-2000, 2000), 'z', bs.rand(-1000, -400))
+                        }
+                    }
+//                  test2()
+                }
+            }, 'shaders.js')
+        }, 'gl.js')
+    })
+</script>
+</body>
+</html>

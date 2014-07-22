@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>001_디텍팅_심화</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs"/>
+    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi"/>
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>body { margin: 0; padding: 0; font-size: 11px }</style>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+<div id="uiLayer" style="position:absolute;width:100%"></div>
+<script>
+    bs.debug(0), bs.repository('./');
+    bs(function(){
+        bs.require(function(data){
+            bs.GL=data.GL
+            bs.js(function(){
+                var result=bs.GL.init('glCanvas')
+                if(result){
+                    var detect={}
+                    for(var k in bs.DETECT) if(k.substr(0, 2) == 'gl') detect[k]=bs.DETECT[k]
+                    console.log(detect)
+                }
+                else{
+                    console.log('초기화 실패')
+                }
+            }, 'shaders.js')
+        }, 'gl.js')
+    })
+</script>
+</body>
+</html>

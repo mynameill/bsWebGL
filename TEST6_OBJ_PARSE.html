@@ -1,0 +1,73 @@
+﻿<html lang="ko">
+<head>
+    <title>OBJ Parser Draft Demo</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs"/>
+    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
+
+        p, li, div, b {
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+<script>
+    bs.debug(0), bs.repository('./');
+    bs(function(){
+        bs.require(function(data){
+            bs.GL=data.GL
+            bs.js(function(){
+                var BGL=bs.GL, i
+                if(BGL.init('glCanvas')) inits()
+                else console.log('초기화 실패')
+
+                function inits(){
+                    var skyMap=bs.GL.Material('sky').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+                    bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
+
+                    bs.GL.controller.S('distance',700)
+
+                    var womanMap=bs.GL.Material('bitmapLight').S('diffuse', 'assets/plate1diffuse1.png', 'normal', 'assets/plate1normal2.png')
+                    var womanEnvMap=bs.GL.Material('environment').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+                    bs.get(function($data){
+                        var r=bs.GL.parserOBJ($data)
+                        bs.GL.makeBufferSet('head', r.vs, r.is, r.cs)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -500)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1000)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1500)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2000)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2500)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3000)
+                        bs.GL.Mesh('head').S('<', 'root', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3500)
+
+                    }, 'assets/woman.obj')
+                    var time=0
+                    bs.ANI.ani({
+                        ANI:function(){
+                            time+=0.01
+                            var list=bs.GL.S('children'), i=list.length, t0
+                            while(i--) t0=list[i], t0.rotationY+=0.001*5
+                            bs.GL.directionalLight.direction=[Math.sin(time) == 0 ? 0.01 : Math.sin(time*2), Math.cos(time) == 0 ? 0.01 : Math.cos(time*1), -0.5]
+                        }
+                    })
+                }
+            }, 'shaders.js')
+        }, 'gl.js')
+    })
+</script>
+</body>
+</html>
