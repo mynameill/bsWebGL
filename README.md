@@ -1,7 +1,9 @@
 bsWebGL
 =======
 
-bsWebGL 연구나무
+bsWebGL 연구나무 
+
+showcase - http://projectbs.github.io/bsWebGL
 
 <pre style="clear:both; background:#111;color:#888;margin-top:10px;padding:8px; margin-left:10px;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
     bsWebGL 커미터를 모집합니다.
