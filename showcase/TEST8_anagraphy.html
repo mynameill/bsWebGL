@@ -1,6 +1,6 @@
 ﻿<html lang="ko">
 <head>
-    <title>Video Material Draft Demo</title>
+    <title>Anagraphy Draft Demo</title>
     <meta name="keywords" content="redcamel, webgl, bsjs"/>
     <meta name="description" content="redcamel, webgl, bsjs"/>
     <meta charset="utf-8"/>
@@ -19,10 +19,12 @@
             user-select: none;
         }
     </style>
+
     <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
 <canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+<div id="uiLayer" style="position:absolute;width:100%"></div>
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
@@ -33,34 +35,35 @@
                 if(BGL.init('glCanvas')) inits()
                 else console.log('초기화 실패')
                 function inits(){
+
+                    // 컨트롤러는 무조건 입력해야함
+                    BGL.S('controller',bs.GL.Controller('ISO'))
+                    BGL.S('controller').S('distance',3000)
+                    // 재질생성
                     var skyMap=bs.GL.Material('sky').S('urls',["assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"])
                     bs.GL.S('skybox',bs.GL.SkyBox().S('material',skyMap))
 
-                    var src = bs.DETECT.browser =='chrome' ? 'assets/mov_bbb.mp4' : 'assets/mov_bbb.mp4'
-
+                    var environment=bs.GL.Material('environment').S('urls',["assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"])
                     var videoL = bs.GL.Material('videoLight')
-                    videoL.S('diffuse',src,'normal','assets/normal/normal5.jpg')
+                    videoL.S('diffuse','assets/mov_bbb.mp4')
                     var video = bs.GL.Material('video')
-                    video.S('diffuse',src)
+                    video.S('diffuse','assets/mov_bbb.mp4')
 
                     bs.get(function($data){
                         var r=bs.GL.parserOBJ($data)
                         bs.GL.makeBufferSet('head',r.vs,r.is,r.cs)
-                        bs.GL.Mesh('head').S('<','root','material',videoL,'scaleX',6,'scaleY',6,'scaleZ',6,'z',-1000)
-                        bs.GL.Mesh('sphere').S('<','root','material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',300,'z',-600,'rotationY',Math.PI)
-                        bs.GL.Mesh('rect').S('<','root','material',videoL,'scaleX',1600,'scaleY',900,'scaleZ',1,'x',0,'z',-1500,'alpha',0.5)
-                    },'assets/head.obj')
+                        bs.GL.Mesh('head').S('<','root','material',videoL,'scaleX',6,'scaleY',6,'scaleZ',6,'z',0)
 
-                    var time=0
-                    bs.ANI.ani({
-                        ANI:function(){
-                            time+=0.03
-                            bs.GL.directionalLight.direction=[Math.sin(time) == 0 ? 0.01 : Math.sin(time*1),Math.cos(time) == 0 ? 0.01 : Math.cos(time*1),-0.5]
+                        for(var i=0; i<10; i++){
+                            bs.GL.Mesh('sphere').S('<','root','material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',Math.sin(Math.PI/5*i)*1000,'z',Math.cos(Math.PI/5*i)*1000,'rotationY',Math.PI)
+                            bs.GL.Mesh('sphere').S('<','root','material',videoL,'scaleX',50,'scaleY',50,'scaleZ',50,'y',Math.sin(Math.PI/5*i)*1000,'z',Math.cos(Math.PI/5*i)*1000,'rotationY',Math.PI)
                         }
-                    })
+                    },'assets/head.obj')
+                    bs.GL.PostEffect.use=1
+                    bs.GL.PostEffect.anagraphy=1
                 }
-            }, 'shaders.js')
-        }, 'gl.js')
+            }, '../shaders.js')
+        }, '../gl.js')
     })
 </script>
 </body>
