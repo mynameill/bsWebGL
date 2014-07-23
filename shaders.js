@@ -10,20 +10,20 @@
 	bs.GL._shaderData._BASE_FRAGMENT_UNIFORM = 'uniform bool uFog;\n' +'uniform float uFogDensity;\n' +'uniform vec3 uFogColor;\n'
 	bs.GL._shaderData._BASE_FRAGMENT_RESULT = ''+
 		//Fog
-		'if(uFog){\n'+
-		'   float far = 15000.0;\n'+
-		'   float height = 2000.0;\n'+
-		'   float fog_cord=(gl_FragCoord.z/gl_FragCoord.w)/far;\n'+
-//		'   float fog = fog_cord*uFogDensity*((height-gl_FragCoord.y)/height);\n'+
-		'   float fog = fog_cord*uFogDensity;\n'+
-		'   vec4 fog_color = vec4(uFogColor,0.0);\n'+
-		//TODO 높이에 따른 안개 처리도 유니폼화해야할듯
-		'   gl_FragColor = mix(fog_color,src,clamp(1.0-fog,0.0,1.0));\n' +
-		'   gl_FragColor = vec4(gl_FragColor.rgb * alpha, alpha*vAlpha);\n'+
-		'}else{' +
-		'   gl_FragColor = vec4(src.rgb * alpha, alpha*vAlpha);'+
-		'};\n'
-
+//		'if(uFog){\n'+
+//		'   float far = 15000.0;\n'+
+//		'   float height = 2000.0;\n'+
+//		'   float fog_cord=(gl_FragCoord.z/gl_FragCoord.w)/far;\n'+
+////		'   float fog = fog_cord*uFogDensity*((height-gl_FragCoord.y)/height);\n'+
+//		'   float fog = fog_cord*uFogDensity;\n'+
+//		'   vec4 fog_color = vec4(uFogColor,0.0);\n'+
+//		//TODO 높이에 따른 안개 처리도 유니폼화해야할듯
+//		'   gl_FragColor = mix(fog_color,src,clamp(1.0-fog,0.0,1.0));\n' +
+//		'   gl_FragColor = vec4(gl_FragColor.rgb * alpha, alpha*vAlpha);\n'+
+//		'}else{' +
+//		'   gl_FragColor = vec4(src.rgb * alpha, alpha*vAlpha);'+
+//		'};\n'
+		'   gl_FragColor = vec4(src.rgb * alpha, alpha*vAlpha);\n'
 	bs.GL._shaderData._MTX_FUNC = ''+
 		'\nmat4 rotationMTX(vec3 t)\n'+
 		'{\n'+
