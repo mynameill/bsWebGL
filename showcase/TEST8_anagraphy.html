@@ -23,13 +23,13 @@
     <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
-<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+
 <div id="uiLayer" style="position:absolute;width:100%"></div>
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
         bs.require(function(){
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
 
                     // 컨트롤러는 무조건 입력해야함

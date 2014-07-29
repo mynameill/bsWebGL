@@ -29,11 +29,9 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 						d_P || d_vb_vnb ? (gl.bindBuffer(G_AB, vb_vnb), gl.vertexAttribPointer(P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0), gl.vertexAttribPointer(P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE)) : 0
 					}else d_P || d_vb ? (gl.bindBuffer(G_AB, vb), gl.vertexAttribPointer(P.aVer, 3, G_FLOAT, false, 3*G_BPE, 0)) : 0
 					if(PID == 8) TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(gl.TEXTURE_CUBE_MAP, TEX), gl.uniform1i(P.uSamC, 0)) : 0), p_src=TEX) : renderPass=0
-					else if(PID == 81) {
-						gl.uniform1i(P.uUseNormal, 0)
-						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(gl.TEXTURE_CUBE_MAP, TEX), gl.uniform1i(P.uSamC, 0)) : 0), p_src=TEX) : renderPass=0
+					else if(PID == 81) gl.uniform1i(P.uUseNormal, 0),
+						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(gl.TEXTURE_CUBE_MAP, TEX), gl.uniform1i(P.uSamC, 0)) : 0), p_src=TEX) : renderPass=0,
 						TEXN && TEXN.loaded ? (gl.uniform1i(P.uUseNormal,1), gl.uniform1i(P.uSamN,1),(p_normal != TEXN ? (gl.activeTexture(gl.TEXTURE1), gl.bindTexture(gl.TEXTURE_CUBE_MAP,TEXN)) : 0), p_normal=TEXN) : 0
-					}
 					else if(PID == 9)
 						d_uvb ? (  d_P ? gl.enableVertexAttribArray(P.aTexC) : 0, gl.bindBuffer(G_AB, uvb), gl.vertexAttribPointer(P.aTexC, 2, G_FLOAT, false, 0, 0)) : 0,
 						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0),gl.bindTexture(G_TEX2D, TEX),gl.uniform1i(P.uSam,0), gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true), gl.texImage2D(G_TEX2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, TEX.video)) : 0), p_src=TEX) : renderPass=0,
@@ -259,16 +257,14 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	//TODO parent처리와 각종 child관련 매서드 추가해야됨
 	function parent(v){v == 'ROOT' ? (GL.children.push(this)) : v.children.push(this)}
 	function child(v){this == GL ? GL.children.push(v) : this.children.push(v)}
-	var GL, baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}}, msgF=' 아이디를 가진 캔버스가없습니다. 생성후 시도하세요!!', msgF2='WEBGL을 지원하지 않는 브라우져입니다'
+	var GL, baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}},  msgF2='WEBGL을 지원하지 않는 브라우져입니다'
 	bs.GL=GL={
 		init:function($id,$shaderSrc,$end,$fail){
-			bs.js(function(){
-				GL._init($id,$end,$fail)
-			},$shaderSrc)
+            bs.js(function(){ document.getElementById($id) ? bs.Dom($id) : bs.Dom("<canvas></canvas>").S('<', 'body', 'position', 'absolute', '@id', $id.substr(1, $id.length-1), 'this'), GL._init($id, $end, $fail)}, $shaderSrc)
 		},
 		_init:function($id,$end,$fail){
 			if(cvs) return console.log('중복초기화 방지');
-			if(!(cvs=document.getElementById($id))) return console.log($id+msgF), false
+            cvs=document.getElementById($id.substr(1,$id.length-1))
 			var keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split(','), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/}, i=keys.length
 			while(i--) if(gl=cvs.getContext(keys[i], keys2)) break
 
@@ -382,12 +378,10 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			while(i--) (function(){ // 마우스관련 전면 폐기하고 다시짜야함
 				var t=evts[i]; fn[t]=function(v){return this.setEvent(t, v)}
 			})();
-
-			fn['material']=sMethod.prototype.material,
 			fn['setEvent']=function($type, v){
 				if(v) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
 				else return this.evt[$type];
-			}, fn['<']=parent, fn['>']=child,fn['setRotationByMat4']=function(m){this.x = m[12],this.y = m[13],this.z = m[14],this.rotationX = -Math.atan2(m[6],m[10]),this.rotationY = Math.asin(m[2]),this.rotationZ = -Math.atan2(m[1],m[0])}
+			},  fn['material']=sMethod.prototype.material,fn['<']=parent, fn['>']=child,fn['setRotationByMat4']=function(m){this.x = m[12],this.y = m[13],this.z = m[14],this.rotationX = -Math.atan2(m[6],m[10]),this.rotationY = Math.asin(m[2]),this.rotationZ = -Math.atan2(m[1],m[0])}
 			// TODO fn['filter'], fn['blendMode']
 			return function($k){ return VBs[$k] ? new Mesh($k) : null}
 		})(),

@@ -25,14 +25,13 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
 <body>
-<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
-<div id="uiLayer" style="position:absolute;width:100%"></div>
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
         bs.require(function(){
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
+                bs.Dom('<div id="uiLayer" style="position:absolute;width:100%"></div>').S('<','body')
                     if(!bs.GL.mobile){
                         bs.get(function($data){
                             bs.Dom('#uiLayer').S('html+', $data)

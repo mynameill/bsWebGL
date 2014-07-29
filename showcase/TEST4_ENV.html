@@ -25,12 +25,11 @@
     <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
-<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
         bs.require(function(){
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
                 var i
                     //새로운 버퍼셋을 호스트에서 입력할수있다!

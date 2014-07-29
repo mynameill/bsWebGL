@@ -24,12 +24,12 @@
     <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
-<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
         bs.require(function(){
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
                     var skyMap=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap, 'this'))

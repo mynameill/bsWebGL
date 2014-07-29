@@ -76,8 +76,9 @@
     bs.debug(0), bs.repository('./');
     bs(function(){
         bs.require(function(){
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
+                bs.Dom('#glCanvas').S('z-index',-1)
                     var map=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
                     bs.GL.controller.S('distance', 1000)

@@ -23,15 +23,15 @@
     <script src="../Oimo.js"></script>
 </head>
 <body>
-<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
-<button id='add' style="position:absolute;height:100px">추가하기</button>
+
 <script>
     bs.debug(0),bs.repository('./');
     bs(function(){
         bs.require(function(){
             var world,ground,bodys = [],meshs = []
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
+                bs.Dom('<button id="add" style="position:absolute;height:100px">추가하기</button>').S('<','body')
                     var mobile=bs.GL.mobile, max=mobile ? 50 : 500, mat=bs.GL.Material('bitmapLight').S('src','assets/t1.jpg')
                     bs.Dom('#add').S('down',function(){
                         bs.GL.Mesh('box').S('<', 'ROOT', 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)

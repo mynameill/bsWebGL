@@ -28,19 +28,15 @@
     <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
-<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
-<div style="position:absolute;color:#fff;top:50px">
-    <input type="button" id="stop" value="stop">
-    <input type="button" id="play" value='play'>
-    <input type="button" id="gotoAndPlay" value='gotoAndPlay'>
-    <input type="button" id="randomStartPlay" value='randomStartPlay'>
-</div>
+
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
         bs.require(function(){
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
+                var str = '<div style="position:absolute;color:#fff;top:50px"><input type="button" id="stop" value="stop"><input type="button" id="play" value="play"><input type="button" id="gotoAndPlay" value="gotoAndPlay"><input type="button" id="randomStartPlay" value="randomStartPlay"></div>'
+                bs.Dom(str).S('<','body')
                     bs.Dom('#stop').S('down', function(){
                         var t=bs.GL.S('children'), j=t.length
                         while(j--)t[j].S('material').stop()

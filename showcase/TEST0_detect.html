@@ -16,12 +16,11 @@
     <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
-<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
         bs.require(function(){
-            bs.GL.init('glCanvas', '../shaders.js', init)
+            bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
                 alert('초기화성공!')
                 bs.GL.Mesh('box').S('material', bs.GL.Material('color'), '<', 'ROOT', 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
