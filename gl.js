@@ -339,7 +339,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 					else if(t6['uD']) t6=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function(src){ this.texture=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5)}
 					else if(t6['useCube']) t6=function(){this.texture=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function(src){ this.texture=makeTexture(src)}
 					t4 ? (_fn['normal']=function(src){ this.textureNormal=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0)}) : 0,
-					t3 ? (_fn.specular=25, _fn.specularColor={r:255, g:255, b:255}) : 0
+					t3 ? (_fn.specular=50, _fn.specularColor={r:255, g:255, b:255}) : 0
 					kind[k]=t6
 				})()
 			}

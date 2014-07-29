@@ -33,8 +33,8 @@
                 var i
                     var skyMap=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
-                    var headMap=bs.GL.Material('bitmapLight').S('src', 'assets/head_diffuse.jpg', 'specular', 100, 'specularColor', {r:bs.rand(0, 255), g:bs.rand(0, 255), b:bs.rand(0, 255)})
-                    var headMap2=bs.GL.Material('bitmapLight').S('src', 'assets/head_diffuse.jpg', 'normal', 'assets/head_normals.jpg', 'specular', 200, 'specularColor', {r:bs.rand(0, 255), g:bs.rand(0, 255), b:bs.rand(0, 255)})
+                    var headMap=bs.GL.Material('bitmapLight').S('src', 'assets/head_diffuse.jpg', 'specularColor', {r:bs.rand(0, 255), g:bs.rand(0, 255), b:bs.rand(0, 255)})
+                    var headMap2=bs.GL.Material('bitmapLight').S('src', 'assets/head_diffuse.jpg', 'normal', 'assets/head_normals.jpg', 'specularColor', {r:bs.rand(0, 255), g:bs.rand(0, 255), b:bs.rand(0, 255)})
                     bs.get(function($data){
                         var r=bs.GL.parserOBJ($data)
                         bs.GL.makeBufferSet('head', r.vs, r.is, r.cs)
@@ -46,8 +46,8 @@
                         if(!bs.GL.mobile){
                             i=50
                             while(i--){
-                                var specularColorTest=bs.GL.Material('bitmapLight').S('src', 'assets/head_diffuse.jpg', 'normal', 'assets/head_normals.jpg', 'specular', bs.rand(1, 1500), 'specularColor', {r:bs.rand(0, 255), g:bs.rand(0, 255), b:bs.rand(0, 255)})
-                                bs.GL.Mesh('head').S('<', 'ROOT', 'material', specularColorTest, 'x', Math.random()*3000-1500, 'y', Math.random()*3000-1500, 'scaleX', 1, 'scaleY', 1, 'scaleZ', 1, 'z', Math.random()*3000-1500)
+
+                                bs.GL.Mesh('head').S('<', 'ROOT', 'material', headMap, 'x', Math.random()*3000-1500, 'y', Math.random()*3000-1500, 'scaleX', 1, 'scaleY', 1, 'scaleZ', 1, 'z', Math.random()*3000-1500)
                             }
                         }
                     }, 'assets/head.obj')
@@ -97,7 +97,7 @@
                     var time=0, ms=Math.sin, mc=Math.cos
                     bs.ANI.ani({
                         ANI:function(){
-                            time+=0.01
+                            time+=0.05
                             bs.GL.directionalLight.x=Math.sin(time) == 0 ? 0.01 : ms(time),bs.GL.directionalLight.y= mc(time) == 0 ? 0.01 : mc(time),bs.GL.directionalLight.z= -1
                         }
                     })

@@ -271,6 +271,7 @@
 			'if(uUseNormal){\n'+
 			'  vec4 normal = texture2D(uSamN, vec2(vTexC.s, vTexC.t));\n'+
 			'  src = (ia+id)*0.5+is+(ia*normal.r+id*normal.g+is*normal.b);\n'+
+
 			'}else{\n'+
 			'  src = ia+id+is;\n'+
 			'}\n'+
