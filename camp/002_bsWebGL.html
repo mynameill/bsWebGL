@@ -22,8 +22,7 @@
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
-        bs.require(function(data){
-            bs.GL=data.GL
+        bs.require(function(){
             bs.GL.init('glCanvas', '../shaders.js', init)
             function init(){
 
