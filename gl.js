@@ -238,11 +238,14 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 								t0[t1]=='TL' ? this._material = GL.Material('toonLight').S('color',t0[0]) :
 								t0[t1]=='T' ? this._material = GL.Material('toon').S('color',t0[0]) :
 							this._material = GL.Material('color').S('color',t0[0])
-					}else if(t0[t1]=='S') {
+					}else if(t0[t1].charAt(0)=='V') {
+                        t0[t1] == 'V' ? this._material=GL.Material('video').S('src',t0[0]) :
+                        this._material=GL.Material('videoLight').S('src',t0[0],'normal',t0[t1-1])
+                    }else if(t0[t1]=='S') {
 						this._material = GL.Material('sprite').S('src',t0[0],'col',t['col'],'row',t['row'],'time',t['time'] ? t['time'] : 1)
 					}else{
 						t0[t1]=='B' ? this._material = GL.Material('bitmap').S('src',t0[0]) :
-								t0[t1]=='BL' ? this._material = GL.Material('bitmapLight').S('src',t0[0],'normal',t0[t1-1]) : 0
+						t0[t1]=='BL' ? this._material = GL.Material('bitmapLight').S('src',t0[0],'normal',t0[t1-1]) : 0
 					}
 				}
 			}
@@ -481,7 +484,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	mat4.lookAt= function (out, eye, center, up) {var x0, x1, x2, y0, y1, y2, z0, z1, z2, len,eyex = eye[0],eyey = eye[1],eyez = eye[2],upx = up[0],upy = up[1],upz = up[2],centerx = center[0],centery = center[1],centerz = center[2];if (Math.abs(eyex - centerx) < GLMAT_EPSILON &&Math.abs(eyey - centery) < GLMAT_EPSILON &&Math.abs(eyez - centerz) < GLMAT_EPSILON) {return mat4.identity(out)};z0 = eyex - centerx,z1 = eyey - centery,z2 = eyez - centerz,len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2),z0 *= len,z1 *= len,z2 *= len,x0 = upy * z2 - upz * z1,x1 = upz * z0 - upx * z2,x2 = upx * z1 - upy * z0,len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);if (!len) x0 = 0,x1 = 0,x2 = 0;else len = 1 / len,x0 *= len,x1 *= len,x2 *= len;y0 = z1 * x2 - z2 * x1,y1 = z2 * x0 - z0 * x2,y2 = z0 * x1 - z1 * x0,len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);if (!len)y0 = 0, y1 = 0, y2 = 0;else len = 1 / len, y0 *= len, y1 *= len, y2 *= len;return out[0] = x0, out[1] = y0, out[2] = z0, out[3] = 0, out[4] = x1, out[5] = y1, out[6] = z1, out[7] = 0, out[8] = x2, out[9] = y2, out[10] = z2, out[11] = 0, out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez), out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez), out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez), out[15] = 1,out;},
 	mat4.perspective =function (a, b, c, d, e) {return a=c * Math.tan(a * Math.PI / 360), b=a * b, mat4.frustum(-b, b, -a, a, c, d, e)},
 	mat4.frustum =function (a, b, c, d, e, g, f) {var h=b - a, i=d - c, j=g - e;return f||(f=mat4.create()), f[0]=e * 2 / h, f[1]=0, f[2]=0, f[3]=0, f[4]=0, f[5]=e * 2 / i, f[6]=0, f[7]=0, f[8]=(b + a) / h, f[9]=(d + c) / i, f[10]=-(g + e) / j, f[11]= -1, f[12]=0, f[13]=0, f[14]=-(g * e * 2) / j, f[15]=0, f},
-	GL.S('directionalLight', GL.Light('directional').S('color', '#ffffff', 'alpha', 0.1, 'x', 0,'y',0,'z',-1, 'intensity', 0.8), 'ambientLight', GL.Light('ambient').S('color', '#333333'),'controller',GL.Controller('ISO'))
+	GL.S('directionalLight', GL.Light('directional').S('color', '#ffffff', 'alpha', 0.1, 'x', 1,'y',-1,'z',-1, 'intensity', 0.8), 'ambientLight', GL.Light('ambient').S('color', '#333333'),'controller',GL.Controller('ISO'))
 	return GL
 })();
 exports.GL = GL

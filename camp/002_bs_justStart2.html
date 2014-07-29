@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <!--<meta name="viewport"content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi"/>-->
     <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-    <style>body { margin: 0; padding: 0;}</style>
+    <style>body{ margin:0; padding:0; }</style>
 
     <!--로컬 로딩-->
     <!--<script src="bsjs.0.5.js"></script>-->
@@ -26,10 +26,26 @@
 
             bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
-                alert('초기화성공!')
-                console.log('초기화성공!')
+                bs.GL.Mesh('box').S(
+                        'material', '#332244',
+                        'scaleX', 100, 'scaleY', 100, 'scaleZ', 100,
+                        'x',-150,
+                        '<', 'ROOT'
+                )
+                bs.GL.Mesh('rect').S(
+                        'material', '#224455',
+                        'scaleX', 100, 'scaleY', 100, 'scaleZ', 100,
+                        'x',0,
+                        '<', 'ROOT'
+                )
+                bs.GL.Mesh('sphere').S(
+                        'material', '#ff1122',
+                        'scaleX', 50, 'scaleY', 50, 'scaleZ', 50,
+                        'x',150,
+                        '<', 'ROOT'
+                )
             }
-        },'../gl.js')
+        }, '../gl.js')
     })
 </script>
 </body>
