@@ -1,6 +1,7 @@
 var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.com /  webGL의 bs 플러그인화 */
 	'use strict';
-	var cvs, gl, VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={}, perspectMTX, D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0, mat4;
+    var trim = /\s/g, hex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
+    var cvs, gl, VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={}, perspectMTX, D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0, mat4;
 	var render, draw, mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile', mC=Math.cos, mS=Math.sin, PI=Math.PI, pickSet={}, setUniqueColor, mouseMNG={event:null, checkInterval:2, checkPoint:0, target:null};
 	(function(){
 		var color=1677215, r=0, g=0, b=0, r1=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r, g, b, t0;
@@ -59,7 +60,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			if(!(ctl=GL.controller)) return console.log('컨트롤러가 존재하지않습니다')
 			cList=GL.children,pList=[], D_tri=0, GL.PostEffect.use ? (gl.bindFramebuffer(gl.FRAMEBUFFER, null), gl.bindFramebuffer(gl.FRAMEBUFFER, FB['pre'])) : 0,
 			gl.viewport(0, 0, GL._w, GL._h), gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT),
-			dColor[0]=GL.directionalLight.r/255, dColor[1]=GL.directionalLight.g/255, dColor[2]=GL.directionalLight.b/255, dColor[3]=GL.directionalLight.a, aColor[0]=GL.ambientLight.r/255, aColor[1]=GL.ambientLight.g/255, aColor[2]=GL.ambientLight.b/255, aColor[3]=GL.ambientLight.a
+			dColor[0]=GL.directionalLight.r/255, dColor[1]=GL.directionalLight.g/255, dColor[2]=GL.directionalLight.b/255, dColor[3]=GL.directionalLight.alpha, aColor[0]=GL.ambientLight.r/255, aColor[1]=GL.ambientLight.g/255, aColor[2]=GL.ambientLight.b/255, aColor[3]=GL.ambientLight.alpha
 			for(var k in Ps) gl.useProgram(P=Ps[k]), gl.uniformMatrix4fv(P.uPerspectMTX, false, perspectMTX), gl.uniformMatrix4fv(P.uCameraMTX, false, ctl.cameraMTX),gl.uniformMatrix4fv(P.uParentMTX, false, parentMTX),
 				GL.fog.use ? (gl.uniform1i(P.uFog, 1), gl.uniform1f(P.uFogDensity, GL.fog.density), gl.uniform3fv(P.uFogColor, [GL.fog.r/255, GL.fog.g/255, GL.fog.b/255]) ) : 0,
 				P.useLight ? (gl.uniform4fv(P.uDLightColor, dColor), gl.uniform4fv(P.uALightColor, aColor), gl.uniform3fv(P.uDLightD, [GL.directionalLight.x,GL.directionalLight.y,GL.directionalLight.z]), gl.uniform1f(P.uDIntensity, GL.directionalLight.intensity), gl.uniform1f(P.uAIntensity, GL.ambientLight.intensity),
@@ -231,13 +232,14 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 							this._material = GL.Material('cube').S('src',v.src)
 					}else this._material=GL.Material('environment').S('src', v.src), v['normal'] ? this._material.S('normal', v['normal']) :0
 				}else{
+                    v =v.replace(trim,'')
 					var t = {},t0 =v.split(','),t1=t0.length-1
 					for(var i=1; i<t1-1;i++) t[t0[i++]] = t0[i]
 					if(v.charAt(0)=='#') {
-						t0[t1] == 'L' ? this._material=GL.Material('colorLight') :
-								t0[t1]=='TL' ? this._material = GL.Material('toonLight') :
-								t0[t1]=='T' ? this._material = GL.Material('toon') :
-							this._material = GL.Material('color')
+						        t0[t1] == 'L' ? this._material=GL.Material('colorLight').S('color',t0[0]) :
+								t0[t1]=='TL' ? this._material = GL.Material('toonLight').S('color',t0[0]) :
+								t0[t1]=='T' ? this._material = GL.Material('toon').S('color',t0[0]) :
+							this._material = GL.Material('color').S('color',t0[0])
 					}else if(t0[t1]=='S') {
 						this._material = GL.Material('sprite').S('src',t0[0],'col',t['col'],'row',t['row'],'time',t['time'] ? t['time'] : 1)
 					}else{
@@ -248,7 +250,12 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			}
 
 		}else return this._material
-	}
+	},
+    sMethod.prototype['color']=function(v){
+        var t0
+        if(v)  t0=hex.exec(v), this.r=parseInt(t0[1], 16), this.g=parseInt(t0[2], 16), this.b=parseInt(t0[3], 16)
+        else return this._color
+    }
 	//TODO parent처리와 각종 child관련 매서드 추가해야됨
 	function parent(v){v == 'ROOT' ? (GL.children.push(this)) : v.children.push(this)}
 	function child(v){this == GL ? GL.children.push(v) : this.children.push(v)}
@@ -316,7 +323,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		},
 		Light:(function(){ //TODO POINT,SPOT
 			var t=function(){}, DLight, ALight, PLight, _fn
-			_fn=t.prototype, _fn.intensity=1.0, _fn.r=255, _fn.g=255, _fn.b=255,_fn.x=0,_fn.y=0,_fn.z=0, _fn.a=1, _fn.S=sMethod.prototype.S,
+			_fn=t.prototype, _fn.intensity=1.0, _fn._color='#ffffff',_fn.r=255, _fn.g=255, _fn.b=255,_fn.x=0,_fn.y=0,_fn.z=0, _fn.alpha=1, _fn.S=sMethod.prototype.S,_fn.color=sMethod.prototype['color']
 			DLight=function(){}, ALight=function(){}, PLight=function(){this.x=0, this.y=0, this.z=0}, DLight.prototype=ALight.prototype=PLight.prototype=_fn
 			return function(k){ return k == "directional" ? new DLight() : k == "ambient" ? new ALight() : k == "point" ? new PLight() : null}
 		})(),
@@ -329,7 +336,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 					i=t2.length
 					while(i--) kind[k][t2[i]] ? 0 : (kind[k][t2[i]]=0)
 					var pk=k.charAt(0).toLowerCase()+k.substr(1, k.length-1), t6=kind[k], t3=t6['uL'], t4=t6['uN'], t5=t6['video'] ? 1 : (t6['text'] ? 2 : 0)
-					if(t6['uC']) t6=function(){this.r=r(0, 255), this.g=r(0, 255), this.b=r(0, 255), this.program=Ps[pk]}, _fn=t6.prototype=new t
+					if(t6['uC']) t6=function(){this._color = '#ffffff',this.r=255, this.g=255, this.b=255, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['color']=sMethod.prototype['color']
 					else if(t6['uD']) t6=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function(src){ this.texture=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5)}
 					else if(t6['useCube']) t6=function(){this.texture=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function(src){ this.texture=makeTexture(src)}
 					t4 ? (_fn['normal']=function(src){ this.textureNormal=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0)}) : 0,
@@ -375,7 +382,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			while(i--) (function(){ // 마우스관련 전면 폐기하고 다시짜야함
 				var t=evts[i]; fn[t]=function(v){return this.setEvent(t, v)}
 			})();
-			var trim = /^\s*|\s*$/g
+
 			fn['material']=sMethod.prototype.material,
 			fn['setEvent']=function($type, v){
 				if(v) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
@@ -480,7 +487,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	mat4.lookAt= function (out, eye, center, up) {var x0, x1, x2, y0, y1, y2, z0, z1, z2, len,eyex = eye[0],eyey = eye[1],eyez = eye[2],upx = up[0],upy = up[1],upz = up[2],centerx = center[0],centery = center[1],centerz = center[2];if (Math.abs(eyex - centerx) < GLMAT_EPSILON &&Math.abs(eyey - centery) < GLMAT_EPSILON &&Math.abs(eyez - centerz) < GLMAT_EPSILON) {return mat4.identity(out)};z0 = eyex - centerx,z1 = eyey - centery,z2 = eyez - centerz,len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2),z0 *= len,z1 *= len,z2 *= len,x0 = upy * z2 - upz * z1,x1 = upz * z0 - upx * z2,x2 = upx * z1 - upy * z0,len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);if (!len) x0 = 0,x1 = 0,x2 = 0;else len = 1 / len,x0 *= len,x1 *= len,x2 *= len;y0 = z1 * x2 - z2 * x1,y1 = z2 * x0 - z0 * x2,y2 = z0 * x1 - z1 * x0,len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);if (!len)y0 = 0, y1 = 0, y2 = 0;else len = 1 / len, y0 *= len, y1 *= len, y2 *= len;return out[0] = x0, out[1] = y0, out[2] = z0, out[3] = 0, out[4] = x1, out[5] = y1, out[6] = z1, out[7] = 0, out[8] = x2, out[9] = y2, out[10] = z2, out[11] = 0, out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez), out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez), out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez), out[15] = 1,out;},
 	mat4.perspective =function (a, b, c, d, e) {return a=c * Math.tan(a * Math.PI / 360), b=a * b, mat4.frustum(-b, b, -a, a, c, d, e)},
 	mat4.frustum =function (a, b, c, d, e, g, f) {var h=b - a, i=d - c, j=g - e;return f||(f=mat4.create()), f[0]=e * 2 / h, f[1]=0, f[2]=0, f[3]=0, f[4]=0, f[5]=e * 2 / i, f[6]=0, f[7]=0, f[8]=(b + a) / h, f[9]=(d + c) / i, f[10]=-(g + e) / j, f[11]= -1, f[12]=0, f[13]=0, f[14]=-(g * e * 2) / j, f[15]=0, f},
-	GL.S('directionalLight', GL.Light('directional').S('r', 255, 'g', 255, 'b', 255, 'a', 0.1, 'x', 0,'y',0,'z',-1, 'intensity', 0.8), 'ambientLight', GL.Light('ambient').S('r', 64, 'g', 64, 'b', 64),'controller',GL.Controller('ISO'))
+	GL.S('directionalLight', GL.Light('directional').S('color', '#ffffff', 'alpha', 0.1, 'x', 0,'y',0,'z',-1, 'intensity', 0.8), 'ambientLight', GL.Light('ambient').S('color', '#333333'),'controller',GL.Controller('ISO'))
 	return GL
 })();
 exports.GL = GL
