@@ -27,8 +27,21 @@
             bs.GL.init('#glCanvas', '../shaders.js', init)
             function init(){
                 bs.GL.Mesh('sphere').S(
+                        'material', 'asset/bitmap.jpg, B',
+                        'scaleX', 75, 'scaleY', 75, 'scaleZ', 75,
+                        'x',-200,
+                        '<', 'ROOT'
+                )
+                bs.GL.Mesh('sphere').S(
+                        'material', 'asset/bitmap.jpg, BL',
+                        'scaleX', 75, 'scaleY', 75, 'scaleZ', 75,
+                        'x',0,
+                        '<', 'ROOT'
+                )
+                bs.GL.Mesh('sphere').S(
                         'material', 'asset/bitmap.jpg, normal, asset/normal.jpg, BL',
-                        'scaleX', 100, 'scaleY', 100, 'scaleZ', 100,
+                        'scaleX', 75, 'scaleY', 75, 'scaleZ', 75,
+                        'x',200,
                         '<', 'ROOT'
                 )
 

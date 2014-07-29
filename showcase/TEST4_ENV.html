@@ -41,7 +41,7 @@
                     var skymap=bs.GL.Material('sky').S('src', ["assets/cubeMap2/grimnight_negX.png", "assets/cubeMap2/grimnight_posX.png", "assets/cubeMap2/grimnight_negY.png", "assets/cubeMap2/grimnight_posY.png", "assets/cubeMap2/grimnight_negZ.png", "assets/cubeMap2/grimnight_posZ.png"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', skymap))
 
-                    var mobile=bs.GL.mobile, max=mobile ? 100 : 1000
+                    var mobile=bs.GL.mobile, max=mobile ? 100 : 500
                     var environmentMap=bs.GL.Material('environment').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     i = max
                     while(i--) bs.GL.Mesh('teapot').S(
