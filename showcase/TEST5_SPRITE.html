@@ -13,7 +13,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-    <!--<meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"/>-->
+    <!--<meta UUId="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"/>-->
     <style>
         body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
 
@@ -38,13 +38,9 @@
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
-        bs.require(function(data){
-            bs.GL=data.GL
-            bs.js(function(){
-                var BGL=bs.GL, i
-                if(BGL.init('glCanvas')) inits()
-                else console.log('초기화 실패')
-                function inits(){
+        bs.require(function(){
+            bs.GL.init('glCanvas', '../shaders.js', init)
+            function init(){
                     bs.Dom('#stop').S('down', function(){
                         var t=bs.GL.S('children'), j=t.length
                         while(j--)t[j].S('material').stop()
@@ -61,31 +57,33 @@
                         var t=bs.GL.S('children'), j=t.length
                         while(j--)t[j].S('material').gotoAndPlay(bs.rand(0, 4))
                     })
-                    var map=bs.GL.Material('sky').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+                    var map=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
                     var mobile=bs.GL.mobile, gap=mobile ? 700 : 2500, max=mobile ? 100 : 1000
                     i=max/2
                     while(i--){
-                        var m1=bs.GL.Material('sprite').S('diffuse', 'assets/sprite3.png', 'col', 4, 'row', 4, 'time', 1)
+                        var m1=bs.GL.Material('sprite').S('src', 'assets/sprite3.png', 'col', 4, 'row', 4, 'time', 1)
                         m1._cCol=1
                         var s
                         s=Math.random()+0.5
-                        bs.GL.Mesh('rect').S('material', m1, '<', 'root', 'scaleX', 60*s, 'scaleY', 60*s, 'scaleZ', 1*s, 'x', Math.random()*gap-gap/2, 'y', Math.random()*gap-gap/2, 'z', Math.random()*gap-gap/2)
+                        bs.GL.Mesh('rect').S('material', m1, '<', 'ROOT', 'scaleX', 60*s, 'scaleY', 60*s, 'scaleZ', 1*s, 'x', Math.random()*gap-gap/2, 'y', Math.random()*gap-gap/2, 'z', Math.random()*gap-gap/2)
                     }
                     i=max/2
                     while(i--){
-                        var m1=bs.GL.Material('sprite').S('diffuse', 'assets/sprite.png', 'col', 5, 'row', 3, 'time', 0.5)
+                        var m1=bs.GL.Material('sprite').S('src', 'assets/sprite.png', 'col', 5, 'row', 3, 'time', 0.5)
                         m1._cCol=1
                         var s
                         s=Math.random()+0.5
-                        bs.GL.Mesh('rect').S('material', m1, '<', 'root', 'scaleX', 64*s, 'scaleY', 64*s, 'scaleZ', 1*s, 'x', Math.random()*gap-gap/2, 'y', Math.random()*gap-gap/2, 'z', Math.random()*gap-gap/2)
+                        bs.GL.Mesh('rect').S('material', m1, '<', 'ROOT', 'scaleX', 64*s, 'scaleY', 64*s, 'scaleZ', 1*s, 'x', Math.random()*gap-gap/2, 'y', Math.random()*gap-gap/2, 'z', Math.random()*gap-gap/2)
                     }
-                    var time=0
+                    var time=0, ms=Math.sin, mc=Math.cos
                     bs.ANI.ani({
-                        ANI:function(){bs.GL.directionalLight.direction=[Math.sin(time+=0.01) == 0 ? 0.01 : Math.sin(time*1), Math.cos(time) == 0 ? 0.01 : Math.cos(time*1), -1]}
+                        ANI:function(){
+                            time+=0.01
+                            bs.GL.directionalLight.x=Math.sin(time) == 0 ? 0.01 : ms(time),bs.GL.directionalLight.y= mc(time) == 0 ? 0.01 : mc(time),bs.GL.directionalLight.z= -1
+                        }
                     })
                 }
-            }, '../shaders.js')
         }, '../gl.js')
     })
 </script>

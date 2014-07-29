@@ -1,8 +1,8 @@
 ﻿﻿<html lang="ko">
 <head>
     <title>Hierarchy Draft Demo</title>
-    <meta name="keywords" content="redcamel, webgl, bsjs"/>
-    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta name="keywords" content="redcamel, webs.GL, bsjs"/>
+    <meta name="description" content="redcamel, webs.GL, bsjs"/>
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="format-detection" content="telephone=no"/>
@@ -27,21 +27,17 @@
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
-        bs.require(function(data){
-            bs.GL=data.GL
-            var BGL=bs.GL
-            bs.js(function(){
-                if(BGL.init('glCanvas')) inits()
-                else console.log('초기화 실패')
-                function inits(){
-                    var map=bs.GL.Material('sky').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+        bs.require(function(){
+            bs.GL.init('glCanvas', '../shaders.js', init)
+            function init(){
+                    var map=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
-                    var cubeMap=bs.GL.Material('cube').S('urls', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+                    var cubeMap=bs.GL.Material('cube').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     var colorLight2=bs.GL.Material('colorLight').S('r', 255, 'g', 255, 'b', 255),colorLight3=bs.GL.Material('colorLight').S('r', 255, 'g', Math.random(), 'b', 255)
-                    var i=BGL.mobile ? 40 : 200
+                    var i=bs.GL.mobile ? 40 : 200
                     while(i--)
                         bs.GL.Mesh('box').S(
-                                '<', 'root',
+                                '<', 'ROOT',
                                 'material', cubeMap,
                                 'scaleX', 50, 'scaleY', 50, 'scaleZ', 50,
                                 'z', bs.rand(-1000, 1000), 'y', bs.rand(-1000, 1000), 'x', bs.rand(-1000, 1000),
@@ -54,7 +50,7 @@
                                             )
                                     ),
                                 '>', bs.GL.Mesh('box').S('material', colorLight2, 'scaleX', 25, 'scaleY', 25, 'scaleZ', 25, 'z', 0, 'x', 100, 'y', 0))
-                    var time=0
+                    var time=0, ms=Math.sin, mc=Math.cos
                     bs.ANI.ani({
                         ANI:function(){
                             time+=0.01
@@ -64,11 +60,10 @@
                                 j=t0.children.length
                                 while(j--) t1=t0.children[j], t1.rotationY+=0.001*15, t1.rotationX+=0.001*15, t1.rotationZ+=0.001*15
                             }
-                            bs.GL.directionalLight.direction=[ Math.sin(time) == 0 ? 0.01 : Math.sin(time*2), Math.cos(time) == 0 ? 0.01 : Math.cos(time*1), -0.5]
+                            bs.GL.directionalLight.x=Math.sin(time) == 0 ? 0.01 : ms(time),bs.GL.directionalLight.y= mc(time) == 0 ? 0.01 : mc(time),bs.GL.directionalLight.z= -1
                         }
                     })
                 }
-            }, '../shaders.js')
         }, '../gl.js')
     })
 </script>

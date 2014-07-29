@@ -1,8 +1,8 @@
 ﻿<html lang="ko">
 <head>
     <title>Video Material Draft Demo</title>
-    <meta name="keywords" content="redcamel, webgl, bsjs"/>
-    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta name="keywords" content="redcamel, webs.GL, bsjs"/>
+    <meta name="description" content="redcamel, webs.GL, bsjs"/>
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="format-detection" content="telephone=no"/>
@@ -26,40 +26,35 @@
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
-        bs.require(function(data){
-            bs.GL=data.GL
-            bs.js(function(){
-                var BGL=bs.GL
-                if(BGL.init('glCanvas')) inits()
-                else console.log('초기화 실패')
-                function inits(){
-                    var skyMap=bs.GL.Material('sky').S('urls',["assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"])
+        bs.require(function(){
+            bs.GL.init('glCanvas', '../shaders.js', init)
+            function init(){
+                    var skyMap=bs.GL.Material('sky').S('src',["assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"])
                     bs.GL.S('skybox',bs.GL.SkyBox().S('material',skyMap))
 
                     var src = bs.DETECT.browser =='chrome' ? 'assets/mov_bbb.mp4' : 'assets/mov_bbb.mp4'
 
                     var videoL = bs.GL.Material('videoLight')
-                    videoL.S('diffuse',src,'normal','assets/normal/normal5.jpg')
+                    videoL.S('src',src,'normal','assets/normal/normal5.jpg')
                     var video = bs.GL.Material('video')
-                    video.S('diffuse',src)
+                    video.S('src',src)
 
                     bs.get(function($data){
                         var r=bs.GL.parserOBJ($data)
                         bs.GL.makeBufferSet('head',r.vs,r.is,r.cs)
-                        bs.GL.Mesh('head').S('<','root','material',videoL,'scaleX',6,'scaleY',6,'scaleZ',6,'z',-1000)
-                        bs.GL.Mesh('sphere').S('<','root','material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',300,'z',-600,'rotationY',Math.PI)
-                        bs.GL.Mesh('rect').S('<','root','material',videoL,'scaleX',1600,'scaleY',900,'scaleZ',1,'x',0,'z',-1500,'alpha',0.5)
+                        bs.GL.Mesh('head').S('<','ROOT','material',videoL,'scaleX',6,'scaleY',6,'scaleZ',6,'z',-1000)
+                        bs.GL.Mesh('sphere').S('<','ROOT','material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',300,'z',-600,'rotationY',Math.PI)
+                        bs.GL.Mesh('rect').S('<','ROOT','material',videoL,'scaleX',1600,'scaleY',900,'scaleZ',1,'x',0,'z',-1500,'alpha',0.5)
                     },'assets/head.obj')
 
-                    var time=0
+                    var time=0, ms=Math.sin, mc=Math.cos
                     bs.ANI.ani({
                         ANI:function(){
                             time+=0.03
-                            bs.GL.directionalLight.direction=[Math.sin(time) == 0 ? 0.01 : Math.sin(time*1),Math.cos(time) == 0 ? 0.01 : Math.cos(time*1),-0.5]
+                            bs.GL.directionalLight.x=Math.sin(time) == 0 ? 0.01 : ms(time),bs.GL.directionalLight.y= mc(time) == 0 ? 0.01 : mc(time),bs.GL.directionalLight.z= -1
                         }
                     })
                 }
-            }, '../shaders.js')
         }, '../gl.js')
     })
 </script>

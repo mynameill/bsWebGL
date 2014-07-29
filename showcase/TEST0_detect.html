@@ -17,23 +17,16 @@
 </head>
 <body>
 <canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
-<div id="uiLayer" style="position:absolute;width:100%"></div>
 <script>
     bs.debug(0), bs.repository('./');
     bs(function(){
-        bs.require(function(data){
-            bs.GL=data.GL
-            bs.js(function(){
-                var result=bs.GL.init('glCanvas')
-                if(result){
-                    var detect={}
-                    for(var k in bs.DETECT) if(k.substr(0, 2) == 'gl') detect[k]=bs.DETECT[k]
-                    console.log(detect)
-                }
-                else{
-                    console.log('초기화 실패')
-                }
-            }, '../shaders.js')
+        bs.require(function(){
+            bs.GL.init('glCanvas', '../shaders.js', init)
+            function init(){
+                alert('초기화성공!')
+                bs.GL.Mesh('box').S('material', bs.GL.Material('color'), '<', 'ROOT', 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
+                bs.GL.Mesh('box').S('material', '#ee2233', '<', 'ROOT', 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
+            }
         }, '../gl.js')
     })
 </script>

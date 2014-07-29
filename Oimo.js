@@ -130,12 +130,12 @@ OIMO.World.prototype = {
         var result = null;
         var body=this.rigidBodies;
         while(body!==null){
-            if(body.name!== "" && body.name === name) result = body;
+            if(body.UUId!== "" && body.UUId === name) result = body;
             body=body.next;
         }
         var joint=this.joints;
         while(joint!==null){
-            if(joint.name!== "" && joint.name === name) result = joint;
+            if(joint.UUId!== "" && joint.UUId === name) result = joint;
             joint=joint.next;
         }
         return result;
@@ -526,7 +526,7 @@ OIMO.RigidBody = function(X,Y,Z,Rad,Ax,Ay,Az){
     var y = Y || 0;
     var z = Z || 0;
     
-    this.name = "";
+    this.UUId = "";
     this.BODY_DYNAMIC=0x1;
     this.BODY_STATIC=0x2;
     this.MAX_SHAPES=64;
@@ -931,7 +931,7 @@ OIMO.Body = function(Obj){
     var obj = Obj || {};
     if(!obj.world) return;
 
-    this.name = obj.name || '';
+    this.UUId = obj.UUId || '';
     var move = obj.move || false;
     var noSleep  = obj.noSleep || false;
     
@@ -1007,14 +1007,14 @@ OIMO.Body = function(Obj){
     }
 
     // finaly add to physics world
-    this.body.name = this.name;
+    this.body.UUId = this.UUId;
     obj.world.addRigidBody(this.body);
 }
 OIMO.Link = function(Obj){
     var obj = Obj || {};
     if(!obj.world) return;
 
-    this.name = obj.name || '';
+    this.UUId = obj.UUId || '';
     var type = obj.type || "jointHinge";
     var axe1 = obj.axe1 || [1,0,0];
     var axe2 = obj.axe2 || [1,0,0];
@@ -1071,7 +1071,7 @@ OIMO.Link = function(Obj){
     }
 
     // finaly add to physics world
-    this.joint.name = this.name;
+    this.joint.UUId = this.UUId;
     obj.world.addJoint(this.joint);
 }
 OIMO.Performance = function(){
@@ -1741,7 +1741,7 @@ OIMO.Constraint.prototype = {
 OIMO.Joint = function(config){
     OIMO.Constraint.call( this );
 
-    this.name = "";
+    this.UUId = "";
     this.JOINT_DISTANCE=0x1;
     this.JOINT_BALL_AND_SOCKET=0x2;
     this.JOINT_HINGE=0x3;

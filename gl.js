@@ -9,7 +9,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	(function(){
 		//TODO GL ActiveTexture를 없앨수 있는 방법이 있으면 찾아야됨
 		var M, TEX, TEXN, P, PID, gt, vb, uvb, ib, vnb, vb_vnb, ctl , mode, cList, pList, renderPass, dColor=new Float32Array(4), aColor=new Float32Array(4), sColor=new Float32Array(4)
-		var p_diffuse, p_normal, p_vb, p_vnb, p_uvb, p_ib, p_vb_vnb, d_vb, d_vnb, d_uvb, d_ib, d_vb_vnb, d_P,p_backFace,p_parentMTX
+		var p_src, p_normal, p_vb, p_vnb, p_uvb, p_ib, p_vb_vnb, d_vb, d_vnb, d_uvb, d_ib, d_vb_vnb, d_P,p_backFace,p_parentMTX
 		draw = function($cList,$num,$parentMTX){
 			var i=$num,j=0,t=$cList,t0,t1,result, ro = mat4.create(),pos = mat4.create(),mClone=mat4.clone,mIdentity=mat4.identity,mMultiply=mat4.matrixMultiply,mXRotation=mat4.makeXRotation,mYRotation=mat4.makeYRotation,mZRotation=mat4.makeZRotation,mTranslate=mat4.translate
 			var G_FLOAT=gl.FLOAT, G_AB=gl.ARRAY_BUFFER, G_EAB=gl.ELEMENT_ARRAY_BUFFER, G_BPE=Float32Array.BYTES_PER_ELEMENT, G_TEX2D=gl.TEXTURE_2D, G_TEX0=gl.TEXTURE0
@@ -19,23 +19,28 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 				if(gt == 'particle') pList.push(t0)
 				else{
 					p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
-					M=t0.material, mode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
-					P != M.program ? ( P=M.program, gl.useProgram(P), gl.enableVertexAttribArray(P.aVer), PID=P.id, d_P=1) : 0,
+					M=t0._material, mode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
+					P != M.program ? ( P=M.program, gl.useProgram(P), gl.enableVertexAttribArray(P.aVer), PID=P.pid, d_P=1) : 0,
 					gl.uniformMatrix4fv(P.uParentMTX, false, $parentMTX),gl.uniform3fv(P.uP, [t0.x, t0.y, t0.z]), gl.uniform3fv(P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ]), gl.uniform3fv(P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ]), gl.uniform1f(P.uAlpha, t0.alpha)
 					if(P.useLight){
 						sColor[0]=M.specularColor.r/255, sColor[1]=M.specularColor.g/255, sColor[2]=M.specularColor.b/255, sColor[4]=1.0,
 						d_P ? gl.enableVertexAttribArray(P.aVerN) : 0, gl.uniform1f(P.uSpecular, M.specular), gl.uniform4fv(P.uSpecularColor, sColor),
 						d_P || d_vb_vnb ? (gl.bindBuffer(G_AB, vb_vnb), gl.vertexAttribPointer(P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0), gl.vertexAttribPointer(P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE)) : 0
 					}else d_P || d_vb ? (gl.bindBuffer(G_AB, vb), gl.vertexAttribPointer(P.aVer, 3, G_FLOAT, false, 3*G_BPE, 0)) : 0
-					if(PID == 8) TEX && TEX.loaded ? ((p_diffuse != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(gl.TEXTURE_CUBE_MAP, TEX), gl.uniform1i(P.uSamC, 0), gl.uniform1i(P.uUseNormal, false)) : 0), p_diffuse=TEX) : renderPass=0
+					if(PID == 8) TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(gl.TEXTURE_CUBE_MAP, TEX), gl.uniform1i(P.uSamC, 0)) : 0), p_src=TEX) : renderPass=0
+					else if(PID == 81) {
+						gl.uniform1i(P.uUseNormal, 0)
+						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(gl.TEXTURE_CUBE_MAP, TEX), gl.uniform1i(P.uSamC, 0)) : 0), p_src=TEX) : renderPass=0
+						TEXN && TEXN.loaded ? (gl.uniform1i(P.uUseNormal,1), gl.uniform1i(P.uSamN,1),(p_normal != TEXN ? (gl.activeTexture(gl.TEXTURE1), gl.bindTexture(gl.TEXTURE_CUBE_MAP,TEXN)) : 0), p_normal=TEXN) : 0
+					}
 					else if(PID == 9)
 						d_uvb ? (  d_P ? gl.enableVertexAttribArray(P.aTexC) : 0, gl.bindBuffer(G_AB, uvb), gl.vertexAttribPointer(P.aTexC, 2, G_FLOAT, false, 0, 0)) : 0,
-						TEX && TEX.loaded ? ((p_diffuse != TEX ? (gl.activeTexture(G_TEX0),gl.bindTexture(G_TEX2D, TEX),gl.uniform1i(P.uSam,0), gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true), gl.texImage2D(G_TEX2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, TEX.video)) : 0), p_diffuse=TEX) : renderPass=0,
+						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0),gl.bindTexture(G_TEX2D, TEX),gl.uniform1i(P.uSam,0), gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true), gl.texImage2D(G_TEX2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, TEX.video)) : 0), p_src=TEX) : renderPass=0,
 						TEXN ? (gl.uniform1i(P.uUseNormal,1), gl.uniform1i(P.uSamN,1)) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture(gl.TEXTURE1), gl.bindTexture(G_TEX2D,TEXN)) : 0), p_normal=TEXN) : 0
 					else if(PID > 3){
 						gl.uniform1i(P.uUseNormal, 0),
 						d_uvb ? (  d_P ? gl.enableVertexAttribArray(P.aTexC) : 0, gl.bindBuffer(G_AB, uvb), gl.vertexAttribPointer(P.aTexC, 2, G_FLOAT, false, 0, 0)) : 0,
-						TEX && TEX.loaded ? ((p_diffuse != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(G_TEX2D, TEX), gl.uniform1i(P.uSam, 0)) : 0), p_diffuse=TEX) : renderPass=0
+						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture(G_TEX0), gl.bindTexture(G_TEX2D, TEX), gl.uniform1i(P.uSam, 0)) : 0), p_src=TEX) : renderPass=0
 						if(PID == 5) TEXN ? (gl.uniform1i(P.uUseNormal,1), gl.uniform1i(P.uSamN,1)) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture(gl.TEXTURE1), gl.bindTexture(G_TEX2D,TEXN)) : 0), p_normal=TEXN) : 0
 						if(PID >= 6) M.useAni ? (M._cGap+=16 , M._cGap >= M._gap ? (M._dirty=1, M._cGap=0, M._cCol++, M._cCol == M.col ? ( M._cCol=0, M._cRow++) : 0, M._cRow == M.row ? M._cRow=0 : 0) : M._dirty=0) : 0,
 							gl.uniform1f(P.uCol, M._cCol/M.col), gl.uniform1f(P.uPerCol, 1/M.col), gl.uniform1f(P.uRow, M._cRow/M.row), gl.uniform1f(P.uPerRow, 1/M.row)
@@ -57,24 +62,24 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			dColor[0]=GL.directionalLight.r/255, dColor[1]=GL.directionalLight.g/255, dColor[2]=GL.directionalLight.b/255, dColor[3]=GL.directionalLight.a, aColor[0]=GL.ambientLight.r/255, aColor[1]=GL.ambientLight.g/255, aColor[2]=GL.ambientLight.b/255, aColor[3]=GL.ambientLight.a
 			for(var k in Ps) gl.useProgram(P=Ps[k]), gl.uniformMatrix4fv(P.uPerspectMTX, false, perspectMTX), gl.uniformMatrix4fv(P.uCameraMTX, false, ctl.cameraMTX),gl.uniformMatrix4fv(P.uParentMTX, false, parentMTX),
 				GL.fog.use ? (gl.uniform1i(P.uFog, 1), gl.uniform1f(P.uFogDensity, GL.fog.density), gl.uniform3fv(P.uFogColor, [GL.fog.r/255, GL.fog.g/255, GL.fog.b/255]) ) : 0,
-				P.useLight ? (gl.uniform4fv(P.uDLightColor, dColor), gl.uniform4fv(P.uALightColor, aColor), gl.uniform3fv(P.uDLightD, GL.directionalLight.direction), gl.uniform1f(P.uDIntensity, GL.directionalLight.intensity), gl.uniform1f(P.uAIntensity, GL.ambientLight.intensity),
-					GL.pointLight ? (gl.uniform3fv(P.uPLightPos, [GL.pointLight.x, GL.pointLight.y, GL.pointLight.z])) : 0
+				P.useLight ? (gl.uniform4fv(P.uDLightColor, dColor), gl.uniform4fv(P.uALightColor, aColor), gl.uniform3fv(P.uDLightD, [GL.directionalLight.x,GL.directionalLight.y,GL.directionalLight.z]), gl.uniform1f(P.uDIntensity, GL.directionalLight.intensity), gl.uniform1f(P.uAIntensity, GL.ambientLight.intensity),
+				GL.pointLight ? (gl.uniform3fv(P.uPLightPos, [GL.pointLight.x, GL.pointLight.y, GL.pointLight.z])) : 0
 				) : 0
-			if(GL.skyBox) gl.disable(gl.DEPTH_TEST), gl.disable(gl.BLEND), t0=GL.skyBox.obj, M=t0.material,
+			if(GL.skyBox) gl.disable(gl.DEPTH_TEST), gl.disable(gl.BLEND), t0=GL.skyBox.obj, M=t0._material,
 				M.texture.loaded ? (gl.enableVertexAttribArray(P.aVer),gt=t0.geoType, ib=IBs[gt], vb_vnb=VB_VNBs[gt], uvb=UVBs[gt], vb=VBs[gt],
 					gl.useProgram(P=M.program), gl.uniform3fv(P.uP, [0, 0, 0]), gl.uniform3fv(P.uR, [0, 0, 0]), gl.uniform3fv(P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ]), gl.uniform1f(P.uAlpha, 1),
 					gl.uniform1i(P.uSamC, 0), gl.activeTexture(gl.TEXTURE0), gl.bindTexture(gl.TEXTURE_CUBE_MAP, M.texture),
 					gl.bindBuffer(G_AB, vb), gl.vertexAttribPointer(P.aVer, 3, G_FLOAT, false, 0, 0), gl.bindBuffer(G_EAB, ib), gl.drawElements(gl[t0.renderMode], ib.num, gl.UNSIGNED_SHORT, 0), D_tri+=8 ) : 0;
 			if(cList.length == 0) return;
 			i=GL.children.length, gl.enable(gl.BLEND), gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA), gl.enable(gl.DEPTH_TEST), gl.depthFunc(gl.LESS)
-			draw(cList,i,parentMTX),p_diffuse=null, p_normal=null, gl.depthMask(false), i=pList.length, D_par=i, D_parType=0
+			draw(cList,i,parentMTX),p_src=null, p_normal=null, gl.depthMask(false), i=pList.length, D_par=i, D_parType=0
 			if(i > 0){// TODO 이것도 텍스쳐랑 컬러랑 분기시켜야하..,TODO 지오메트리 파티클을 지원해야하나;;;// 거리에 따른 포인트 크기 도 계산해야됨...어찌하지;;
 				var pTList={}, pT, kList, check, pv
 				while(i--) pTList[pT=pList[i]._geoTypeP] ? pTList[pT].push(pList[i]) : (pTList[pT]=[], pTList[pT].push(pList[i]))
 				gl.useProgram(P=Ps['particle']), gl.enableVertexAttribArray(P.aPage), gl.enableVertexAttribArray(P.aPalpha), gl.enableVertexAttribArray(P.aPscale), gl.enableVertexAttribArray(P.aVer)
 				for(var k in pTList){
 					i=pTList[k].length, kList=pTList[k], check={}
-					while(i--) t0=kList[i], M=t0.material,TEX=M.texture,
+					while(i--) t0=kList[i], M=t0._material,TEX=M.texture,
 						!check[t0._geoTypeP] ? (t0.update(), D_parType++, check[gt=t0._geoTypeP]=1, gl.bindBuffer(G_AB, vb=VBs[gt]), gl.vertexAttribPointer(P.aVer, 3, G_FLOAT, false, 0, 0),
 							pv=VBs[gt+'_p'], pv ? (gl.bindBuffer(G_AB, pv), gl.vertexAttribPointer(P.aPage, 1, G_FLOAT, false, 3*G_BPE, 0), gl.vertexAttribPointer(P.aPalpha, 1, G_FLOAT, false, 3*G_BPE, 1*G_BPE), gl.vertexAttribPointer(P.aPscale, 1, G_FLOAT, false, 3*G_BPE, 2*G_BPE)) : 0) : 0,
 							t0.zSort ? (gl.enable(gl.DEPTH_TEST), gl.depthFunc(gl.LESS)) : gl.disable(gl.DEPTH_TEST),
@@ -161,12 +166,12 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	function calculateNormals(v,i){var x=0, y=1, z=2, j, k, len, mSqt=Math.sqrt, ns=[], v1=[], v2=[], n0=[], n1=[];for(j=0, len=v.length; j < len; j++) ns[j]=0.0;for(j=0, len=i.length; j < len; j=j+3){v1=[], v2=[], n0=[], v1[x]=v[3*i[j+1]+x]-v[3*i[j]+x], v1[y]=v[3*i[j+1]+y]-v[3*i[j]+y], v1[z]=v[3*i[j+1]+z]-v[3*i[j]+z], v2[x]=v[3*i[j+2]+x]-v[3*i[j+1]+x], v2[y]=v[3*i[j+2]+y]-v[3*i[j+1]+y], v2[z]=v[3*i[j+2]+z]-v[3*i[j+1]+z], n0[x]=v1[y]*v2[z]-v1[z]*v2[y], n0[y]=v1[z]*v2[x]-v1[x]*v2[z], n0[z]=v1[x]*v2[y]-v1[y]*v2[x];for(k=0; k < 3; k++) ns[3*i[j+k]+x]=ns[3*i[j+k]+x]+n0[x], ns[3*i[j+k]+y]=ns[3*i[j+k]+y]+n0[y], ns[3*i[j+k]+z]=ns[3*i[j+k]+z]+n0[z]};for(var i=0, len=v.length; i < len; i=i+3){n1=[], n1[x]=ns[i+x], n1[y]=ns[i+y], n1[z]=ns[i+z];var len=mSqt((n1[x]*n1[x])+(n1[y]*n1[y])+(n1[z]*n1[z]));if(len == 0) len=0.00001;n1[x]=n1[x]/len, n1[y]=n1[y]/len, n1[z]=n1[z]/len, ns[i+x]=n1[x], ns[i+y]=n1[y], ns[i+z]=n1[z];};return ns;}
 	function setBaseBuffers(){
 		var vs, i, c;vs=[ -0.5,-0.5,0.0,0.5,-0.5,0.0,0.5,0.5,0.0,-0.5,0.5,0.0], i=[0,1,2,0,2,3], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0], makeBufferSet('rect',vs,i,c), vs=[0,0.5,0,-0.5,-0.5,0,0.5,-0.5,0], i=[0,1,2], c=[0.5,0,1,0,1,1,0,1], makeBufferSet('tri',vs,i,c), vs=[-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5], i=[0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0], makeBufferSet('box',vs,i,c)
-		var vs=[], is=[], cs=[], w=18, h=18, radius=1, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};makeBufferSet('sphere',vs,is,cs)
+		var vs=[], is=[], cs=[], w=32, h=32, radius=1, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};makeBufferSet('sphere',vs,is,cs)
 	}
 	var attrIDX={}
 	function mkProgram(k){ // 여긴어케 더 정리를 먼저 할꺼냐...쉐이더 메이커를 좀더 안정화 고도화 시킬꺼냐 -_-;;
 		var _data=bs.GL._shaderData, vShader=gl.createShader(gl.VERTEX_SHADER), fShader=gl.createShader(gl.FRAGMENT_SHADER),
-			t0="uP,uR,uS,uAlpha,uFog,uFogDensity,uFogColor,uPointSize,uPerspectMTX,uCameraMTX,uParentMTX".split(','), t1, t2=k.name, t3, t4, t5='attribute,v_uniform,f_uniform,varying'.split(','), j=t5.length, i, p, targetKey, splitKey,
+			t0="uP,uR,uS,uAlpha,uFog,uFogDensity,uFogColor,uPointSize,uPerspectMTX,uCameraMTX,uParentMTX".split(','), t1, t2=k.UUId, t3, t4, t5='attribute,v_uniform,f_uniform,varying'.split(','), j=t5.length, i, p, targetKey, splitKey,
 			vStr="precision mediump float;\n"+_data._BASE_VERTEX_UNIFORM+_data._MTX_FUNC, fStr="precision mediump float;\n"+_data._BASE_FRAGMENT_UNIFORM+(t2 == 'last' ? _data._FXAA : '')
 		while(j--){
 			targetKey=t5[j], splitKey=targetKey.split('_'), i=k[targetKey].length
@@ -175,8 +180,8 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		vStr+='\nvoid main(void) {\n'+_data._MAKE_VERTEX+(k.useLight ? _data._BASE_VERTEX_LIGHT_CAL : '')+k.vFunc+'\n}', t2 == 'last' ? (fStr+='\nvoid main(void) {\n'+k.fFunc+'\n}') : (fStr+='\nvoid main(void) {\n'+k.fFunc+'\n'+_data._BASE_FRAGMENT_RESULT+'\n}')
 		gl.shaderSource(vShader, vStr), gl.compileShader(vShader), VSs[t2]=vShader;if(!gl.getShaderParameter(vShader, gl.COMPILE_STATUS)) return alert(gl.getShaderInfoLog(vShader));
 		gl.shaderSource(fShader, fStr), gl.compileShader(fShader), FSs[t2]=fShader;if(!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)) return alert(gl.getShaderInfoLog(fShader));
-		Ps[t2]=p=gl.createProgram(), p.name=t2, gl.attachShader(p, VSs[t2]), gl.attachShader(p, FSs[t2]), gl.linkProgram(p),
-		gl.getProgramParameter(p, gl.LINK_STATUS) ? ( gl.useProgram(p), p.useLight=k.useLight, p.id=k.id ) : alert("쉐이더 초기화에 실패했습니다.")
+		Ps[t2]=p=gl.createProgram(), p.UUId=t2, gl.attachShader(p, VSs[t2]), gl.attachShader(p, FSs[t2]), gl.linkProgram(p),
+		gl.getProgramParameter(p, gl.LINK_STATUS) ? ( gl.useProgram(p), p.useLight=k.useLight, p.pid=k.pid ) : alert("쉐이더 초기화에 실패했습니다.")
 		for(i in t0) t2=t0[i], p[t2]=gl.getUniformLocation(p,t2);
 		i=k.v_uniform.length;while(i--) p[t3=k.v_uniform[i].split('_')[1]]=gl.getUniformLocation(p,t3);i=k.f_uniform.length;while(i--) p[t3=k.f_uniform[i].split('_')[1]]=gl.getUniformLocation(p,t3)
 		i=k.attribute.length;while(i--) attrIDX[k.attribute[i].split('_')[1]]= -1
@@ -215,22 +220,56 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		if(arg[j] == 'this') return this
 		if(arg.length%2) return k == null ? console.log('존재하지않는 값입니다!') : ((typeof this[k] == 'function') ? this[k]() : this[k])
 		return this
+	},
+	sMethod.prototype['material']=function(v){
+		if(v) {
+			if(v['program']) this._material = v
+			else {
+				if(v['type']) {
+					if(v['type'] =='cube'){
+						v['light'] ? (this._material=GL.Material('cubeLight').S('src', v.src), v['normal'] ? this._material.S('normal', v['normal']) :0 ) :
+							this._material = GL.Material('cube').S('src',v.src)
+					}else this._material=GL.Material('environment').S('src', v.src), v['normal'] ? this._material.S('normal', v['normal']) :0
+				}else{
+					var t = {},t0 =v.split(','),t1=t0.length-1
+					for(var i=1; i<t1-1;i++) t[t0[i++]] = t0[i]
+					if(v.charAt(0)=='#') {
+						t0[t1] == 'L' ? this._material=GL.Material('colorLight') :
+								t0[t1]=='TL' ? this._material = GL.Material('toonLight') :
+								t0[t1]=='T' ? this._material = GL.Material('toon') :
+							this._material = GL.Material('color')
+					}else if(t0[t1]=='S') {
+						this._material = GL.Material('sprite').S('src',t0[0],'col',t['col'],'row',t['row'],'time',t['time'] ? t['time'] : 1)
+					}else{
+						t0[t1]=='B' ? this._material = GL.Material('bitmap').S('src',t0[0]) :
+								t0[t1]=='BL' ? this._material = GL.Material('bitmapLight').S('src',t0[0],'normal',t0[t1-1]) : 0
+					}
+				}
+			}
+
+		}else return this._material
 	}
 	//TODO parent처리와 각종 child관련 매서드 추가해야됨
-	function parent(v){v == 'root' ? (GL.children.push(this)) : v.children.push(this)}
+	function parent(v){v == 'ROOT' ? (GL.children.push(this)) : v.children.push(this)}
 	function child(v){this == GL ? GL.children.push(v) : this.children.push(v)}
-	var GL, baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}}, msgF=' 아이디를 가진 캔버스가없습니다. 생성후 시도하세요!!', msgF2='WEBGL을 지원하지 않는 브라우져입니다'
-	window.BGL=GL={
-		init:function($id){
+	var GL, baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}}, msgF=' 아이디를 가진 캔버스가없습니다. 생성후 시도하세요!!', msgF2='WEBGL을 지원하지 않는 브라우져입니다'
+	bs.GL=GL={
+		init:function($id,$shaderSrc,$end,$fail){
+			bs.js(function(){
+				GL._init($id,$end,$fail)
+			},$shaderSrc)
+		},
+		_init:function($id,$end,$fail){
 			if(cvs) return console.log('중복초기화 방지');
 			if(!(cvs=document.getElementById($id))) return console.log($id+msgF), false
 			var keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split(','), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/}, i=keys.length
 			while(i--) if(gl=cvs.getContext(keys[i], keys2)) break
+
 			if(gl){
 				var i, p, t0=[], m=mouseMNG, per=window.performance, last=0, now, delta, t=GL.debug;
 				for(var k in GL._shaderData) k.charAt(0) != '_' ? t0.push(k) : 0
 				i=t0.length;while(i--) mkProgram(GL._shaderData[t0[i]]);
-				for(i in Ps){ p=Ps[i];for(k in attrIDX) p[k]=gl.getAttribLocation(p,k);console.log('생성 '+p.name,p)}
+				for(i in Ps){ p=Ps[i];for(k in attrIDX) p[k]=gl.getAttribLocation(p,k);console.log('생성 '+p.UUId,p)}
 				setBaseBuffers(), gl.clearColor(0.0,0.0,0.0,1.0), GL._eventDiv=bs.Dom('body'),
 					GL._eventDiv.S(
 						'down',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=1},
@@ -244,9 +283,9 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 				(function tick(){if(m.checkPoint == m.checkInterval) drawMouse();if(m.checkPoint == m.checkInterval+2) checkMouse();m.checkPoint++, requestAnimationFrame(tick)})(),
 				(function tick(){if(GL.controller) GL.controller.update(perspectMTX);requestAnimationFrame(tick)})();
 //			    setInterval(function(){if(GL.controller) GL.controller.update(perspectMTX)},15) // TODO 이건 모바일일 경우 인터벌이 더나아보이긴하네 -_-;; 이유는!?
-				return  gl
+				$end()
 			}
-			else return console.log(msgF2), false
+			else console.log(msgF2), $fail ? $fail() : 0
 		},
 		parserOBJ:function($d){ console.log('블렌더obj를 파싱')
 			// TODO 파서는 나중에 좀더 파자.............잘몰것다 -_-
@@ -277,13 +316,13 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		},
 		Light:(function(){ //TODO POINT,SPOT
 			var t=function(){}, DLight, ALight, PLight, _fn
-			_fn=t.prototype, _fn.intensity=1.0, _fn.r=255, _fn.g=255, _fn.b=255, _fn.a=1, _fn.S=sMethod.prototype.S,
-			DLight=function(){this.direction=[0, 1, 1] }, ALight=function(){}, PLight=function(){this.x=0, this.y=0, this.z=0}, DLight.prototype=ALight.prototype=PLight.prototype=_fn
+			_fn=t.prototype, _fn.intensity=1.0, _fn.r=255, _fn.g=255, _fn.b=255,_fn.x=0,_fn.y=0,_fn.z=0, _fn.a=1, _fn.S=sMethod.prototype.S,
+			DLight=function(){}, ALight=function(){}, PLight=function(){this.x=0, this.y=0, this.z=0}, DLight.prototype=ALight.prototype=PLight.prototype=_fn
 			return function(k){ return k == "directional" ? new DLight() : k == "ambient" ? new ALight() : k == "point" ? new PLight() : null}
 		})(),
 		Material:(function(){
 			var t=function(){}, r=bs.rand, t2='uC,uL,uD,uN,useCube,video,text'.split(','), kind, t1, i, k, _fn
-			t.prototype.S=sMethod.prototype.S, kind={ Color:{uC:1}, ColorLight:{uC:1, uL:1}, Toon:{uC:1, uL:1}, ToonLight:{uC:1, uL:1},  Bitmap:{uD:1}, BitmapLight:{uL:1, uD:1, uN:1}, Video:{uD:1, video:1}, VideoLight:{uL:1, uD:1, uN:1, video:1}, Environment:{uL:1, useCube:1}, Cube:{uL:1, useCube:1}, Sky:{useCube:1}, PointLightTest:{uL:1, useCube:1}}
+			t.prototype.S=sMethod.prototype.S, kind={ Color:{uC:1}, ColorLight:{uC:1, uL:1}, Toon:{uC:1, uL:1}, ToonLight:{uC:1, uL:1},  Bitmap:{uD:1}, BitmapLight:{uL:1, uD:1, uN:1}, Video:{uD:1, video:1}, VideoLight:{uL:1, uD:1, uN:1, video:1}, Environment:{uL:1, useCube:1,uN:1}, Cube:{uL:0, useCube:1}, CubeLight:{uL:1, useCube:1,uN:1}, Sky:{useCube:1}, PointLightTest:{uL:1, useCube:1}}
 			kind.Text = {}
 			for(k in kind){ // LINEAR_MIPMAP_LINEAR, NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_NEAREST,NEAREST,LINEAR 못외우것음 -_-
 				(function(){
@@ -291,8 +330,8 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 					while(i--) kind[k][t2[i]] ? 0 : (kind[k][t2[i]]=0)
 					var pk=k.charAt(0).toLowerCase()+k.substr(1, k.length-1), t6=kind[k], t3=t6['uL'], t4=t6['uN'], t5=t6['video'] ? 1 : (t6['text'] ? 2 : 0)
 					if(t6['uC']) t6=function(){this.r=r(0, 255), this.g=r(0, 255), this.b=r(0, 255), this.program=Ps[pk]}, _fn=t6.prototype=new t
-					else if(t6['uD']) t6=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['diffuse']=function(src){ this.texture=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5)}
-					else if(t6['useCube']) t6=function(){this.texture=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['urls']=function(urls){ this.texture=makeTexture(urls)}
+					else if(t6['uD']) t6=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function(src){ this.texture=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5)}
+					else if(t6['useCube']) t6=function(){this.texture=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function(src){ this.texture=makeTexture(src)}
 					t4 ? (_fn['normal']=function(src){ this.textureNormal=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0)}) : 0,
 					t3 ? (_fn.specular=25, _fn.specularColor={r:255, g:255, b:255}) : 0
 					kind[k]=t6
@@ -300,7 +339,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			}
 			t1=kind['Sprite']=function(){this.texture=null, this.program=Ps['sprite'], this.col=this.row=0, this._cCol=this._cRow=0, this.useAni=1, this._dirty=0, this._cGap=0, this._gap=16, this._time=1000}, _fn=t1.prototype=new t
 			_fn['time']=function(v){if(!v) return this._time; else this._time=v*1000, this._gap=this._time/(this.col*this.row)}
-			_fn['diffuse']=function(src){ this.texture=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST',0)}
+			_fn['src']=function(src){ this.texture=makeTexture(src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST',0)}
 			_fn['stop']=function(){this.useAni=0}, _fn['play']=function(){this.useAni=1}, _fn['gotoAndPlay']=function(f){this.useAni=1, this._cCol=f%this.col, this._cRow=Math.floor(f/this.row)}
 			t1=kind['Text']=function(){
 				this.program=Ps['text'], this.texture=gl.createTexture(), this.texture.loaded=0, this.texture.canvas=document.createElement('canvas'), this.texture.context=this.texture.canvas.getContext("2d")
@@ -328,14 +367,16 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			return function(k){ return new kind[k.charAt(0).toUpperCase()+k.substr(1, k.length-1)]()}
 		})(),
 		Mesh:(function(){
-			var idx=0, t0={backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split(','), i=evts.length
+			var UUID=0, t0={backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split(','), i=evts.length
 			var Mesh=function(k){
-				for(var t in baseGeoProperty) this[t]=baseGeoProperty[t];for(t in t0) this[t]=t0[t]
-				this.children = [],this.geoType=k , this.name='bsMesh_Instance'+idx++, t=setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};
+				this.children = [],this.geoType=k , this.UUId='Mesh'+UUID++, t=setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};
 			}, fn=Mesh.prototype=sMethod.prototype
+			for(var t in baseGeoProperty) fn[t]=baseGeoProperty[t];for(t in t0) fn[t]=t0[t]
 			while(i--) (function(){ // 마우스관련 전면 폐기하고 다시짜야함
 				var t=evts[i]; fn[t]=function(v){return this.setEvent(t, v)}
 			})();
+			var trim = /^\s*|\s*$/g
+			fn['material']=sMethod.prototype.material,
 			fn['setEvent']=function($type, v){
 				if(v) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
 				else return this.evt[$type];
@@ -344,19 +385,20 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			return function($k){ return VBs[$k] ? new Mesh($k) : null}
 		})(),
 		Particle:(function(){ //TODO 이건 다이나믹 타입인데... 향후 비애니타입의 빌보드로 나눠야할듯
-			var idx=0, t0={renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}, Particle=function(k){
+			var UUID=0, t0={renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}, Particle=function(k){
 				for(var t in baseGeoProperty) this[t]=baseGeoProperty[t];for(t in t0) this[t]=t0[t]
-				this._geoTypeP=k, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.name='bsParticle_Instance'+idx++
+				this._geoTypeP=k, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='bsParticle_Instance'+UUID++
 				this.addParticle=function(){
 					var t={}, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, tsP=cp.sPos, tsS=cp.sScale, tsA=cp.sAlpha, tdP=cp.dPos, tdS=cp.dScale, tdA=cp.dAlpha, r=bs.randf
 					t.age=0, t.sP=cp.speedPos, t.sS=cp.speedScale, t.sA=cp.speedAlpha,
-					t.dX=r(tdP[0], tdP[1]), t.dY=r(tdP[2], tdP[3]), t.dZ=r(tdP[4], tdP[5]), t.dS=r(tdS[0], tdS[1]), t.dA=r(tdA[0], tdA[1]),
-					t.x=r(tsP[0], tsP[1]), t.y=r(tsP[2], tsP[3]), t.z=r(tsP[4], tsP[5]), t.scale=r(tsS[0], tsS[1]), t.alpha=r(tsA[0], tsA[1]),
-					t.addMath=cp.addMath, ps.push(t), v.concat([t.x, t.y, t.z]), p.concat([t.age, t.alpha, t.scale]),
-					t.gravity=cp.gravity, t.gravityR={x:0, y:0, z:0}
+						t.dX=r(tdP[0], tdP[1]), t.dY=r(tdP[2], tdP[3]), t.dZ=r(tdP[4], tdP[5]), t.dS=r(tdS[0], tdS[1]), t.dA=r(tdA[0], tdA[1]),
+						t.x=r(tsP[0], tsP[1]), t.y=r(tsP[2], tsP[3]), t.z=r(tsP[4], tsP[5]), t.scale=r(tsS[0], tsS[1]), t.alpha=r(tsA[0], tsA[1]),
+						t.addMath=cp.addMath, ps.push(t), v.concat([t.x, t.y, t.z]), p.concat([t.age, t.alpha, t.scale]),
+						t.gravity=cp.gravity, t.gravityR={x:0, y:0, z:0}
 					return t
 				}
 			}, fn=Particle.prototype, newA=[]
+			fn['material']=sMethod.prototype.material,
 			fn.update=function(){
 				var sP, sA, sS, o, ic, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, t0, t1, perPI=Math.PI/30, k, len=ps.length, i=ps.length
 				while(i--){
@@ -372,7 +414,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		})(),
 		PostEffect:(function(){
 			var t0='PostEffect_mono,PostEffect_invert,PostEffect_sepia,PostEffect_bloom'.split(','), R='', t1, t2, i=t0.length
-			while(i--) t1=t0[i].split('_'), t2=t1[1].charAt(0).toUpperCase()+t1[1].substr(1, t1[1].length-1), R+='if(k == "'+t1[1]+'") return new '+new Function('', "return this.name = '"+t1[1]+"', this.uniform = 'u"+t2+"';")+'();\n'
+			while(i--) t1=t0[i].split('_'), t2=t1[1].charAt(0).toUpperCase()+t1[1].substr(1, t1[1].length-1), R+='if(k == "'+t1[1]+'") return new '+new Function('', "return this.UUId = '"+t1[1]+"', this.uniform = 'u"+t2+"';")+'();\n'
 			return R=new Function('k', R), R.__list=t0, R.use=0, R.fxaa=0, R.anagraphy=0, R.list=[], R;
 		})(),
 		Controller :(function(){
@@ -385,7 +427,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			var ISO=function(){
 				var t=new camera(), t0, t1, dx, dy, d3=new Float32Array(3), mC=Math.cos, mS=Math.sin, PI=Math.PI, rTilt=PI/2, rPan=PI/2, mx=GL.mobile ? 'mx0' : 'mx', my=GL.mobile ? 'my0' : 'my'
 				t.distance=500, t.speed=1, t.speedDelay=0.05, t.tilt=PI/2, t.pan=PI/2, t.mouseDowned=0, t.enable=1,
-					t._updateDrag=function($e){ this.mouseDowned*this.enable ? (dx=$e[mx], dy= -$e[my], this.tilt+=(dx)/GL._w*PI*this.speed, this.pan+=(dy)/GL._h/2*PI*this.speed ) : 0},
+				t._updateDrag=function($e){ this.mouseDowned*this.enable ? (dx=$e[mx], dy= -$e[my], this.tilt+=(dx)/GL._w*PI*this.speed, this.pan+=(dy)/GL._h/2*PI*this.speed ) : 0},
 				t.update=function($perspectMTX){
 					this.perspectiveUpdate($perspectMTX), t0=this.cameraMTX=mat4.identity(t.cameraMTX), t1=this.distance
 					rPan+=(this.pan-rPan)*this.speedDelay*2, rTilt+=(this.tilt-rTilt)*this.speedDelay // 짐벌락 보정해야됨 - 왜 라디안값이 이따우지-_-
@@ -413,6 +455,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 				else console.log('지원하지 않는 타입입니다.')}
 		})(),
 		S:sMethod.prototype.S,
+//		SkyBox:function(){ return GL.Mesh('box').S('scaleX', 10000, 'scaleY', 10000, 'scaleZ', 10000, 'geoType', 'box')},
 		SkyBox:function(){ return GL.Mesh('box').S('scaleX', 10000, 'scaleY', 10000, 'scaleZ', 10000, 'geoType', 'box')},
 		makeBufferSet:makeBufferSet, makeTexture:makeTexture,
 		skyBox:null, controller:null, directionalLight:null, ambientLight:null, pointLight:null,
@@ -437,7 +480,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	mat4.lookAt= function (out, eye, center, up) {var x0, x1, x2, y0, y1, y2, z0, z1, z2, len,eyex = eye[0],eyey = eye[1],eyez = eye[2],upx = up[0],upy = up[1],upz = up[2],centerx = center[0],centery = center[1],centerz = center[2];if (Math.abs(eyex - centerx) < GLMAT_EPSILON &&Math.abs(eyey - centery) < GLMAT_EPSILON &&Math.abs(eyez - centerz) < GLMAT_EPSILON) {return mat4.identity(out)};z0 = eyex - centerx,z1 = eyey - centery,z2 = eyez - centerz,len = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2),z0 *= len,z1 *= len,z2 *= len,x0 = upy * z2 - upz * z1,x1 = upz * z0 - upx * z2,x2 = upx * z1 - upy * z0,len = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);if (!len) x0 = 0,x1 = 0,x2 = 0;else len = 1 / len,x0 *= len,x1 *= len,x2 *= len;y0 = z1 * x2 - z2 * x1,y1 = z2 * x0 - z0 * x2,y2 = z0 * x1 - z1 * x0,len = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);if (!len)y0 = 0, y1 = 0, y2 = 0;else len = 1 / len, y0 *= len, y1 *= len, y2 *= len;return out[0] = x0, out[1] = y0, out[2] = z0, out[3] = 0, out[4] = x1, out[5] = y1, out[6] = z1, out[7] = 0, out[8] = x2, out[9] = y2, out[10] = z2, out[11] = 0, out[12] = -(x0 * eyex + x1 * eyey + x2 * eyez), out[13] = -(y0 * eyex + y1 * eyey + y2 * eyez), out[14] = -(z0 * eyex + z1 * eyey + z2 * eyez), out[15] = 1,out;},
 	mat4.perspective =function (a, b, c, d, e) {return a=c * Math.tan(a * Math.PI / 360), b=a * b, mat4.frustum(-b, b, -a, a, c, d, e)},
 	mat4.frustum =function (a, b, c, d, e, g, f) {var h=b - a, i=d - c, j=g - e;return f||(f=mat4.create()), f[0]=e * 2 / h, f[1]=0, f[2]=0, f[3]=0, f[4]=0, f[5]=e * 2 / i, f[6]=0, f[7]=0, f[8]=(b + a) / h, f[9]=(d + c) / i, f[10]=-(g + e) / j, f[11]= -1, f[12]=0, f[13]=0, f[14]=-(g * e * 2) / j, f[15]=0, f},
-	GL.S('directionalLight', GL.Light('directional').S('r', 255, 'g', 255, 'b', 255, 'a', 0.1, 'direction', [0, 0, -1], 'intensity', 0.8), 'ambientLight', GL.Light('ambient').S('r', 64, 'g', 64, 'b', 64),'controller',GL.Controller('ISO'))
+	GL.S('directionalLight', GL.Light('directional').S('r', 255, 'g', 255, 'b', 255, 'a', 0.1, 'x', 0,'y',0,'z',-1, 'intensity', 0.8), 'ambientLight', GL.Light('ambient').S('r', 64, 'g', 64, 'b', 64),'controller',GL.Controller('ISO'))
 	return GL
 })();
 exports.GL = GL

@@ -1,0 +1,50 @@
+﻿﻿<html lang="ko">
+<head>
+    <title>Game Demo</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs"/>
+    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>
+        body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
+        p, li, div, b {
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+    </style>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+<canvas id="glCanvas" width="1" height="1" style="position:absolute"></canvas>
+<script>
+    bs.debug(0),bs.repository('./');
+    bs(function(){
+        bs.require(function(data){
+            bs.GL=data.GL
+            var BGL=bs.GL
+            var world,ground,bodys = [],meshs = []
+            bs.js(function(){
+                if(BGL.init('glCanvas')) inits()
+                else console.log('초기화 실패')
+                function inits(){
+
+                    var game = {
+                        setBg : function(){
+                            var
+                        }
+                    }
+
+                }
+            }, '../shaders.js')
+        }, '../gl.js')
+    })
+</script>
+</body>
+</html>

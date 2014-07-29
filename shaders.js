@@ -1,6 +1,6 @@
 ;(function(){
 	bs.GL._shaderData={}
-	function addShader($obj){bs.GL._shaderData[$obj.name]=$obj}
+	function addShader($obj){bs.GL._shaderData[$obj.UUId]=$obj}
 	bs.GL._shaderData._BASE_VERTEX_UNIFORM = ''+
 		'uniform mat4 uPerspectMTX;\n'+'uniform mat4 uCameraMTX;\n'+'uniform mat4 uParentMTX;\n'+
 		'uniform vec3 uP;\n'+'uniform vec3 uR;\n'+'uniform vec3 uS;\n'+
@@ -90,7 +90,7 @@
 		'const mat3 sepiaMatrix = mat3(0.3588, 0.7044, 0.1368, 0.2990, 0.5870, 0.1140, 0.2392, 0.4696, 0.0912);\n';
 
 	var color={
-		name:'color',useLight:0,id:0,
+		UUId:'color',useLight:0,pid:0,
 		attribute:['vec3_aVer'],
 		v_uniform:['vec3_uColor'],
 		f_uniform:[],
@@ -106,7 +106,7 @@
 	}
 	addShader(color)
 	var colorLight={
-		name:'colorLight',useLight:1,id:1,
+		UUId:'colorLight',useLight:1,pid:1,
 		attribute:['vec3_aVer','vec3_aVerN'],
 		v_uniform:['vec3_uColor','vec3_uDLightD','float_uSpecular','mat4_test'],
 		f_uniform:['float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
@@ -130,7 +130,7 @@
 	}
 	addShader(colorLight)
 	var toon={
-		name:'toon',useLight:1,id:2,
+		UUId:'toon',useLight:1,pid:2,
 		attribute:['vec3_aVer','vec3_aVerN'],
 		v_uniform:['vec3_uColor','vec3_uDLightD','float_uSpecular'],
 		f_uniform:['vec4_uSpecularColor'],
@@ -150,7 +150,7 @@
 	}
 	addShader(toon)
 	var toonLight={
-		name:'toonLight',useLight:1,id:3,
+		UUId:'toonLight',useLight:1,pid:3,
 		attribute:['vec3_aVer','vec3_aVerN'],
 		v_uniform:['vec3_uColor','vec3_uDLightD','float_uSpecular'],
 		f_uniform:['float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
@@ -178,7 +178,7 @@
 	}
 	addShader(toonLight)
 	var bitmap={
-		name:'bitmap',useLight:0,id:4,
+		UUId:'bitmap',useLight:0,pid:4,
 		attribute:['vec3_aVer','vec2_aTexC'],
 		v_uniform:[],
 		f_uniform:['sampler2D_uSam'],
@@ -197,7 +197,7 @@
 	addShader(bitmap)
 
 	var video={
-		name:'video',useLight:0,id:9,
+		UUId:'video',useLight:0,pid:9,
 		attribute:['vec3_aVer','vec2_aTexC'],
 		v_uniform:[],
 		f_uniform:['sampler2D_uSam'],
@@ -214,7 +214,7 @@
 	}
 	addShader(video)
 	var videoLight={
-		name:'videoLight',useLight:1,id:9,
+		UUId:'videoLight',useLight:1,pid:9,
 		attribute:['vec3_aVer','vec3_aVerN','vec2_aTexC'],
 		v_uniform:['vec3_uDLightD','float_uSpecular'],
 		f_uniform:['sampler2D_uSam','sampler2D_uSamN','float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','bool_uUseNormal','vec4_uSpecularColor'],
@@ -246,7 +246,7 @@
 	addShader(videoLight)
 
 	var bitmapLight={
-		name:'bitmapLight',useLight:1,id:5,
+		UUId:'bitmapLight',useLight:1,pid:5,
 		attribute:['vec3_aVer','vec3_aVerN','vec2_aTexC'],
 		v_uniform:['vec3_uDLightD','float_uSpecular'],
 		f_uniform:['sampler2D_uSam','sampler2D_uSamN','float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','bool_uUseNormal','vec4_uSpecularColor'],
@@ -281,7 +281,7 @@
 
 
 	var sprite={
-		name:'sprite',useLight:0,id:6,
+		UUId:'sprite',useLight:0,pid:6,
 		attribute:['vec3_aVer','vec2_aTexC'],
 		v_uniform:[],
 		f_uniform:['sampler2D_uSam','float_uCol','float_uRow','float_uPerCol','float_uPerRow'],
@@ -298,34 +298,10 @@
 			' if(alpha<0.1) discard;\n'
 	}
 	addShader(sprite)
-	var environment={
-		name:'environment',useLight:1,id:8,
-		attribute:['vec3_aVer','vec3_aVerN'],
-		v_uniform:['vec3_uDLightD','float_uSpecular'],
-		f_uniform:['samplerCube_uSamC','float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
-		varying : ['vec3_vCubeCoord','float_vAlpha','float_lambertDirection','float_vSpecular'],
-		vFunc:''+
-			' gl_PointSize = uPointSize;\n'+
-			' vec4 cubeNormal =  mv *vec4(-aVerN, 0.0);\n'+
-			' vCubeCoord = cubeNormal.xyz;\n'+
-			' vAlpha = uAlpha;\n'+
-			' gl_Position = uPerspectMTX * uCameraMTX * vertex;\n',
-		fFunc:''+
-			'vec4 src = textureCube(uSamC, vCubeCoord);\n'+
-			'float alpha = src.a;\n'+
 
-			' vec4 ia = vec4(0.0, 0.0, 0.0, 1.0);\n'+
-			' vec4 id = vec4(0.0, 0.0, 0.0, 1.0);\n'+
-			' vec4 is = vec4(0.0, 0.0, 0.0, 1.0);\n'+
-			' ia =src*uALightColor*uAIntensity;\n'+
-			' id =src*uDLightColor*lambertDirection*uDIntensity;\n'+
-			' is =uSpecularColor*vSpecular*lambertDirection*uDIntensity;\n'+
-			' src = ia+id+is;\n'
-	}
-	addShader(environment)
 
 	var pointLightTest={
-		name:'pointLightTest',useLight:1,id:8,
+		UUId:'pointLightTest',useLight:1,pid:8,
 		attribute:['vec3_aVer','vec3_aVerN'],
 		v_uniform:['vec3_uDLightD','float_uSpecular','vec3_uPLightPos'],
 		f_uniform:['samplerCube_uSamC','float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
@@ -369,10 +345,28 @@
 	addShader(pointLightTest)
 
 	var cube={
-		name:'cube',useLight:1,id:8,
+		UUId:'cube',useLight:0,pid:8,
+		attribute:['vec3_aVer','vec3_aVerN'],
+		v_uniform:[],
+		f_uniform:['samplerCube_uSamC'],
+		varying : ['vec3_vCubeCoord','float_vAlpha'],
+		vFunc:''+
+			' gl_PointSize = uPointSize;\n'+
+			' vec4 cubeNormal =  normalize(vec4(-aVer, 0.0));\n'+
+			' vCubeCoord = cubeNormal.xyz;\n'+
+			' vAlpha = uAlpha;\n'+
+			' gl_Position = uPerspectMTX * uCameraMTX * vertex;\n',
+		fFunc:''+
+			'vec4 src = textureCube(uSamC, vCubeCoord);\n'+
+			'float alpha = src.a;\n'
+	}
+	addShader(cube)
+
+	var cubeLight={
+		UUId:'cubeLight',useLight:1,pid:81,
 		attribute:['vec3_aVer','vec3_aVerN'],
 		v_uniform:['vec3_uDLightD','float_uSpecular'],
-		f_uniform:['samplerCube_uSamC','float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
+		f_uniform:['samplerCube_uSamC','samplerCube_uSamN','float_uAIntensity','vec4_uDLightColor','bool_uUseNormal', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
 		varying : ['vec3_vCubeCoord','float_vAlpha','float_lambertDirection','float_vSpecular'],
 		vFunc:''+
 			' gl_PointSize = uPointSize;\n'+
@@ -389,12 +383,50 @@
 			' ia =src*uALightColor*uAIntensity;\n'+
 			' id =src*uDLightColor*lambertDirection*uDIntensity;\n'+
 			' is =uSpecularColor*vSpecular*lambertDirection*uDIntensity;\n'+
-			' src = ia+id+is;\n'
+			'if(uUseNormal){\n'+
+			'  vec4 normal = textureCube(uSamN, vCubeCoord);\n'+
+			'  src = (ia+id)*0.5+is+(ia*normal.r+id*normal.g+is*normal.b);\n'+
+			'}else{\n'+
+			'  src = ia+id+is;\n'+
+			'}\n'
 	}
-	addShader(cube)
+	addShader(cubeLight)
+
+	var environment={
+		UUId:'environment',useLight:1,pid:81,
+		attribute:['vec3_aVer','vec3_aVerN'],
+		v_uniform:['vec3_uDLightD','float_uSpecular'],
+		f_uniform:['samplerCube_uSamC','samplerCube_uSamN','float_uAIntensity','vec4_uDLightColor', 'bool_uUseNormal','float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
+		varying : ['vec3_vCubeCoord','vec3_vCubeCoord2','float_vAlpha','float_lambertDirection','float_vSpecular'],
+		vFunc:''+
+			' gl_PointSize = uPointSize;\n'+
+			' vec4 cubeNormal =  mv *vec4(-aVerN, 0.0);\n'+
+			' vCubeCoord = cubeNormal.xyz;\n'+
+			' vec4 cubeNormal2 =  normalize(vec4(-aVer, 1.0));\n'+
+			' vCubeCoord2 = cubeNormal2.xyz;\n'+
+			' vAlpha = uAlpha;\n'+
+			' gl_Position = uPerspectMTX * uCameraMTX * vertex;\n',
+		fFunc:''+
+			'vec4 src = textureCube(uSamC, vCubeCoord);\n'+
+			'float alpha = src.a;\n'+
+
+			' vec4 ia = vec4(0.0, 0.0, 0.0, 1.0);\n'+
+			' vec4 id = vec4(0.0, 0.0, 0.0, 1.0);\n'+
+			' vec4 is = vec4(0.0, 0.0, 0.0, 1.0);\n'+
+			' ia =src*uALightColor*uAIntensity;\n'+
+			' id =src*uDLightColor*lambertDirection*uDIntensity;\n'+
+			' is =uSpecularColor*vSpecular*lambertDirection*uDIntensity;\n'+
+			'if(uUseNormal){\n'+
+			'  vec4 normal = textureCube(uSamN, vCubeCoord2);\n'+
+			'  src = (ia+id)*0.5+is+(ia*normal.r+id*normal.g+is*normal.b);\n'+
+			'}else{\n'+
+			'  src = ia+id+is;\n'+
+			'}\n'
+	}
+	addShader(environment)
 
 	var text={
-		name:'text',useLight:0,id:10,
+		UUId:'text',useLight:0,pid:10,
 		attribute:['vec3_aVer','vec2_aTexC'],
 		v_uniform:[],
 		f_uniform:['sampler2D_uSam'],
@@ -412,7 +444,7 @@
 	addShader(text)
 
 	var sky={
-		name:'sky',useLight:0,id:100,
+		UUId:'sky',useLight:0,pid:100,
 		attribute:['vec3_aVer'],
 		v_uniform:['vec3_uDLightD','float_uSpecular'],
 		f_uniform:['samplerCube_uSamC'],
@@ -431,7 +463,7 @@
 	addShader(sky)
 
 	var particle={
-		name:'particle',useLight:0,id:200,
+		UUId:'particle',useLight:0,pid:200,
 		attribute:['vec3_aVer','float_aPage','float_aPalpha','float_aPscale'],
 		v_uniform:[],
 		f_uniform:['sampler2D_uSam'],
@@ -448,7 +480,7 @@
 	addShader(particle)
 
 	var last={
-		name:'last',useLight:0,id:1000,
+		UUId:'last',useLight:0,pid:1000,
 		attribute:['vec3_aVer','vec2_aTexC'],
 		v_uniform:[],
 		f_uniform:['sampler2D_uSam','vec2_uResolution','int_uFXAA','int_uMono','int_uSepia','int_uInvert','int_uBloom','int_uAnaglyph'],

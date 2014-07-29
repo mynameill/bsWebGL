@@ -13,7 +13,7 @@ var meshInfoWindow;
     var renderScales=bs.Dom('.renderScale')
     meshInfoWindow=function($target){
         bs.Dom('#info_renderMode').S(null), bs.Dom('#info_material').S(null)
-        var str='<div style="background:#888888;color:#000;padding:5px;margin-bottom:5px;border-radius:10px">name : '+$target.S('name')+'</div>'
+        var str='<div style="background:#888888;color:#000;padding:5px;margin-bottom:5px;border-radius:10px">UUId : '+$target.S('UUId')+'</div>'
         for(var k in $target){
             if(typeof($target[k]) == 'function'){
             }
@@ -39,15 +39,15 @@ var meshInfoWindow;
         })();
         (function(){
             var m1, m2, m3, m4
-            m1=bs.GL.Material('bitmap').S('diffuse','assets/t1.jpg')
-            m2=bs.GL.Material('bitmapLight').S('diffuse','assets/t3.jpg')
-            m3=bs.GL.Material('bitmapLight').S('diffuse','assets/t3.jpg','normal','assets/normal/normal3.png')
-            m4=bs.GL.Material('environment').S('urls',[
+            m1=bs.GL.Material('bitmap').S('src','assets/t1.jpg')
+            m2=bs.GL.Material('bitmapLight').S('src','assets/t3.jpg')
+            m3=bs.GL.Material('bitmapLight').S('src','assets/t3.jpg','normal','assets/normal/normal3.png')
+            m4=bs.GL.Material('environment').S('src',[
                 "assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"
             ])
             var modes=[bs.GL.Material('color'),bs.GL.Material('colorLight'),bs.GL.Material('toon'),bs.GL.Material('toonLight'),m1,m2,m4]
             var check={colorPGM:0,colorLPGM:1,toonPGM:2,toonLPGM:3,bitmapPGM:4,bitmapLPGM:5,envPGM:6}
-            var idx=check[t.S('material').S('program').name.toString()]
+            var idx=check[t.S('material').S('program').UUId.toString()]
             var str='<option '+(idx == 0 ? 'selected' : '')+'>color</option>'+'<option '+(idx == 1 ? 'selected' : '')+'>colorLight</option>'+'<option '+(idx == 2 ? 'selected' : '')+'>toon</option>'+'<option '+(idx == 3 ? 'selected' : '')+'>toonLight</option>'+'<option '+(idx == 4 ? 'selected' : '')+'>bitmap</option>'+'<option '+(idx == 5 ? 'selected' : '')+'>bitmapLight</option>'+'<option '+(idx == 6 ? 'selected' : '')+'>environment</option>'
             bs.Dom('#info_material').S('html',str,'change',function(){
                     t.S('material',modes[this.selectedIndex])
@@ -80,7 +80,7 @@ var meshInfoWindow;
             bs.GL.PostEffect.use=1
         }
         var adaptList='adapted List'
-        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].name+'</ol>')
+        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].UUId+'</ol>')
         bs.Dom(filter[7]).S('html',adaptList)
     },'this')
     bs.Dom(filter[1]).S('down',function(){
@@ -89,13 +89,13 @@ var meshInfoWindow;
             var nList=[], check
             for(var i=0; i < list.length; i++){
                 check=list[i]
-                if(check.name != 'mono') nList.push(check)
+                if(check.UUId != 'mono') nList.push(check)
             }
             bs.GL.PostEffect.list=nList
         }
         else bs.GL.PostEffect.list.push(bs.GL.PostEffect('mono'))
         var adaptList='adapted List'
-        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].name+'</ol>')
+        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].UUId+'</ol>')
         bs.Dom(filter[7]).S('html',adaptList)
     },'this')
     bs.Dom(filter[2]).S('down',function(){
@@ -104,13 +104,13 @@ var meshInfoWindow;
             var nList=[], check
             for(var i=0; i < list.length; i++){
                 check=list[i]
-                if(check.name != 'sepia') nList.push(check)
+                if(check.UUId != 'sepia') nList.push(check)
             }
             bs.GL.PostEffect.list=nList
         }
         else bs.GL.PostEffect.list.push(bs.GL.PostEffect('sepia'))
         var adaptList='adapted List'
-        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].name+'</ol>')
+        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].UUId+'</ol>')
         bs.Dom(filter[7]).S('html',adaptList)
     },'this')
     bs.Dom(filter[3]).S('down',function(){
@@ -119,13 +119,13 @@ var meshInfoWindow;
             var nList=[], check
             for(var i=0; i < list.length; i++){
                 check=list[i]
-                if(check.name != 'invert') nList.push(check)
+                if(check.UUId != 'invert') nList.push(check)
             }
             bs.GL.PostEffect.list=nList
         }
         else bs.GL.PostEffect.list.push(bs.GL.PostEffect('invert'))
         var adaptList='adapted List'
-        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].name+'</ol>')
+        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].UUId+'</ol>')
         bs.Dom(filter[7]).S('html',adaptList)
     },'this')
     bs.Dom(filter[4]).S('down',function(){
@@ -134,13 +134,13 @@ var meshInfoWindow;
             var nList=[], check
             for(var i=0; i < list.length; i++){
                 check=list[i]
-                if(check.name != 'bloom') nList.push(check)
+                if(check.UUId != 'bloom') nList.push(check)
             }
             bs.GL.PostEffect.list=nList
         }
         else bs.GL.PostEffect.list.push(bs.GL.PostEffect('bloom'))
         var adaptList='adapted List'
-        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].name+'</ol>')
+        for(var i=0; i < bs.GL.PostEffect.list.length; i++) adaptList+=('<ol>'+bs.GL.PostEffect.list[i].UUId+'</ol>')
         bs.Dom(filter[7]).S('html',adaptList)
     },'this')
     bs.Dom(filter[5]).S('down',function(){
@@ -162,8 +162,8 @@ var meshInfoWindow;
 
 	bs.Dom(ambient[3]).S('@step',0.01)
     for(var i=0, len=ambient.length; i < len; i++){
-        bs.Dom(ambient[i]).S('@value',bs.GL.ambientLight[ambient[i].name],'input',function(){
-                bs.GL.ambientLight[this.name]=this.value
+        bs.Dom(ambient[i]).S('@value',bs.GL.ambientLight[ambient[i].UUId],'input',function(){
+                bs.GL.ambientLight[this.UUId]=this.value
                 bs.GL.controller.enable=0
             },'change',function(){
                 bs.GL.controller.enable=1
@@ -171,8 +171,8 @@ var meshInfoWindow;
     }
 	bs.Dom(directional[3]).S('@step',0.01)
 	for(var i=0, len=directional.length; i < len; i++){
-		bs.Dom(directional[i]).S('@value',bs.GL.directionalLight[directional[i].name],'input',function(){
-			bs.GL.directionalLight[this.name]=this.value
+		bs.Dom(directional[i]).S('@value',bs.GL.directionalLight[directional[i].UUId],'input',function(){
+			bs.GL.directionalLight[this.UUId]=this.value
 			bs.GL.controller.enable=0
 		},'change',function(){
 			bs.GL.controller.enable=1
@@ -180,13 +180,13 @@ var meshInfoWindow;
 	}
 
 
-    var map0=bs.GL.Material('sky').S('urls',[
+    var map0=bs.GL.Material('sky').S('src',[
         "assets/cubeMap2/grimnight_posX.png","assets/cubeMap2/grimnight_negX.png","assets/cubeMap2/grimnight_negY.png","assets/cubeMap2/grimnight_posY.png","assets/cubeMap2/grimnight_posZ.png","assets/cubeMap2/grimnight_negZ.png"
     ])
-    var map1=bs.GL.Material('sky').S('urls',[
+    var map1=bs.GL.Material('sky').S('src',[
         "assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"
     ])
-    var map2=bs.GL.Material('sky').S('urls',[
+    var map2=bs.GL.Material('sky').S('src',[
         "assets/cubeMap/snow_positive_x.jpg","assets/cubeMap/snow_negative_x.jpg","assets/cubeMap/snow_negative_y.jpg","assets/cubeMap/snow_positive_y.jpg","assets/cubeMap/snow_positive_z.jpg","assets/cubeMap/snow_negative_z.jpg"
     ])
     var maps=[map0,map1,map2]
@@ -215,13 +215,13 @@ var meshInfoWindow;
         });
     (function(){
         var m1, m2, m3, m4,m5, BGL=bs.GL
-        m1=BGL.Material('bitmap').S('diffuse','assets/t1.jpg')
-        m2=BGL.Material('bitmapLight').S('diffuse','assets/t3.jpg')
-        m3=BGL.Material('bitmapLight').S('diffuse','assets/t3.jpg','normal','assets/normal/normal3.png')
-        m4=BGL.Material('environment').S('urls',[
+        m1=BGL.Material('bitmap').S('src','assets/t1.jpg')
+        m2=BGL.Material('bitmapLight').S('src','assets/t3.jpg')
+        m3=BGL.Material('bitmapLight').S('src','assets/t3.jpg','normal','assets/normal/normal3.png')
+        m4=BGL.Material('environment').S('src',[
             "assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"
         ])
-	    m5=BGL.Material('cube').S('urls',[
+	    m5=BGL.Material('cube').S('src',[
 		    "assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"
 	    ])
         var maps=[BGL.Material('color'),BGL.Material('colorLight'),BGL.Material('toon'),BGL.Material('toonLight'),m1,m2,m3,m4,m5]
@@ -266,9 +266,9 @@ var meshInfoWindow;
             })
     })();
     for(var i=0, len=controllers.length; i < len; i++){
-        bs.Dom(controllers[i]).S('@value',bs.GL.controller[controllers[i].name],'input',function(){
+        bs.Dom(controllers[i]).S('@value',bs.GL.controller[controllers[i].UUId],'input',function(){
                 console.log(this.value)
-                bs.GL.controller[this.name]= +this.value
+                bs.GL.controller[this.UUId]= +this.value
                 bs.GL.controller.enable=0
             },'change',function(){
                 bs.GL.controller.enable=1
