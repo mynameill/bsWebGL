@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <!--<meta name="viewport"content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi"/>-->
     <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-    <style>body { margin: 0; padding: 0;}</style>
+    <style>body { margin: 0; padding: 0; }</style>
 
     <!--로컬 로딩-->
     <!--<script src="bsjs.0.5.js"></script>-->
@@ -20,17 +20,16 @@
 </head>
 <body>
 <script>
-    bs.debug(0)
-    bs(function(){
-        bs.require(function(){
-
-            bs.GL.init('#glCanvas', '../shaders.js', init)
+    bs.debug( 0 )
+    bs( function(){
+        bs.require( function(){
+            bs.GL.init( '#glCanvas', '../shaders.js', init )
             function init(){
-                alert('초기화성공!')
-                console.log('초기화성공!')
+                alert( '초기화성공!' )
+                console.log( '초기화성공!' )
             }
-        },'../gl.js')
-    })
+        }, '../gl.js' )
+    } )
 </script>
 </body>
 </html>
