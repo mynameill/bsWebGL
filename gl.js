@@ -9,12 +9,12 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	})(),window.GLMAT_EPSILON=0.000001, window.Float32Array=Float32Array ? Float32Array : Array;
 	(function(){
 		//TODO GL ActiveTexture를 없앨수 있는 방법이 있으면 찾아야됨
-		var M, TEX, TEXN, P, PID, gt, vb, uvb, ib, vnb, vb_vnb, ctl , mode, cList, pList, renderPass, dColor=new Float32Array(4), aColor=new Float32Array(4), sColor=new Float32Array(4)
-		var p_src, p_normal, p_vb, p_vnb, p_uvb, p_ib, p_vb_vnb, d_vb, d_vnb, d_uvb, d_ib, d_vb_vnb, d_P,p_backFace,p_parentMTX
+		var M, TEX, TEXN, P, PID, gt, vb, uvb, ib, vnb, vb_vnb, ctl , mode, cList, pList, renderPass, dColor=new Float32Array(4), aColor=new Float32Array(4), sColor=new Float32Array(4);
+		var p_src, p_normal, p_vb, p_vnb, p_uvb, p_ib, p_vb_vnb, d_vb, d_vnb, d_uvb, d_ib, d_vb_vnb, d_P,p_backFace,p_parentMTX;
 		draw = function($cList,$num,$parentMTX){
-			var i=$num,j=0,t=$cList,t0,t1,result, ro = mat4.create(),pos = mat4.create(),mClone=mat4.clone,mIdentity=mat4.identity,mMultiply=mat4.matrixMultiply,mXRotation=mat4.makeXRotation,mYRotation=mat4.makeYRotation,mZRotation=mat4.makeZRotation,mTranslate=mat4.translate
-			var G_FLOAT=gl.FLOAT, G_AB=gl.ARRAY_BUFFER, G_EAB=gl.ELEMENT_ARRAY_BUFFER, G_BPE=Float32Array.BYTES_PER_ELEMENT, G_TEX2D=gl.TEXTURE_2D, G_TEX0=gl.TEXTURE0
-			P= null
+			var i=$num,j=0,t=$cList,t0,t1,result, ro = mat4.create(),pos = mat4.create(),mClone=mat4.clone,mIdentity=mat4.identity,mMultiply=mat4.matrixMultiply,mXRotation=mat4.makeXRotation,mYRotation=mat4.makeYRotation,mZRotation=mat4.makeZRotation,mTranslate=mat4.translate;
+			var G_FLOAT=gl.FLOAT, G_AB=gl.ARRAY_BUFFER, G_EAB=gl.ELEMENT_ARRAY_BUFFER, G_BPE=Float32Array.BYTES_PER_ELEMENT, G_TEX2D=gl.TEXTURE_2D, G_TEX0=gl.TEXTURE0;
+			P= null;
 			while(i--){
 				t0=t[j++], d_vb=d_vnb=d_ib=d_vb_vnb=d_uvb=d_P=0, renderPass=1, gt=t0.geoType, (p_backFace != t0.backFace) ? t0.backFace ? gl.enable(gl.CULL_FACE) : gl.disable(gl.CULL_FACE) : 0, p_backFace=t0.backFace
 				if(gt == 'particle') pList.push(t0)
@@ -272,7 +272,7 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 			while(i--) if(gl=cvs.getContext(keys[i], keys2)) break
 
 			if(gl){
-				var i, p, t0=[], m=mouseMNG, per=window.performance, last=0, now, delta, t=GL.debug;
+				var i, p, t0=[], m=mouseMNG, per=Date, last=0, now, delta, t=GL.debug;
 				for(var k in GL._shaderData) k.charAt(0) != '_' ? t0.push(k) : 0
 				i=t0.length;while(i--) mkProgram(GL._shaderData[t0[i]]);
 				for(i in Ps){ p=Ps[i];for(k in attrIDX) p[k]=gl.getAttribLocation(p,k);console.log('생성 '+p.UUId,p)}
@@ -465,7 +465,10 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 		skyBox:null, controller:null, directionalLight:null, ambientLight:null, pointLight:null,
 		children:[], mobile:mobile, mat4:{},
 		debug:{triangles:0, particles:0, particlesType:0, fps:0, aFps:0, _tfps:0, frame:0},
-		fog:{use:0,density:1.0,r:255.0,g:255.0,b:255.0}
+		fog:{use:0,density:1.0,r:255.0,g:255.0,b:255.0},
+		getElementByID:function(){console.log('TODO')},
+		getElementsByName:function(){console.log('TODO')},
+		getElementsByClassName:function(){console.log('TODO')}
 	},
 	GL['skybox']=function($t){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child,
 	mat4=GL.mat4,
@@ -488,3 +491,4 @@ var GL = (function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmai
 	return GL
 })();
 exports.GL = GL
+
