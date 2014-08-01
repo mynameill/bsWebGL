@@ -1,6 +1,6 @@
 var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.com /  webGL의 bs 플러그인화 */
 	'use strict';
-	var trim=/\s/g, hex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i
+	var trim=/\s/g, hex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, hex_s=/^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i
 	var cvs, gl, VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={}, perspectMTX, D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0, mat4;
 	var render, draw, mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile', mC=Math.cos, mS=Math.sin, PI=Math.PI, pickSet={}, setUniqueColor, mouseMNG={event:null, checkInterval:2, checkPoint:0, target:null};
 	(function(){
@@ -249,7 +249,8 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 		}else return this._material
 	}, sMethod.prototype['color']=function( v ){
         var t0
-        if(v)  t0=hex.exec(v), this.r=parseInt(t0[1], 16), this.g=parseInt(t0[2], 16), this.b=parseInt(t0[3], 16)
+        if(v) (t0=hex.exec(v)) ? (this.r=parseInt(t0[1], 16), this.g=parseInt(t0[2], 16), this.b=parseInt(t0[3], 16)) 
+			: (t0=hex_s.exec(v), this.r=parseInt(t0[1]+t0[1], 16), this.g=parseInt(t0[2]+t0[2], 16), this.b=parseInt(t0[3]+t0[3], 16))
         else return this._color
     }
 	//TODO parent처리와 각종 child관련 매서드 추가해야됨
