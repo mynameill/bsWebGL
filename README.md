@@ -4,6 +4,7 @@ bsWebGL
 bsWebGL 연구나무 
 
 showcase - http://projectbs.github.io/bsWebGL
+tutorial sample - http://projectbs.github.io/bsWebGL/camp/
 
 <pre style="clear:both; background:#111;color:#888;margin-top:10px;padding:8px; margin-left:10px;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
     bsWebGL 커미터를 모집합니다.
@@ -33,7 +34,10 @@ showcase - http://projectbs.github.io/bsWebGL
 
 update List
 
-2014.07.22
-
-	1. redGL 프로젝트를 bsWebGL 프로젝트로 오픈
-	2. 쇼케이스 경로수정
+    . parent 처리 추가
+    . getElementByID 추가
+    . tutorial 추가 - http://projectbs.github.io/bsWebGL/camp/
+    . material 특수키추가
+    . window.performace 관련 버그 픽스
+	. redGL 프로젝트를 bsWebGL 프로젝트로 오픈
+	. 쇼케이스 경로수정
