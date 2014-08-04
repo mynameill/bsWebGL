@@ -1,7 +1,7 @@
 var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.com /  webGL의 bs 플러그인화 */
 	'use strict';
 	var trim=/\s/g, hex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, hex_s=/^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i
-	var cvs, gl, IDs={},VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={}, perspectMTX, D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0, mat4;
+	var cvs, gl, IDs={},CLASSs={},VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={}, perspectMTX, D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0, mat4;
 	var render, draw, mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile', mC=Math.cos, mS=Math.sin, PI=Math.PI, pickSet={}, setUniqueColor, mouseMNG={event:null, checkInterval:2, checkPoint:0, target:null};
 	(function(){
 		var color=1677215, r=0, g=0, b=0, r1=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r, g, b, t0;
@@ -16,37 +16,39 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 			P= null;
 			while(i--){
 				t0=t[j++], d_vb=d_vnb=d_ib=d_vb_vnb=d_uvb=d_P=0, renderPass=1, gt=t0.geoType, (p_backFace != t0.backFace) ? t0.backFace ? gl.enable( gl.CULL_FACE ) : gl.disable( gl.CULL_FACE ) : 0, p_backFace=t0.backFace
-				if( gt == 'particle' ) pList.push( t0 )
-				else{
-					p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
-					M=t0._material, mode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
-					P != M.program ? ( P=M.program, gl.useProgram( P ), gl.enableVertexAttribArray( P.aVer ), PID=P.pid, d_P=1) : 0,
-					gl.uniformMatrix4fv( P.uParentMTX, false, $parentMTX ), gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha )
-					if( P.useLight ){
-						sColor[0]=M.specularColor.r/255, sColor[1]=M.specularColor.g/255, sColor[2]=M.specularColor.b/255, sColor[4]=1.0,
-						d_P ? gl.enableVertexAttribArray( P.aVerN ) : 0, gl.uniform1f( P.uSpecular, M.specular ), gl.uniform4fv( P.uSpecularColor, sColor ),
-						d_P || d_vb_vnb ? (gl.bindBuffer( G_AB, vb_vnb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0 ), gl.vertexAttribPointer( P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE )) : 0
-					}else d_P || d_vb ? (gl.bindBuffer( G_AB, vb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 3*G_BPE, 0 )) : 0
-					if( PID == 8 ) TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEX ), gl.uniform1i( P.uSamC, 0 )) : 0), p_src=TEX) : renderPass=0
-					else if( PID == 81 ) gl.uniform1i( P.uUseNormal, 0 ),
-						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEX ), gl.uniform1i( P.uSamC, 0 )) : 0), p_src=TEX) : renderPass=0,
-						TEXN && TEXN.loaded ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 ), (p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEXN )) : 0), p_normal=TEXN) : 0
-					else if( PID == 9 )
-						d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
-						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 ), gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.texImage2D( G_TEX2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, TEX.video )) : 0), p_src=TEX) : renderPass=0,
-						TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
-					else if( PID > 3 ){
-						gl.uniform1i( P.uUseNormal, 0 ),
-						d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
-						TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 )) : 0), p_src=TEX) : renderPass=0
-						if( PID == 5 ) TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
-						if( PID >= 6 ) M.useAni ? (M._cGap+=16 , M._cGap >= M._gap ? (M._dirty=1, M._cGap=0, M._cCol++, M._cCol == M.col ? ( M._cCol=0, M._cRow++) : 0, M._cRow == M.row ? M._cRow=0 : 0) : M._dirty=0) : 0,
-						gl.uniform1f( P.uCol, M._cCol/M.col ), gl.uniform1f( P.uPerCol, 1/M.col ), gl.uniform1f( P.uRow, M._cRow/M.row ), gl.uniform1f( P.uPerRow, 1/M.row )
-						// 현재 row값이 제대로 안되는데...텍스쳐 uv에 대한 뭔가 이해가 잘못되었음....공부해!
-					}else gl.uniform3fv( P.uColor, [M.r/255, M.g/255, M.b/255] )
-					renderPass ? (D_tri+=ib.num/3, mode != 'POINTS' ? ( gl.bindBuffer( G_EAB, ib ), gl.drawElements( gl[mode], ib.num, gl.UNSIGNED_SHORT, 0 )) : (vb=VBs[gt], gl.uniform1f( P.uPointSize, 1 ), gl.bindBuffer( G_AB, vb ), gl.drawArrays( gl.POINTS, 0, vb.num ))) : 0
-					// TODO 부모매트릭스와 자기 매트릭스 캐시해야됨
-					t1=t0.children, t1.length ? (result=mClone( $parentMTX ), mIdentity( ro ), mIdentity( pos ), ro=mMultiply( ro, mXRotation( -t0.rotationX ) ), ro=mMultiply( ro, mYRotation( -t0.rotationY ) ), ro=mMultiply( ro, mZRotation( -t0.rotationZ ) ), mTranslate( pos, pos, [t0.x, t0.y, t0.z] ), draw( t1, t1.length, mMultiply( mMultiply( ro, result ), pos ) )) : 0
+				if(t0.visible){
+					if( gt == 'particle' ) pList.push( t0 )
+					else{
+						p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
+						M=t0._material, mode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
+								P != M.program ? ( P=M.program, gl.useProgram( P ), gl.enableVertexAttribArray( P.aVer ), PID=P.pid, d_P=1) : 0,
+							gl.uniformMatrix4fv( P.uParentMTX, false, $parentMTX ), gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha )
+						if( P.useLight ){
+							sColor[0]=M.specularColor.r/255, sColor[1]=M.specularColor.g/255, sColor[2]=M.specularColor.b/255, sColor[4]=1.0,
+								d_P ? gl.enableVertexAttribArray( P.aVerN ) : 0, gl.uniform1f( P.uSpecular, M.specular ), gl.uniform4fv( P.uSpecularColor, sColor ),
+									d_P || d_vb_vnb ? (gl.bindBuffer( G_AB, vb_vnb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0 ), gl.vertexAttribPointer( P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE )) : 0
+						}else d_P || d_vb ? (gl.bindBuffer( G_AB, vb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 3*G_BPE, 0 )) : 0
+						if( PID == 8 ) TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEX ), gl.uniform1i( P.uSamC, 0 )) : 0), p_src=TEX) : renderPass=0
+						else if( PID == 81 ) gl.uniform1i( P.uUseNormal, 0 ),
+								TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEX ), gl.uniform1i( P.uSamC, 0 )) : 0), p_src=TEX) : renderPass=0,
+								TEXN && TEXN.loaded ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 ), (p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEXN )) : 0), p_normal=TEXN) : 0
+						else if( PID == 9 )
+							d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
+									TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 ), gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.texImage2D( G_TEX2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, TEX.video )) : 0), p_src=TEX) : renderPass=0,
+								TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
+						else if( PID > 3 ){
+							gl.uniform1i( P.uUseNormal, 0 ),
+								d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
+									TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 )) : 0), p_src=TEX) : renderPass=0
+							if( PID == 5 ) TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
+							if( PID >= 6 ) M.useAni ? (M._cGap+=16 , M._cGap >= M._gap ? (M._dirty=1, M._cGap=0, M._cCol++, M._cCol == M.col ? ( M._cCol=0, M._cRow++) : 0, M._cRow == M.row ? M._cRow=0 : 0) : M._dirty=0) : 0,
+								gl.uniform1f( P.uCol, M._cCol/M.col ), gl.uniform1f( P.uPerCol, 1/M.col ), gl.uniform1f( P.uRow, M._cRow/M.row ), gl.uniform1f( P.uPerRow, 1/M.row )
+							// 현재 row값이 제대로 안되는데...텍스쳐 uv에 대한 뭔가 이해가 잘못되었음....공부해!
+						}else gl.uniform3fv( P.uColor, [M.r/255, M.g/255, M.b/255] )
+						renderPass ? (D_tri+=ib.num/3, mode != 'POINTS' ? ( gl.bindBuffer( G_EAB, ib ), gl.drawElements( gl[mode], ib.num, gl.UNSIGNED_SHORT, 0 )) : (vb=VBs[gt], gl.uniform1f( P.uPointSize, 1 ), gl.bindBuffer( G_AB, vb ), gl.drawArrays( gl.POINTS, 0, vb.num ))) : 0
+						// TODO 부모매트릭스와 자기 매트릭스 캐시해야됨
+						t1=t0.children, t1.length ? (result=mClone( $parentMTX ), mIdentity( ro ), mIdentity( pos ), ro=mMultiply( ro, mXRotation( -t0.rotationX ) ), ro=mMultiply( ro, mYRotation( -t0.rotationY ) ), ro=mMultiply( ro, mZRotation( -t0.rotationZ ) ), mTranslate( pos, pos, [t0.x, t0.y, t0.z] ), draw( t1, t1.length, mMultiply( mMultiply( ro, result ), pos ) )) : 0
+					}
 				}
 				p_vb=VBs[gt], p_vnb=VNBs[gt], p_ib=IBs[gt], p_vb_vnb=VB_VNBs[gt]
 			}
@@ -372,7 +374,7 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 			return function( k ){ return new kind[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 		})(),
 		Mesh:(function(){
-			var UUID=0, t0={backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
+			var UUID=0, t0={visible:1,backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
 			var Mesh=function( k ){
 				this.children=[], this.geoType=k , this.UUId='Mesh'+UUID++, t=setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};
 			}, fn=Mesh.prototype=sMethod.prototype
@@ -381,6 +383,7 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 				var t=evts[i];fn[t]=function( v ){return this.setEvent( t, v )}
 			})();
 			fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},
+			fn['class']=function(v){this.class = v,CLASSs[v] ? 0 : CLASSs[v] = [], CLASSs[v].push(this)},
 			fn['setEvent']=function( $type, v ){
 				if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
 				else return this.evt[$type];
@@ -468,8 +471,7 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 		debug:{triangles:0, particles:0, particlesType:0, fps:0, aFps:0, _tfps:0, frame:0},
 		fog:{use:0, density:1.0, r:255.0, g:255.0, b:255.0},
 		getElementByID:function( v ){var t=IDs[v];if( t && t.parent ) return t ? t : 0},
-		getElementsByName:function(){console.log( 'TODO' )},
-		getElementsByClassName:function(){console.log( 'TODO' )}
+		getElementsByClassName:function(v){return CLASSs[v].concat()}
 	},
 	GL['skybox']=function( $t ){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child,
 	mat4=GL.mat4,

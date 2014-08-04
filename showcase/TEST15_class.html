@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>classTest</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs"/>
+    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!--<meta name="viewport"content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi"/>-->
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>body { margin: 0; padding: 0; }</style>
+
+    <!--로컬 로딩-->
+    <!--<script src="bsjs.0.5.js"></script>-->
+    <!--깃헙으로 로딩-->
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+<script>
+    bs.debug( 0 )
+    bs( function(){
+        bs.require( function(){
+            bs.GL.init( '#glCanvas', '../shaders.js', init )
+            function init(){
+                var i = 300
+                while(i--){
+                    bs.GL.Mesh( 'box' ).S(
+                            'class', 'boxClass',
+                            'material', '#552233,L', 'scaleX', 75, 'scaleY', 75, 'scaleZ', 75, '<', 'ROOT' ,'x',bs.rand(-1500,1500),'y',bs.rand(-1500,1500),'z',bs.rand(-1500,1500)
+                    )
+                    bs.GL.Mesh( 'sphere' ).S(
+                            'class', 'sphereClass',
+                            'material', '#225544,L', 'x', 200, 'scaleX', 75, 'scaleY', 75, 'scaleZ', 75 ,'<', 'ROOT'  ,'x',bs.rand(-1500,1500),'y',bs.rand(-1500,1500),'z',bs.rand(-750,1500)
+                    )
+                }
+
+                var testUI=bs.Dom( '<div></div>' ).S( '<', 'body', 'position', 'absolute', 'this' )
+                bs.Dom('<button>search box</button>' ).S('<',testUI,'down',function(){
+                    console.log(bs.GL.getElementsByClassName('boxClass'))
+                    var list = bs.GL.getElementsByClassName('sphereClass' ),i=list.length
+                    while(i--) list[i].S('visible',0)
+                    list = bs.GL.getElementsByClassName('boxClass' ),i=list.length
+                    while(i--) list[i].S('visible',1)
+
+                })
+                bs.Dom('<button>search sphere</button>' ).S('<',testUI,'down',function(){
+                    console.log(bs.GL.getElementsByClassName('sphereClass'))
+                    var list = bs.GL.getElementsByClassName('boxClass' ),i=list.length
+                    while(i--) list[i].S('visible',0)
+
+                    list = bs.GL.getElementsByClassName('sphereClass' ),i=list.length
+                    while(i--) list[i].S('visible',1)
+
+                })
+                bs.Dom('<button>search all</button>' ).S('<',testUI,'down',function(){
+                    var list = bs.GL.getElementsByClassName('boxClass' ),i=list.length
+                    while(i--) list[i].S('visible',1)
+                    list = bs.GL.getElementsByClassName('sphereClass' ),i=list.length
+                    while(i--) list[i].S('visible',1)
+                })
+
+
+
+
+            }
+        }, '../gl.js' )
+    } )
+</script>
+</body>
+</html>
