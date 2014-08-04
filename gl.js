@@ -1,7 +1,7 @@
 var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.com /  webGL의 bs 플러그인화 */
 	'use strict';
 	var trim=/\s/g, hex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, hex_s=/^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i
-	var cvs, gl, VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={}, perspectMTX, D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0, mat4;
+	var cvs, gl, IDs={},VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={}, perspectMTX, D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0, mat4;
 	var render, draw, mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile', mC=Math.cos, mS=Math.sin, PI=Math.PI, pickSet={}, setUniqueColor, mouseMNG={event:null, checkInterval:2, checkPoint:0, target:null};
 	(function(){
 		var color=1677215, r=0, g=0, b=0, r1=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r, g, b, t0;
@@ -254,7 +254,11 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
         else return this._color
     }
 	//TODO parent처리와 각종 child관련 매서드 추가해야됨
-	function parent( v ){v == 'ROOT' ? (GL.children.push( this )) : v.children.push( this )}
+	function parent( v ){
+		(v==null && this.parent) ?  (this.parent.children.splice(this.parent.children.indexOf(this),1) , this.parent = null) : 0
+		if(v && v['join']) v = v.charAt(0) =='#' ? IDs[v] : v
+		v == 'ROOT' ? this.parent=GL : this.parent=v, this.parent ? this.parent.children.push( this ) : 0
+	}
 	function child( v ){this == GL ? GL.children.push( v ) : this.children.push( v )}
 	var GL, baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}}, msgF2='WEBGL을 지원하지 않는 브라우져입니다'
 	bs.GL=GL={
@@ -376,6 +380,7 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 			while( i-- ) (function(){ // 마우스관련 전면 폐기하고 다시짜야함
 				var t=evts[i];fn[t]=function( v ){return this.setEvent( t, v )}
 			})();
+			fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},
 			fn['setEvent']=function( $type, v ){
 				if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
 				else return this.evt[$type];
@@ -462,7 +467,7 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 		children:[], mobile:mobile, mat4:{},
 		debug:{triangles:0, particles:0, particlesType:0, fps:0, aFps:0, _tfps:0, frame:0},
 		fog:{use:0, density:1.0, r:255.0, g:255.0, b:255.0},
-		getElementByID:function(){console.log( 'TODO' )},
+		getElementByID:function( v ){var t=IDs[v];if( t && t.parent ) return t ? t : 0},
 		getElementsByName:function(){console.log( 'TODO' )},
 		getElementsByClassName:function(){console.log( 'TODO' )}
 	},

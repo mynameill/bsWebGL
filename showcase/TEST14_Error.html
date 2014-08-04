@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>getElementByID</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs"/>
+    <meta name="description" content="redcamel, webgl, bsjs"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <!--<meta name="viewport"content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi"/>-->
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>body { margin: 0; padding: 0; }</style>
+
+    <!--로컬 로딩-->
+    <!--<script src="bsjs.0.5.js"></script>-->
+    <!--깃헙으로 로딩-->
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+<script>
+    bs.debug( 0 )
+    bs( function(){
+        bs.require( function(){
+            bs.GL.init( '#glCanvas', '../shaders.js', init )
+            function init(){
+                var test=bs.GL.Mesh( 'box' ).S( 'id', 'test', 'material', '#444', 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100, '<', 'ROOT' )
+                var testSub=bs.GL.Mesh( 'box' ).S( 'id', 'testSub', 'material', '#225544', 'x', 200, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100 )
+                console.log( bs.GL.getElementByID( '#test' ) )
+                bs.GL.getElementByID( '#test' ).S( '<', null )
+                test.S( '<', 'ROOT' )
+                console.log( bs.GL.getElementByID( '#test' ) )
+                bs.Css( 'button' ).S( 'display', 'block' )
+                var testUI=bs.Dom( '<div></div>' ).S( '<', 'body', 'position', 'absolute', 'this' )
+                var a1=bs.Dom( '<button>부모입력</button>' ).S( '<', testUI, 'down', function(){
+                    test.S( '<', 'ROOT' )
+                    a1.S( 'display', 'none' )
+                    a2.S( 'display', 'block' )
+                    a3.S( 'display', 'block' )
+                    a4.S( 'display', 'none' )
+                }, 'display', 'none', 'this' )
+                var a2=bs.Dom( '<button>부모삭제</button>' ).S( '<', testUI, 'down', function(){
+                    test.S( '<', null )
+                    a1.S( 'display', 'block' )
+                    a2.S( 'display', 'none' )
+                    testSub.S( '<', null )
+                    a3.S( 'display', 'none' )
+                    a4.S( 'display', 'none' )
+                }, 'this' )
+                var a3=bs.Dom( '<button>서브부모입력</button>' ).S( '<', testUI, 'down', function(){
+                    testSub.S( '<', bs.GL.getElementByID( '#test' ) )
+                    a3.S( 'display', 'none' )
+                    a4.S( 'display', 'block' )
+                }, 'this' )
+                var a4=bs.Dom( '<button>서브부모삭제</button>' ).S( '<', testUI, 'down', function(){
+                    testSub.S( '<', null )
+                    a3.S( 'display', 'block' )
+                    a4.S( 'display', 'none' )
+                }, 'display', 'none', 'this' )
+            }
+        }, '../gl.js' )
+    } )
+</script>
+</body>
+</html>
