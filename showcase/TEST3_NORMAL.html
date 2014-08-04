@@ -45,7 +45,7 @@
                     while(i--){
                         gap=bs.GL.mobile ? 300 : 750
                         mesh=bs.GL.Mesh('sphere')
-                        mesh.S('UUId', mesh.geoType+i, 'x', Math.sin(i*360/6*Math.PI/180)*15, 'y', Math.cos(i*360/6*Math.PI/180)*15, 'scaleX', s, 'scaleY', s, 'scaleZ', s, 'material', maps[i], '<', 'ROOT', 'mouseup', function(){
+                        mesh.S('UUId', mesh.geoType+i, 'x', Math.sin(i*360/6*Math.PI/180)*15, 'y', Math.cos(i*360/6*Math.PI/180)*15, 'scaleX', s, 'scaleY', s, 'scaleZ', s, 'material', maps[i], '<',bs.GL, 'mouseup', function(){
                             console.log(this.UUId, 'mouseup')
                             this.S('alpha', 1)
                         }, 'mouseover', function(){

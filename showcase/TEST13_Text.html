@@ -85,8 +85,8 @@
                     function setDesign(){
                         textMat=bs.GL.Material('text')
                         textMat.S('font', '나눔고딕', 'fontWeight', '900', 'align', 'center', 'size', 35, 'text', '하여가 [이방원] 이런들 어떠하고 저런들 어떠하리 만수산 드렁칡이 얽혀진들 어떠하리 우리도 이같이 얽어져 백년까지 누리리라 단심가 [정몽주]이 몸이 죽고 죽어 일백 번 고쳐 죽어백골이 진토되어 넋이라도 있고 없고임 향한 일편 단심, 가실 줄이 있으랴')
-//                        var rect=bs.GL.Mesh('rect').S('<', 'ROOT', 'material', bs.GL.Material('color'), 'scaleX', 512, 'scaleY', 512,'scaleZ', 512,'z',-10)
-                        var rect=bs.GL.Mesh('rect').S('<', 'ROOT', 'material', textMat, 'scaleX', 512, 'scaleY', 512, 'scaleZ', 512)
+//                        var rect=bs.GL.Mesh('rect').S('<',bs.GL, 'material', bs.GL.Material('color'), 'scaleX', 512, 'scaleY', 512,'scaleZ', 512,'z',-10)
+                        var rect=bs.GL.Mesh('rect').S('<',bs.GL, 'material', textMat, 'scaleX', 512, 'scaleY', 512, 'scaleZ', 512)
                     }
 
                     setDesign()
@@ -139,7 +139,7 @@
                             size=Math.random()*30+11
                             var t=bs.GL.Material('text').S('text', i+'하여가 [이방원] 이런들 어떠하고 저런들 어떠하리 만수산 드렁칡이 얽혀진들 어떠하리 우리도 이같이 얽어져 백년까지 누리리라 단심가 [정몽주]이 몸이 죽고 죽어 일백 번 고쳐 죽어백골이 진토되어 넋이라도 있고 없고임 향한 일편 단심, 가실 줄이 있으랴')
                             t.S('size', size, 'lineHeight', 30, 'align', 'right', 'color', colors[Math.floor(Math.random()*3)])
-                            bs.GL.Mesh('box').S('<', 'ROOT', 'material', t, 'scaleX', 256, 'scaleY', 256, 'scaleZ', 256, 'x', bs.rand(-2000, 2000), 'y', bs.rand(-2000, 2000), 'z', bs.rand(-1000, -400))
+                            bs.GL.Mesh('box').S('<',bs.GL, 'material', t, 'scaleX', 256, 'scaleY', 256, 'scaleZ', 256, 'x', bs.rand(-2000, 2000), 'y', bs.rand(-2000, 2000), 'z', bs.rand(-1000, -400))
                         }
                     }
 //                  test2()

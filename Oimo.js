@@ -7827,7 +7827,7 @@ OIMO.SAPProxy.prototype.update = function () {
     }
 }
 OIMO.DBVT = function(){
-    this.root=null;
+    this.bs.GL=null;
     this.freeNodes=[];// vector
     this.freeNodes.length = 16384;
     this.numFreeNodes=0;
@@ -7842,12 +7842,12 @@ OIMO.DBVT.prototype = {
         this.insertLeaf(leaf);
     },
     insertLeaf:function(leaf){
-        if(this.root==null){
-            this.root=leaf;
+        if(this.bs.GL==null){
+            this.bs.GL=leaf;
             return;
         }
         var lb=leaf.aabb;
-        var sibling=this.root;
+        var sibling=this.bs.GL;
         var oldArea;
         var newArea;
         while(sibling.proxy==null){
@@ -7903,9 +7903,9 @@ OIMO.DBVT.prototype = {
         newParent.height=sibling.height+1;
         sibling.parent=newParent;
         leaf.parent=newParent;
-        if(sibling==this.root){
-            // replace root
-            this.root=newParent;
+        if(sibling==this.bs.GL){
+            // replace bs.GL
+            this.bs.GL=newParent;
         }else{
             // replace child
             if(oldParent.child1==sibling){
@@ -7936,8 +7936,8 @@ OIMO.DBVT.prototype = {
         return text;
     },
     deleteLeaf:function(leaf){
-        if(leaf==this.root){
-            this.root=null;
+        if(leaf==this.bs.GL){
+            this.bs.GL=null;
             return;
         }
         var parent=leaf.parent;
@@ -7947,8 +7947,8 @@ OIMO.DBVT.prototype = {
         }else{
             sibling=parent.child1;
         }
-        if(parent==this.root){
-            this.root=sibling;
+        if(parent==this.bs.GL){
+            this.bs.GL=sibling;
             sibling.parent=null;
             return;
         }
@@ -8060,7 +8060,7 @@ OIMO.DBVT.prototype = {
                     p.child2=l;
                 }
             }else{
-                this.root=l;
+                this.bs.GL=l;
             }
             l.parent=p;
             return l;
@@ -8135,7 +8135,7 @@ OIMO.DBVT.prototype = {
                     p.child2=r;
                 }
             }else{
-                this.root=r;
+                this.bs.GL=r;
             }
             r.parent=p;
             return r;
@@ -8220,7 +8220,7 @@ OIMO.DBVTBroadPhase.prototype.collectPairs = function () {
     leafB.minZ=trueB.minZ-margin;
     leafB.maxZ=trueB.maxZ+margin;
     this.tree.insertLeaf(leaf);
-    this.collide(leaf,this.tree.root);
+    this.collide(leaf,this.tree.bs.GL);
     }
     }
 }

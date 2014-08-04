@@ -42,9 +42,9 @@
                     bs.get(function($data){
                         var r=bs.GL.parserOBJ($data)
                         bs.GL.makeBufferSet('head',r.vs,r.is,r.cs)
-                        bs.GL.Mesh('head').S('<','ROOT','material',videoL,'scaleX',6,'scaleY',6,'scaleZ',6,'z',-1000)
-                        bs.GL.Mesh('sphere').S('<','ROOT','material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',300,'z',-600,'rotationY',Math.PI)
-                        bs.GL.Mesh('rect').S('<','ROOT','material',videoL,'scaleX',1600,'scaleY',900,'scaleZ',1,'x',0,'z',-1500,'alpha',0.5)
+                        bs.GL.Mesh('head').S('<',bs.GL,'material',videoL,'scaleX',6,'scaleY',6,'scaleZ',6,'z',-1000)
+                        bs.GL.Mesh('sphere').S('<',bs.GL,'material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',300,'z',-600,'rotationY',Math.PI)
+                        bs.GL.Mesh('rect').S('<',bs.GL,'material',videoL,'scaleX',1600,'scaleY',900,'scaleZ',1,'x',0,'z',-1500,'alpha',0.5)
                     },'assets/head.obj')
 
                     var time=0, ms=Math.sin, mc=Math.cos

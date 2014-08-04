@@ -25,16 +25,16 @@
         bs.require( function(){
             bs.GL.init( '#glCanvas', '../shaders.js', init )
             function init(){
-                var test=bs.GL.Mesh( 'box' ).S( 'id', 'test', 'material', '#444', 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100, '<', 'ROOT' )
+                var test=bs.GL.Mesh( 'box' ).S( 'id', 'test', 'material', '#444', 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100, '<', bs.GL )
                 var testSub=bs.GL.Mesh( 'box' ).S( 'id', 'testSub', 'material', '#225544', 'x', 200, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100 )
                 console.log( bs.GL.getElementByID( '#test' ) )
                 bs.GL.getElementByID( '#test' ).S( '<', null )
-                test.S( '<', 'ROOT' )
+                test.S( '<', bs.GL )
                 console.log( bs.GL.getElementByID( '#test' ) )
                 bs.Css( 'button' ).S( 'display', 'block' )
                 var testUI=bs.Dom( '<div></div>' ).S( '<', 'body', 'position', 'absolute', 'this' )
                 var a1=bs.Dom( '<button>부모입력</button>' ).S( '<', testUI, 'down', function(){
-                    test.S( '<', 'ROOT' )
+                    test.S( '<', bs.GL )
                     a1.S( 'display', 'none' )
                     a2.S( 'display', 'block' )
                     a3.S( 'display', 'block' )

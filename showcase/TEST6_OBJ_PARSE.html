@@ -39,14 +39,14 @@
                     bs.get(function($data){
                         var r=bs.GL.parserOBJ($data)
                         bs.GL.makeBufferSet('head', r.vs, r.is, r.cs)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -500)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1000)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1500)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2000)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2500)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3000)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1000)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2000)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3000)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3500)
 
                     }, 'assets/woman.obj')
                     var time=0, ms=Math.sin, mc=Math.cos

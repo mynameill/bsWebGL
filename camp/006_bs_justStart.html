@@ -25,9 +25,9 @@
         bs.require( function( data ){
             bs.GL.init( '#glCanvas', '../shaders.js', init )
             function init(){
-                bs.GL.Mesh( 'box' ).S( 'material', 'asset/video.mp4, V', '<', 'ROOT', 'scaleX', 150, 'scaleY', 150, 'scaleZ', 150, 'x', -200, 'y', 0 )
-                bs.GL.Mesh( 'box' ).S( 'material', 'asset/video.mp4, VL', '<', 'ROOT', 'scaleX', 150, 'scaleY', 150, 'scaleZ', 150, 'x', 0, 'y', 0 )
-                bs.GL.Mesh( 'box' ).S( 'material', 'asset/video.mp4, normal,asset/normal.jpg,VL', '<', 'ROOT', 'scaleX', 150, 'scaleY', 150, 'scaleZ', 150, 'x', 200, 'y', 0 )
+                bs.GL.Mesh( 'box' ).S( 'material', 'asset/video.mp4, V', '<',bs.GL, 'scaleX', 150, 'scaleY', 150, 'scaleZ', 150, 'x', -200, 'y', 0 )
+                bs.GL.Mesh( 'box' ).S( 'material', 'asset/video.mp4, VL', '<',bs.GL, 'scaleX', 150, 'scaleY', 150, 'scaleZ', 150, 'x', 0, 'y', 0 )
+                bs.GL.Mesh( 'box' ).S( 'material', 'asset/video.mp4, normal,asset/normal.jpg,VL', '<',bs.GL, 'scaleX', 150, 'scaleY', 150, 'scaleZ', 150, 'x', 200, 'y', 0 )
             }
         }, '../gl.js' )
     } )

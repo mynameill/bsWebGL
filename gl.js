@@ -258,9 +258,11 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
     }
 	//TODO parent처리와 각종 child관련 매서드 추가해야됨
 	function parent( v ){
-		(v==null && this.parent) ?  (this.parent.children.splice(this.parent.children.indexOf(this),1) , this.parent = null) : 0
-		if(v && v['join']) v = v.charAt(0) =='#' ? IDs[v] : v
-		v == 'ROOT' ? this.parent=GL : this.parent=v, this.parent ? this.parent.children.push( this ) : 0
+		v == GL ? console.log('ROOT를 사용하지않고 bs.GL을 사용합니다.') : 0
+		if(v==null && this['parent']) this.parent.children.splice(this.parent.children.indexOf(this),1) , this.parent = null
+		if(v!=null && v instanceof String) v = v.charAt(0) =='#' ? IDs[v] : v
+		this.parent=v, this.parent ? this.parent.children.push( this ) : 0
+
 	}
 	function child( v ){this == GL ? GL.children.push( v ) : this.children.push( v )}
 	var GL, baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}}, msgF2='WEBGL을 지원하지 않는 브라우져입니다'

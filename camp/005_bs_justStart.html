@@ -27,7 +27,7 @@
             function init(){
                 var map=bs.GL.Material( 'sky' ).S( 'src', ["asset/environ/right.jpg", "asset/environ/left.jpg", "asset/environ/bottom.jpg", "asset/environ/top.jpg", "asset/environ/front.jpg", "asset/environ/back.jpg"] )
                 bs.GL.S( 'skybox', bs.GL.SkyBox().S( 'material', map ) )
-                bs.GL.Mesh( 'sphere' ).S( 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100, '<', 'ROOT', 'material', '#ee2244,L' )
+                bs.GL.Mesh( 'sphere' ).S( 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100, '<',bs.GL, 'material', '#ee2244,L' )
             }
         }, '../gl.js' )
     } )

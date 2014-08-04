@@ -38,16 +38,16 @@
                     bs.get(function($data){
                         var r=bs.GL.parserOBJ($data)
                         bs.GL.makeBufferSet('head', r.vs, r.is, r.cs)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', headMap2, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', 0)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', headMap, 'x', 500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', headMap, 'x', -500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500)
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', headMap, 'x', 250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'LINES')
-                        bs.GL.Mesh('head').S('<', 'ROOT', 'material', headMap, 'x', -250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'POINTS', 'pointSize', bs.rand(0.5, 3))
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap2, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', 0)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', 500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', -500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', 250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'LINES')
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', -250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'POINTS', 'pointSize', bs.rand(0.5, 3))
                         if(!bs.GL.mobile){
                             i=50
                             while(i--){
 
-                                bs.GL.Mesh('head').S('<', 'ROOT', 'material', headMap, 'x', Math.random()*3000-1500, 'y', Math.random()*3000-1500, 'scaleX', 1, 'scaleY', 1, 'scaleZ', 1, 'z', Math.random()*3000-1500)
+                                bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', Math.random()*3000-1500, 'y', Math.random()*3000-1500, 'scaleX', 1, 'scaleY', 1, 'scaleZ', 1, 'z', Math.random()*3000-1500)
                             }
                         }
                     }, 'assets/head.obj')
@@ -55,7 +55,7 @@
                     var particle2=bs.GL.Material('bitmap').S('src', 'assets/snowflake1.png')
                     i=bs.GL.mobile ? 50 : 250
                     while(i--){
-                        bs.GL.Particle('particle_fire1_'+i%10).S('<', 'ROOT', 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle, 'x', Math.random()*2000-1000, 'y', Math.random()*2000-1000, 'z', Math.random()*2000-1000, 'changeProperty', {
+                        bs.GL.Particle('particle_fire1_'+i%10).S('<',bs.GL, 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle, 'x', Math.random()*2000-1000, 'y', Math.random()*2000-1000, 'z', Math.random()*2000-1000, 'changeProperty', {
                                     max:100,
                                     sPos:[-3, 3, 0, 0, 0, 0],
                                     dPos:[-100, 100, 100, 300, -100, 100],
@@ -77,7 +77,7 @@
                                 });
                     }
 //                    if(!bs.GL.mobile){
-//                        bs.GL.Particle('particle_snow').S('<', 'ROOT', 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle2, 'x', 0, 'y', 0, 'changeProperty', {
+//                        bs.GL.Particle('particle_snow').S('<',bs.GL, 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle2, 'x', 0, 'y', 0, 'changeProperty', {
 //                                    max:200,
 //                                    sPos:[-1000, 1000, 350, 350, -350, 50],
 //                                    dPos:[-1000, 1000, -500, -500, -350, 50],

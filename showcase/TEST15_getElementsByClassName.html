@@ -27,14 +27,14 @@
             function init(){
                 var i = 300
                 while(i--){
-                    bs.GL.Mesh( 'box' ).S(
-                            'class', 'boxClass',
-                            'material', '#552233,L', 'scaleX', 75, 'scaleY', 75, 'scaleZ', 75, '<', 'ROOT' ,'x',bs.rand(-1500,1500),'y',bs.rand(-1500,1500),'z',bs.rand(-1500,1500)
-                    )
-                    bs.GL.Mesh( 'sphere' ).S(
-                            'class', 'sphereClass',
-                            'material', '#225544,L', 'x', 200, 'scaleX', 75, 'scaleY', 75, 'scaleZ', 75 ,'<', 'ROOT'  ,'x',bs.rand(-1500,1500),'y',bs.rand(-1500,1500),'z',bs.rand(-750,1500)
-                    )
+                bs.GL.Mesh( 'box' ).S(
+                        'class', 'boxClass',
+                        'material', '#552233,L', 'scaleX', 75, 'scaleY', 75, 'scaleZ', 75, '<', bs.GL ,'x',bs.rand(-1500,1500),'y',bs.rand(-1500,1500),'z',bs.rand(-1500,1500)
+                )
+                bs.GL.Mesh( 'sphere' ).S(
+                        'class', 'sphereClass',
+                        'material', '#225544,L', 'x', 200, 'scaleX', 75, 'scaleY', 75, 'scaleZ', 75 ,'<', bs.GL  ,'x',bs.rand(-1500,1500),'y',bs.rand(-1500,1500),'z',bs.rand(-750,1500)
+                )
                 }
 
                 var testUI=bs.Dom( '<div></div>' ).S( '<', 'body', 'position', 'absolute', 'this' )

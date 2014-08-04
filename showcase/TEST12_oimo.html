@@ -34,8 +34,8 @@
                 bs.Dom('<button id="add" style="position:absolute;height:100px">추가하기</button>').S('<','body')
                     var mobile=bs.GL.mobile, max=mobile ? 50 : 500, mat=bs.GL.Material('bitmapLight').S('src','assets/t1.jpg')
                     bs.Dom('#add').S('down',function(){
-                        bs.GL.Mesh('box').S('<', 'ROOT', 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
-                        bs.GL.Mesh('box').S('<', 'ROOT', 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
+                        bs.GL.Mesh('box').S('<',bs.GL, 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
+                        bs.GL.Mesh('box').S('<',bs.GL, 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
                         var i=10
                         while(i--) addBox()
                     })
@@ -47,7 +47,7 @@
 
                     function setDesign(){
                         world=new OIMO.World(),ground=new OIMO.Body({size:[10000, 10, 10000], pos:[0, -500, 0], world:world});
-                        bs.GL.Mesh('box').S('<', 'ROOT', 'scaleX', 10000, 'scaleY', 10, 'scaleZ', 10000, 'y', -500, 'material', mat)
+                        bs.GL.Mesh('box').S('<',bs.GL, 'scaleX', 10000, 'scaleY', 10, 'scaleZ', 10000, 'y', -500, 'material', mat)
                         var i=max
                         while(i--) addBox()
                     }
@@ -61,7 +61,7 @@
                                 'rotationX',Math.random()*360,'rotationY',Math.random()*360,'rotationZ',Math.random()*360,
                                 'scaleX',s,'scaleY',s,'scaleZ',s,
                                 'material',mat,
-                                '<','ROOT'
+                                '<',bs.GL
                         )
                         bodys.push(new OIMO.Body({type:"box", size:[s, s, s], pos:[x, y, z], rot:[mesh.S('rotationX'), mesh.S('rotationY'), mesh.S('rotationZ')], move:true, world:world, name:mesh.UUId  }))
                         meshs.push(mesh)
