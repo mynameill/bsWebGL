@@ -16,9 +16,10 @@ var GL=(function(){ /*  Created by seonki on 14. 5. 1. /  email : webseon@gmail.
 			P= null;
 			while(i--){
 				t0=t[j++], d_vb=d_vnb=d_ib=d_vb_vnb=d_uvb=d_P=0, renderPass=1, gt=t0.geoType, (p_backFace != t0.backFace) ? t0.backFace ? gl.enable( gl.CULL_FACE ) : gl.disable( gl.CULL_FACE ) : 0, p_backFace=t0.backFace
-				if(t0.visible){
-					if( gt == 'particle' ) pList.push( t0 )
-					else{
+
+				if( gt == 'particle' ) pList.push( t0 )
+				else{
+					if(t0.visible){
 						p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
 						M=t0._material, mode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
 								P != M.program ? ( P=M.program, gl.useProgram( P ), gl.enableVertexAttribArray( P.aVer ), PID=P.pid, d_P=1) : 0,
