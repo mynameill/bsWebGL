@@ -34,8 +34,13 @@ tutorial sample - http://projectbs.github.io/bsWebGL/camp/
 
 update List
 
+    2014.08.05
+    . S매서드 표준화
+    . sprite uv처리 버그 수정
+    . class 적용범위 재질까지 확대
+
     . parent 처리 추가
-    . getElementByID 추가
+    . getElementByID / getElementsByClassName 추가
     . tutorial 추가 - http://projectbs.github.io/bsWebGL/camp/
     . material 특수키추가
     . window.performace 관련 버그 픽스
