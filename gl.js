@@ -236,7 +236,7 @@
 			})(),
 			Light:(function(){ //TODO POINT,SPOT
 				var Light=function( k ){this.type=k}, type={directional:1, ambient:1} // 음 라이트가 똑같네 -_-;;
-				Light.fn=Light.prototype={ intensity:1.0, r:255, g:255, b:255, alpha:1, _color:'#ffffff', color:sMethod.prototype['color'], x:0, y:0, z:0, S:sMethod.prototype.S, class:sMethod.prototype.class}
+				Light.fn=Light.prototype={ intensity:1.0, r:255, g:255, b:255, alpha:1, _color:'#ffffff', color:sMethod.prototype['color'], x:0, y:0, z:0, S:sMethod.prototype.S, class:sMethod.prototype.class,id:function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this}}
 				return function( k ){ if( type[k] ) return new Light( k );else throw '지원하지않는 타입의 라이트 입니다.'}
 			})(),
 			Material:(function(){

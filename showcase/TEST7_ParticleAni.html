@@ -48,27 +48,28 @@
                     }
                 }, 'assets/head.obj' )
                 var particle=bs.GL.Material( 'bitmap' ).S( 'src', 'assets/particle.png' ,'this')
+                var particle2=bs.GL.Material( 'bitmap' ).S( 'src', 'assets/particle2.png' ,'this')
                 i=bs.GL.mobile ? 50 : 250
                 while( i-- ){
-                    bs.GL.Particle( 'particle_fire1_'+i%10 ).S( '<', bs.GL, 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle, 'x', Math.random()*2000-1000, 'y', Math.random()*2000-1000, 'z', Math.random()*2000-1000, 'changeProperty', {
+                    bs.GL.Particle( 'particle_fire1_'+i%10 ).S( '<', bs.GL, 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', i%3 ? particle : particle2, 'x', Math.random()*2000-1000, 'y', Math.random()*2000-1000, 'z', Math.random()*2000-1000, 'changeProperty', {
                         max:100,
                         sPos:[-3, 3, 0, 0, 0, 0],
-                        dPos:[-100, 100, 100, 300, -100, 100],
+                        dPos:[-100, 100, 100, 500, -100, 100],
                         sScale:[25, 35],
                         dScale:[0, 25],
                         sAlpha:[0, 0],
                         dAlpha:[0, 1],
                         speedPos:0.01,
                         speedScale:0.03,
-                        speedAlpha:0.05,
+                        speedAlpha:0.08,
                         // 계산추가하기
                         addMath:{
                             //   속성 : [ 함수, 변화강도, 속도]
-                            x:['sin', bs.randf( -4, 4 ), 0.3],
-                            y:['cos', bs.randf( -3, 3 ), 0.3],
-                            z:['sin', bs.randf( -3, 3 ), 0.3]
+                            x:['sin', bs.randf( -8, 8 ), 0.3],
+                            y:['cos', bs.randf( -8, 8 ), 0.3],
+                            z:['sin', bs.randf( -8, 8 ), 0.3]
                         },
-                        gravity:{x:1, y:0, z:1}
+                        gravity:{x:-0.3, y:0.1, z:0}
                     } );
                 }
                 var time=0, ms=Math.sin, mc=Math.cos
