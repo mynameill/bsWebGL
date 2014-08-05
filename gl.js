@@ -96,6 +96,11 @@
 				var vs, i, c;vs=[ -0.5,-0.5,0.0,0.5,-0.5,0.0,0.5,0.5,0.0,-0.5,0.5,0.0], i=[0,1,2,0,2,3], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0], UTIL.makeBufferSet('rect',vs,i,c), vs=[0,0.5,0,-0.5,-0.5,0,0.5,-0.5,0], i=[0,1,2], c=[0.5,0,1,0,1,1,0,1], UTIL.makeBufferSet('tri',vs,i,c), vs=[-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5], i=[0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0], UTIL.makeBufferSet('box',vs,i,c)
 				var vs=[], is=[], cs=[], w=32, h=32, radius=1, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};UTIL.makeBufferSet('sphere',vs,is,cs)
 			},
+			makeBufferSet:function ( k, v, i, c/*etcBuffer, size */ ){
+				var ns=UTIL.calculateNormals(v, i), j, len;
+				UTIL.mkBuffer(VBs, k, v, 3), UTIL.mkBuffer(IBs, k, i, 1), UTIL.mkBuffer(UVBs, k, c, 2), UTIL.mkBuffer(VNBs, k, ns, 3), UTIL.mkBuffer2(VB_VNBs, k, v, ns, 3)
+				for(j=4, len=arguments.length; j < len; j=j+2) UTIL.mkBuffer(VBs, k+"_p", arguments[j], arguments[j+1]);//console.log('vertices',$vs.length,'normals',ns.length,'codi',$cs.length,'indices',$is.length)
+			},
 			mkFrameBuffer:function ( k, w, h, scaleW, scaleH ){
 				var w=w, h=h, t0, G_TEX2D=gl.TEXTURE_2D, G_RBF=gl.RENDERBUFFER, G_FBF=gl.FRAMEBUFFER;
 				gl.bindTexture( G_TEX2D, FT[k]=gl.createTexture() ), gl.texParameteri( G_TEX2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( G_TEX2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ), gl.texParameteri( G_TEX2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE ), gl.texParameteri( G_TEX2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE ), gl.texImage2D( G_TEX2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null ), gl.bindTexture( G_TEX2D, null ),
@@ -122,11 +127,6 @@
 				else if( type == 0 ) t0.image=new Image(), t0.image.src=src, t0.image.onload=onLoad
 				else if( type == 1 ) t1=document.createElement( 'video' ), t0.video=t1, t1.src=src, t1.style.position='absolute', t1.play(), t1.style.display='none', t1.addEventListener( "canplaythrough", onLoad, true ), document.body.appendChild( t1 );
 				return t0.loaded=0, TEXTURES[src]=t0
-			},
-			makeBufferSet:function ( k, v, i, c/*etcBuffer, size */ ){
-				var ns=UTIL.calculateNormals(v, i), j, len;
-				UTIL.mkBuffer(VBs, k, v, 3), UTIL.mkBuffer(IBs, k, i, 1), UTIL.mkBuffer(UVBs, k, c, 2), UTIL.mkBuffer(VNBs, k, ns, 3), UTIL.mkBuffer2(VB_VNBs, k, v, ns, 3)
-				for(j=4, len=arguments.length; j < len; j=j+2) UTIL.mkBuffer(VBs, k+"_p", arguments[j], arguments[j+1]);//console.log('vertices',$vs.length,'normals',ns.length,'codi',$cs.length,'indices',$is.length)
 			},
 			setUniqueColor:(function(){
 				var color=1677215, r=0, g=0, b=0, r1=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r, g, b, t0;
@@ -452,6 +452,7 @@
 								gl.uniform1f( P.uCol, M._cCol/M.col ), gl.uniform1f( P.uPerCol, 1/M.col ), gl.uniform1f( P.uRow, M._cRow/M.row ), gl.uniform1f( P.uPerRow, 1/M.row )
 							// 현재 row값이 제대로 안되는데...텍스쳐 uv에 대한 뭔가 이해가 잘못되었음....공부해!
 						}else gl.uniform3fv( P.uColor, [M._r/255, M._g/255, M._b/255] )
+
 						renderPass ? (D_tri+=ib.num/3, rmode != 'POINTS' ? ( gl.bindBuffer( G_EAB, ib ), gl.drawElements( gl[rmode], ib.num, gl.UNSIGNED_SHORT, 0 )) : (vb=VBs[gt], gl.uniform1f( P.uPointSize, 1 ), gl.bindBuffer( G_AB, vb ), gl.drawArrays( gl.POINTS, 0, vb.num ))) : 0
 						// TODO 부모매트릭스와 자기 매트릭스 캐시해야됨
 						t1=t0.children, t1.length ? (result=mClone( $parentMTX ), mIden( rot ), mIden( pos ), rot=mMul( rot, mXRot( -t0.rotationX ) ), rot=mMul( rot, mYRot( -t0.rotationY ) ), rot=mMul( rot, mZRot( -t0.rotationZ ) ), mTran( pos, pos, [t0.x, t0.y, t0.z] ), draw( t1, t1.length, mMul( mMul( rot, result ), pos ) )) : 0

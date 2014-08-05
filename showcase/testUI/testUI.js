@@ -244,7 +244,7 @@ var meshInfoWindow;
 
 
     (function(){
-        var geos=['rect','tri','sphere','cube','teapot'], BGL=bs.GL
+        var geos=['rect','tri','sphere','box','teapot'], BGL=bs.GL
         bs.Dom(geometrys[0]).S('change',function(){
                 console.log(this.selectedIndex)
                 var list=BGL.children
