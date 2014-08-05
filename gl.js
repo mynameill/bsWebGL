@@ -11,6 +11,7 @@
 	var attrIDX={};
 	///////////////////////////////////////////
 	// 마우스는 척결대상이고..아예다시짜야함
+	MOUSE :
 	(function(){
 		var m=mouseMNG,mouseFireList=[]
 		function drawMouse(){
@@ -64,6 +65,7 @@
 			}
 		}
 	})();
+	UTIL :
 	(function(){
 		UTIL = {
 			 mkBuffer:function( BO, k, d, size ){
@@ -81,12 +83,12 @@
 				var vs, i, c;vs=[ -0.5,-0.5,0.0,0.5,-0.5,0.0,0.5,0.5,0.0,-0.5,0.5,0.0], i=[0,1,2,0,2,3], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0], UTIL.makeBufferSet('rect',vs,i,c), vs=[0,0.5,0,-0.5,-0.5,0,0.5,-0.5,0], i=[0,1,2], c=[0.5,0,1,0,1,1,0,1], UTIL.makeBufferSet('tri',vs,i,c), vs=[-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5], i=[0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0], UTIL.makeBufferSet('box',vs,i,c)
 				var vs=[], is=[], cs=[], w=32, h=32, radius=1, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};UTIL.makeBufferSet('sphere',vs,is,cs)
 			},
-			mkFrameBuffer:function ( $k, $w, $h, $scaleW, $scaleH ){
-				var w=$w, h=$h, t0, G_TEX2D=gl.TEXTURE_2D, G_RBF=gl.RENDERBUFFER, G_FBF=gl.FRAMEBUFFER;
-				gl.bindTexture( G_TEX2D, FT[$k]=gl.createTexture() ), gl.texParameteri( G_TEX2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( G_TEX2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ), gl.texParameteri( G_TEX2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE ), gl.texParameteri( G_TEX2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE ), gl.texImage2D( G_TEX2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null ), gl.bindTexture( G_TEX2D, null ),
-					FT[$k].wScale=$scaleW, FT[$k].hScale=$scaleH
+			mkFrameBuffer:function ( k, w, h, scaleW, scaleH ){
+				var w=w, h=h, t0, G_TEX2D=gl.TEXTURE_2D, G_RBF=gl.RENDERBUFFER, G_FBF=gl.FRAMEBUFFER;
+				gl.bindTexture( G_TEX2D, FT[k]=gl.createTexture() ), gl.texParameteri( G_TEX2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( G_TEX2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ), gl.texParameteri( G_TEX2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE ), gl.texParameteri( G_TEX2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE ), gl.texImage2D( G_TEX2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null ), gl.bindTexture( G_TEX2D, null ),
+				FT[k].wScale=scaleW, FT[k].hScale=scaleH
 				gl.bindRenderbuffer( G_RBF, t0=gl.createRenderbuffer() ), gl.renderbufferStorage( G_RBF, gl.DEPTH_COMPONENT16, w, h ),
-					gl.bindFramebuffer( G_FBF, FB[$k]=gl.createFramebuffer() ), gl.framebufferTexture2D( G_FBF, gl.COLOR_ATTACHMENT0, G_TEX2D, FT[$k], 0 ), gl.framebufferRenderbuffer( G_FBF, gl.DEPTH_ATTACHMENT, G_RBF, t0 ), gl.bindTexture( G_TEX2D, null ), gl.bindRenderbuffer( G_RBF, null ), gl.bindFramebuffer( G_FBF, null )
+				gl.bindFramebuffer( G_FBF, FB[k]=gl.createFramebuffer() ), gl.framebufferTexture2D( G_FBF, gl.COLOR_ATTACHMENT0, G_TEX2D, FT[k], 0 ), gl.framebufferRenderbuffer( G_FBF, gl.DEPTH_ATTACHMENT, G_RBF, t0 ), gl.bindTexture( G_TEX2D, null ), gl.bindRenderbuffer( G_RBF, null ), gl.bindFramebuffer( G_FBF, null )
 			},
 			makeTexture:function( src, W, MA, MI, type ){
 				if( TEXTURES[src] ) return TEXTURES[src]  //type 0 : image / 1 : video / undefined : cube
@@ -117,7 +119,14 @@
 				var color=1677215, r=0, g=0, b=0, r1=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r, g, b, t0;
 				return function(){return t0=r1.exec(color.toString(16)), color--, r=parseInt(t0[1], 16), g=parseInt(t0[2], 16), b=parseInt(t0[3], 16), pickSet[r+'::'+g+'::'+b]={r:r, g:g, b:b, r2:(r/255), g2:(g/255), b2:(b/255)}}
 			})(),
-			mkProgram:function(k){ // 여긴어케 더 정리를 먼저 할꺼냐...쉐이더 메이커를 좀더 안정화 고도화 시킬꺼냐 -_-;;
+			setPrograms:function(){
+				var i, k, p,t0=[]
+				for( k in GL._shaderData ) k.charAt( 0 ) != '_' ? t0.push( k ) : 0
+				i=t0.length;while( i-- ) mkProgram( GL._shaderData[t0[i]] );
+				for( i in Ps ){ p=Ps[i];for( k in attrIDX ) p[k]=gl.getAttribLocation( p, k );console.log( '생성 '+p.UUId, p ) }
+			}
+		}
+		function mkProgram(k){ // 여긴어케 더 정리를 먼저 할꺼냐...쉐이더 메이커를 좀더 안정화 고도화 시킬꺼냐 -_-;;
 			var _data=bs.GL._shaderData, vShader=gl.createShader( gl.VERTEX_SHADER ), fShader=gl.createShader( gl.FRAGMENT_SHADER ),
 				t0="uP,uR,uS,uAlpha,uFog,uFogDensity,uFogColor,uPointSize,uPerspectMTX,uCameraMTX,uParentMTX".split( ',' ), t1, t2=k.UUId, t3, t4, t5='attribute,v_uniform,f_uniform,varying'.split( ',' ), j=t5.length, i, p, targetKey, splitKey,
 				vStr="precision mediump float;\n"+_data._BASE_VERTEX_UNIFORM+_data._MTX_FUNC, fStr="precision mediump float;\n"+_data._BASE_FRAGMENT_UNIFORM+(t2 == 'last' ? _data._FXAA : '')
@@ -134,10 +143,10 @@
 			i=k.v_uniform.length;while( i-- ) p[t3=k.v_uniform[i].split( '_' )[1]]=gl.getUniformLocation( p, t3 );i=k.f_uniform.length;while( i-- ) p[t3=k.f_uniform[i].split( '_' )[1]]=gl.getUniformLocation( p, t3 )
 			i=k.attribute.length;while( i-- ) attrIDX[k.attribute[i].split( '_' )[1]]= -1
 		}
-		}
 	})();
+	GL :
 	(function(){
-		var baseGeoProperty={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}}, msgF2='WEBGL을 지원하지 않는 브라우져입니다'
+		var msgF2='WEBGL을 지원하지 않는 브라우져입니다'
 		function sMethod(){}
 		sMethod.prototype['S']=function(){
 			var i=0, j=arguments.length, k, v; //루프용 i,j와 키밸류용 k, v
@@ -154,46 +163,34 @@
 				}
 			}
 			return this;
-		},
-		sMethod.prototype['material']=function( v ){
-			var i, k, v, t, t0, t1, M=GL.Material
-			if(v) {
+		}, sMethod.prototype['material']=function( v ){
+			var i, k, t, t0, t1, M=GL.Material;
+			if( v ){
 				if( v['program'] ) this._material=v
-				else {
+				else{
 					if( v['type'] ){
-						if( v['type'] == 'cube' )
-							v['light'] ? (this._material=M( 'cubeLight' ).S( 'src', v.src ), v['normal'] ? this._material.S( 'normal', v['normal'] ) : 0 ) :
-							this._material = M('cube').S('src',v.src)
-						else this._material=M('environment').S('src', v.src), v['normal'] ? this._material.S('normal', v['normal']) :0
-					}else{
-						v=v.replace( trim, '' ),t={}, t0=v.split( ',' ), t1=t0.length-1
+						if( v['type'] == 'cube' )v['light'] ? (this._material=M( 'cubeLight' ).S( 'src', v.src ), v['normal'] ? this._material.S( 'normal', v['normal'] ) : 0 ) : this._material=M( 'cube' ).S( 'src', v.src )
+						else this._material=M( 'environment' ).S( 'src', v.src ), v['normal'] ? this._material.S( 'normal', v['normal'] ) : 0
+					}
+					else{
+						v=v.replace( trim, '' ), t={}, t0=v.split( ',' ), t1=t0.length-1
 						for( i=1; i < t1-1; i++ ) t[t0[i++]]=t0[i]
-						k=t0[t1],v = t0[0]
-						if( v.charAt( 0 ) == '#' )
-							k == 'L' ? this._material=M( 'colorLight' ).S( 'color', v ) :
-							k == 'TL' ? this._material=M( 'toonLight' ).S( 'color', v ) :
-							k == 'T' ? this._material=M( 'toon' ).S( 'color', v ) :
-							this._material=M( 'color' ).S( 'color', v )
-						else if( k.charAt( 0 ) == 'V' )
-							k == 'V' ? this._material=M( 'video' ).S( 'src', v ) :
-							this._material=M( 'videoLight' ).S( 'src', v, 'normal', t0[t1-1] )
+						k=t0[t1], v=t0[0]
+						if( v.charAt( 0 ) == '#' ) k == 'L' ? this._material=M( 'colorLight' ).S( 'color', v ) : k == 'TL' ? this._material=M( 'toonLight' ).S( 'color', v ) : k == 'T' ? this._material=M( 'toon' ).S( 'color', v ) : this._material=M( 'color' ).S( 'color', v )
+						else if( k.charAt( 0 ) == 'V' )k == 'V' ? this._material=M( 'video' ).S( 'src', v ) : this._material=M( 'videoLight' ).S( 'src', v, 'normal', t0[t1-1] )
 						else if( k == 'S' ) this._material=M( 'sprite' ).S( 'src', v, 'col', t['col'], 'row', t['row'], 'time', t['time'] ? t['time'] : 1 )
-						else
-							k == 'B' ? this._material=M( 'bitmap' ).S( 'src', v ) :
-							k == 'BL' ? this._material=M( 'bitmapLight' ).S( 'src', v, 'normal', t0[t1-1] ) : 0
-
+						else k == 'B' ? this._material=M( 'bitmap' ).S( 'src', v ) : k == 'BL' ? this._material=M( 'bitmapLight' ).S( 'src', v, 'normal', t0[t1-1] ) : 0
 					}
 				}
 			}else return this._material
-		},
-		sMethod.prototype['color']=function( v ){
+		},sMethod.prototype['color']=function( v ){
 			var t0
-			if(v) (t0=hex.exec(v)) ? (this.r=parseInt(t0[1], 16), this.g=parseInt(t0[2], 16), this.b=parseInt(t0[3], 16)) : (t0=hex_s.exec(v), this.r=parseInt(t0[1]+t0[1], 16), this.g=parseInt(t0[2]+t0[2], 16), this.b=parseInt(t0[3]+t0[3], 16))
+			if( v ) (t0=hex.exec( v )) ? (this.r=parseInt( t0[1], 16 ), this.g=parseInt( t0[2], 16 ), this.b=parseInt( t0[3], 16 )) : (t0=hex_s.exec( v ), this.r=parseInt( t0[1]+t0[1], 16 ), this.g=parseInt( t0[2]+t0[2], 16 ), this.b=parseInt( t0[3]+t0[3], 16 ))
 			else return this._color
 		}
 		function parent( v ){ //TODO parent처리와 각종 child관련 매서드 추가해야됨
-			if(v==null && this['parent']) this.parent.children.splice(this.parent.children.indexOf(this),1) , this.parent = null
-			if(v!=null && v instanceof String) v = v.charAt(0) =='#' ? IDs[v] : v
+			if( v == null && this['parent'] ) this.parent.children.splice( this.parent.children.indexOf( this ), 1 ) , this.parent=null
+			if( v != null && v instanceof String ) v=v.charAt( 0 ) == '#' ? IDs[v] : v
 			this.parent=v, this.parent ? this.parent.children.push( this ) : 0
 		}
 		function child( v ){this == GL ? GL.children.push( v ) : this.children.push( v )}
@@ -202,18 +199,13 @@
 				bs.js( function(){ document.getElementById( $id ) ? bs.Dom( $id ) : bs.Dom( "<canvas></canvas>" ).S( '<', 'body', 'position', 'absolute', '@id', $id.substr( 1, $id.length-1 ), 'this' ), GL._init( $id, $end, $fail )}, $shaderSrc )
 			},
 			_init:function( $id, $end, $fail ){
-				var i, k, p, t0=[];
-				var per=Date,last=0, now, delta, debug=GL.debug;
+				var i,per=Date,last=0, now, delta, debug=GL.debug;
 				var keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/};
 				if( cvs ) return console.log( '중복초기화 방지' );
-				cvs=document.getElementById( $id.substr( 1, $id.length-1 ) )
-				i=keys.length
+				cvs=document.getElementById( $id.substr( 1, $id.length-1 ) ),i=keys.length
 				while( i-- ) if( gl=cvs.getContext( keys[i], keys2 ) ) break
 				if( gl ){
-					for( k in GL._shaderData ) k.charAt( 0 ) != '_' ? t0.push( k ) : 0
-					i=t0.length;while( i-- ) UTIL.mkProgram( GL._shaderData[t0[i]] );
-					for( i in Ps ){ p=Ps[i];for( k in attrIDX ) p[k]=gl.getAttribLocation( p, k );console.log( '생성 '+p.UUId, p ) }
-					UTIL.setBaseBuffers(), gl.clearColor( 0.0, 0.0, 0.0, 1.0 ),MOUSE.init()
+					UTIL.setPrograms(),UTIL.setBaseBuffers(),MOUSE.init(), gl.clearColor( 0.0, 0.0, 0.0, 1.0 ),
 					bs.WIN.sizer( function( w, h ){
 						perspectMTX=mat4.create(), w=w*1, h=h*1, GL._w=w, GL._h=h, cvs.width=w, cvs.height=h, cvs.style.width="100%", cvs.style.height="100%"
 						gl.viewport( 0, 0, w, h ), GL._eventDiv.S( 'width', w, 'height', h ), UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
@@ -224,52 +216,27 @@
 				}
 				else console.log( msgF2 ), $fail ? $fail() : 0
 			},
-			parserOBJ:function($d){ console.log('블렌더obj를 파싱')
-				// TODO 파서는 나중에 좀더 파자.............잘몰것다 -_-// TODO 다중 재질 어케파싱할건가에 대한 고려필요// TODO 애니메이션 어케파싱할건가에 대한 고려...
-				var v=[], n=[], c=[], _hi={}, _index=0, _v=[], _n=[], _c=[], _i=[], t0=$d.split('\n'), i=0, j, len, len2,t1;
-				len=t0.length
-				while(len--){ t1=t0[i],i++
-					switch(t1.substr(0,2)){
-						case "v ":t1=t1.slice(2).split(" ");len2=t1.length,j=0;while(len2--) v.push(t1[j]),j++;break;
-						case "vt":t1=t1.slice(3).split(" ");len2=t1.length,j=0;while(len2--) c.push(t1[j]),j++;break
-						case "f ":
-							var quad=false;
-							t1=t1.slice(2).split(" ");
-							for(j=0; j < t1.length; j++){
-								if(j === 3 && !quad) j=2, quad=true;
-								if(t1[j] in _hi) _i.push(_hi[t1[j]]);
-								else{
-									var vt=t1[ j ].split('/');
-									for(var k=0; k < 3; k++) _v.push(v[(vt[0]-1)*3+k]), _n.push(n[(vt[2]-1)*3+j]);
-									_c.push(c[(vt[1]-1)*2+0]), _c.push(c[(vt[1]-1)*2+1]), _hi[t1[j]]=_index, _i.push(_index), _index+=1
-								}
-								if(j === 3 && quad) _i.push(_hi[t1[0]]);
-							};break
-					}
-				}
-				return {vs:_v, vns:_n, cs:_c, is:_i}
-			},
 			Light:(function(){ //TODO POINT,SPOT
-				var t=function(){}, DLight, ALight, PLight, _fn
-				_fn=t.prototype, _fn.intensity=1.0, _fn._color='#ffffff', _fn.r=255, _fn.g=255, _fn.b=255, _fn.x=0, _fn.y=0, _fn.z=0, _fn.alpha=1, _fn.S=sMethod.prototype.S, _fn.color=sMethod.prototype['color']
-				DLight=function(){}, ALight=function(){}, PLight=function(){this.x=0, this.y=0, this.z=0}, DLight.prototype=ALight.prototype=PLight.prototype=_fn
-				return function( k ){ return k == "directional" ? new DLight() : k == "ambient" ? new ALight() : k == "point" ? new PLight() : null}
+				var Light=function(){}, t;
+				Light.fn = Light.prototype = { intensity : 1.0,r:255,g:255,b:255,alpha:1,_color:'#ffffff',color:sMethod.prototype['color'],x:0,y:0,z:0,S:sMethod.prototype.S}
+				// 음 라이트가 똑같네 -_-;;
+				return function( k ){return t=new Light(), t.type=k,t}
 			})(),
 			Material:(function(){
-				var t=function(){}, r=bs.rand, t2='uC,uL,uD,uN,useCube,video,text'.split( ',' ), kind, t1, i, k, _fn
+				var t=function(){}, r=bs.rand, uniforms='uC,uL,uD,uN,useCube,video,text'.split( ',' ), kind, t1, i, k, _fn
 				t.prototype.S=sMethod.prototype.S, kind={ Color:{uC:1}, ColorLight:{uC:1, uL:1}, Toon:{uC:1, uL:1}, ToonLight:{uC:1, uL:1}, Bitmap:{uD:1}, BitmapLight:{uL:1, uD:1, uN:1}, Video:{uD:1, video:1}, VideoLight:{uL:1, uD:1, uN:1, video:1}, Environment:{uL:1, useCube:1, uN:1}, Cube:{uL:0, useCube:1}, CubeLight:{uL:1, useCube:1, uN:1}, Sky:{useCube:1}, PointLightTest:{uL:1, useCube:1}}
 				kind.Text={}
 				for( k in kind ){ // LINEAR_MIPMAP_LINEAR, NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_NEAREST,NEAREST,LINEAR 못외우것음 -_-
 					(function(){
-						i=t2.length
-						while( i-- ) kind[k][t2[i]] ? 0 : (kind[k][t2[i]]=0)
+						i=uniforms.length
+						while( i-- ) kind[k][uniforms[i]] ? 0 : (kind[k][uniforms[i]]=0)
 						var pk=k.charAt( 0 ).toLowerCase()+k.substr( 1, k.length-1 ), t6=kind[k], t3=t6['uL'], t4=t6['uN'], t5=t6['video'] ? 1 : (t6['text'] ? 2 : 0)
 						if( t6['uC'] ) t6=function(){this._color='#ffffff', this.r=255, this.g=255, this.b=255, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['color']=sMethod.prototype['color']
 						else if( t6['uD'] ) t6=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function( src ){ this.texture=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5 )}
 						else if( t6['useCube'] ) t6=function(){this.texture=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function( src ){ this.texture=UTIL.makeTexture( src )}
 						t4 ? (_fn['normal']=function( src ){ this.textureNormal=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0 )}) : 0,
 							t3 ? (_fn.specular=50, _fn.specularColor={r:255, g:255, b:255}) : 0
-						kind[k]=t6
+						kind[k]=t6,kind[k].fn = _fn
 					})()
 				}
 				t1=kind['Sprite']=function(){this.texture=null, this.program=Ps['sprite'], this.col=this.row=0, this._cCol=this._cRow=0, this.useAni=1, this._dirty=0, this._cGap=0, this._gap=16, this._time=1000}, _fn=t1.prototype=new t
@@ -297,17 +264,18 @@
 					while( i-- ) ctx.fillText( result[j], this._align == 'center' ? this.maxWidth/2 : this._align == 'right' ? this.maxWidth : 0, this._drawY+(j*this._lineHeight) ), j++
 					this._updateTexture( this.texture )
 				}
+				t1.fn = _fn
 				var textFn='text,size,color,align,textBaseline,lineHeight,fontWeight,font,fontStyle,bgColor,useBgColor'.split( ',' ), i=textFn.length
 				while(i--) (function(){var k=textFn[i], k2='_'+k;_fn[k]=function(v){if(v!=undefined) this[k2]=v, this._draw(this._text);else return this[k2]}})()
 				return function( k ){ return new kind[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 			})(),
 			Mesh:(function(){
-				var UUID=0,t, k, t0={visible:1,backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
+				var UUID=0, t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
 				var Mesh=function( k ){
 					this.children=[], this.geoType=k , this.UUId='Mesh'+UUID++, t=UTIL.setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};
 				}, fn=Mesh.prototype=sMethod.prototype
-				for( k in baseGeoProperty ) fn[k]=baseGeoProperty[k];
-				for( k in t0 ) fn[k]=t0[k]
+				Mesh.fn = fn
+				for( k in tfn ) fn[k]=tfn[k]
 				while( i-- ) (function(){ // 마우스관련 전면 폐기하고 다시짜야함
 					var t=evts[i];fn[t]=function( v ){return this.setEvent( t, v )}
 				})();
@@ -323,7 +291,7 @@
 				return function( $k ){ return VBs[$k] ? new Mesh( $k ) : null}
 			})(),
 			Particle:(function(){ //TODO 이건 다이나믹 타입인데... 향후 비애니타입의 빌보드로 나눠야할듯
-				var UUID=0, k, t0={renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}
+				var UUID=0, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, pointSize:1.0, userData:{},renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}
 				var Particle=function( type ){
 					this._geoTypeP=type, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='Particle'+UUID++
 					this.addParticle=function(){
@@ -336,8 +304,8 @@
 						return t
 					}
 				}, fn=Particle.prototype, newA=[]
-				for( k in baseGeoProperty ) fn[k]=baseGeoProperty[k];
-				for( k in t0 ) fn[k]=t0[k]
+				Particle.fn = fn
+				for( k in tfn ) fn[k]=tfn[k]
 				fn['material']=sMethod.prototype.material,
 					fn.update=function(){
 						var sP, sA, sS, o, ic, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, t0, t1, perPI=Math.PI/30, k, len=ps.length, i=ps.length
@@ -353,15 +321,16 @@
 				return fn.S=sMethod.prototype.S, fn['<']=parent, function( _k ){ return new Particle( _k )}
 			})(),
 			Controller:(function(){
-				var camera,ISO,NONE
+				var camera,ISO,NONE;
+				var mC=Math.cos, mS=Math.sin, PI=Math.PI;
 				camera = function(){
-					var cam={data:{}, fov:55, near:1, far:15000, cameraMTX:mat4.create(), S:sMethod.prototype.S}, t0='x,y,z,rotationX,rotationY,rotationZ'.split( ',' ), i=t0.length
-					while( i-- ) (function(){var t=t0[i];cam.data[t]=0, cam[t]=function( v ){if( v ) this.data[t]=v;else return this.data[t]}})()
+					var cam={data:{}, fov:55, near:1, far:15000, cameraMTX:mat4.create(), S:sMethod.prototype.S}, tfn='x,y,z,rotationX,rotationY,rotationZ'.split( ',' ), i=tfn.length
+					while( i-- ) (function(){var t=tfn[i];cam.data[t]=0, cam[t]=function( v ){if( v ) this.data[t]=v;else return this.data[t]}})()
 					cam.perspectiveUpdate=function( $perspectMTX ){ mat4.perspective(cam.fov, GL._w/GL._h, cam.near, cam.far, $perspectMTX);if(!this.enable) return}
 					return cam
 				}
 				ISO=function(){
-					var t=new camera(), t0, t1, dx, dy, d3=new Float32Array( 3 ), mC=Math.cos, mS=Math.sin, PI=Math.PI, rTilt=PI/2, rPan=PI/2, mx=GL.mobile ? 'mx0' : 'mx', my=GL.mobile ? 'my0' : 'my'
+					var t=new camera(), t0, t1, dx, dy, d3=new Float32Array( 3 ), rTilt=PI/2, rPan=PI/2, mx=GL.mobile ? 'mx0' : 'mx', my=GL.mobile ? 'my0' : 'my'
 					t.distance=500, t.speed=1, t.speedDelay=0.05, t.tilt=PI/2, t.pan=PI/2, t.mouseDowned=0, t.enable=1,
 						t._updateDrag=function( $e ){ this.mouseDowned*this.enable ? (dx=$e[mx], dy= -$e[my], this.tilt+=(dx)/GL._w*PI*this.speed, this.pan+=(dy)/GL._h/2*PI*this.speed ) : 0},
 						t.update=function( $perspectMTX ){
@@ -400,17 +369,46 @@
 			})(),
 			S:sMethod.prototype.S,
 			SkyBox:function(){ return GL.Mesh( 'box' ).S( 'scaleX', 10000, 'scaleY', 10000, 'scaleZ', 10000, 'geoType', 'box' )},
-			makeBufferSet:UTIL.makeBufferSet, makeTexture:UTIL.makeTexture,
-			skyBox:null, controller:null, directionalLight:null, ambientLight:null, pointLight:null,
-			children:[], mobile:mobile,
+			makeBufferSet:UTIL.makeBufferSet,
+			makeTexture:UTIL.makeTexture,
+			skyBox:null,
+			controller:null,
+			directionalLight:null, ambientLight:null, pointLight:null,
+			children:[],
+			mobile:mobile,
 			debug:{triangles:0, particles:0, particlesType:0, fps:0, aFps:0, _tfps:0, frame:0},
 			fog:{use:0, density:1.0, r:255.0, g:255.0, b:255.0},
 			getElementByID:function( v ){var t=IDs[v];if( t && t.parent ) return t ? t : 0},
 			getElementsByClassName:function(v){return CLASSs[v].concat()}
 		},
-		GL['skybox']=function( $t ){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child
+		GL['skybox']=function( $t ){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child,
+		GL['parserOBJ']=function($d){ console.log('블렌더obj를 파싱')
+			// TODO 파서는 나중에 좀더 파자.............잘몰것다 -_-// TODO 다중 재질 어케파싱할건가에 대한 고려필요// TODO 애니메이션 어케파싱할건가에 대한 고려...
+			var v=[], n=[], c=[], _hi={}, _index=0, _v=[], _n=[], _c=[], _i=[], t0=$d.split('\n'), i=0, j, len, len2,t1;
+			len=t0.length
+			while(len--){ t1=t0[i],i++
+				switch(t1.substr(0,2)){
+					case "v ":t1=t1.slice(2).split(" ");len2=t1.length,j=0;while(len2--) v.push(t1[j]),j++;break;
+					case "vt":t1=t1.slice(3).split(" ");len2=t1.length,j=0;while(len2--) c.push(t1[j]),j++;break
+					case "f ":
+						var quad=false;
+						t1=t1.slice(2).split(" ");
+						for(j=0; j < t1.length; j++){
+							if(j === 3 && !quad) j=2, quad=true;
+							if(t1[j] in _hi) _i.push(_hi[t1[j]]);
+							else{
+								var vt=t1[ j ].split('/');
+								for(var k=0; k < 3; k++) _v.push(v[(vt[0]-1)*3+k]), _n.push(n[(vt[2]-1)*3+j]);
+								_c.push(c[(vt[1]-1)*2+0]), _c.push(c[(vt[1]-1)*2+1]), _hi[t1[j]]=_index, _i.push(_index), _index+=1
+							}
+							if(j === 3 && quad) _i.push(_hi[t1[0]]);
+						};break
+				}
+			}
+			return {vs:_v, vns:_n, cs:_c, is:_i}
+		}
 	})()
-	,
+	RENDER :
 	(function(){
 		var M, TEX, TEXN, P, PID, gt, vb, uvb, ib, vnb, vb_vnb, ctl , rmode,  pList, renderPass, dColor=new Float32Array( 4 ), aColor=new Float32Array( 4 ), sColor=new Float32Array( 4 );
 		var p_src, p_normal, p_vb, p_vnb, p_uvb, p_ib, p_vb_vnb, d_vb, d_vnb, d_uvb, d_ib, d_vb_vnb, d_P, p_backFace, p_parentMTX;
@@ -427,10 +425,10 @@
 						p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
 						M=t0._material, rmode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
 								P != M.program ? ( P=M.program, gl.useProgram( P ), gl.enableVertexAttribArray( P.aVer ), PID=P.pid, d_P=1) : 0,
-							gl.uniformMatrix4fv( P.uParentMTX, false, $parentMTX ), gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha )
+								gl.uniformMatrix4fv( P.uParentMTX, false, $parentMTX ), gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha )
 						if( P.useLight ) sColor[0]=M.specularColor.r/255, sColor[1]=M.specularColor.g/255, sColor[2]=M.specularColor.b/255, sColor[4]=1.0,
-							d_P ? gl.enableVertexAttribArray( P.aVerN ) : 0, gl.uniform1f( P.uSpecular, M.specular ), gl.uniform4fv( P.uSpecularColor, sColor ),
-							d_P || d_vb_vnb ? (gl.bindBuffer( G_AB, vb_vnb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0 ), gl.vertexAttribPointer( P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE )) : 0
+								d_P ? gl.enableVertexAttribArray( P.aVerN ) : 0, gl.uniform1f( P.uSpecular, M.specular ), gl.uniform4fv( P.uSpecularColor, sColor ),
+								d_P || d_vb_vnb ? (gl.bindBuffer( G_AB, vb_vnb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0 ), gl.vertexAttribPointer( P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE )) : 0
 						else d_P || d_vb ? (gl.bindBuffer( G_AB, vb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 3*G_BPE, 0 )) : 0
 						if( PID == 8 ) TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEX ), gl.uniform1i( P.uSamC, 0 )) : 0), p_src=TEX) : renderPass=0
 						else if( PID == 81 ) gl.uniform1i( P.uUseNormal, 0 ),
@@ -444,8 +442,8 @@
 								gl.uniform1i( P.uUseNormal, 0 ),
 								d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
 								TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 )) : 0), p_src=TEX) : renderPass=0
-							if( PID == 5 ) TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
-							if( PID >= 6 ) M.useAni ? (M._cGap+=16 , M._cGap >= M._gap ? (M._dirty=1, M._cGap=0, M._cCol++, M._cCol == M.col ? ( M._cCol=0, M._cRow++) : 0, M._cRow == M.row ? M._cRow=0 : 0) : M._dirty=0) : 0,
+								if( PID == 5 ) TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
+								if( PID >= 6 ) M.useAni ? (M._cGap+=16 , M._cGap >= M._gap ? (M._dirty=1, M._cGap=0, M._cCol++, M._cCol == M.col ? ( M._cCol=0, M._cRow++) : 0, M._cRow == M.row ? M._cRow=0 : 0) : M._dirty=0) : 0,
 								gl.uniform1f( P.uCol, M._cCol/M.col ), gl.uniform1f( P.uPerCol, 1/M.col ), gl.uniform1f( P.uRow, M._cRow/M.row ), gl.uniform1f( P.uPerRow, 1/M.row )
 							// 현재 row값이 제대로 안되는데...텍스쳐 uv에 대한 뭔가 이해가 잘못되었음....공부해!
 						}else gl.uniform3fv( P.uColor, [M.r/255, M.g/255, M.b/255] )
@@ -508,6 +506,7 @@
 			}
 		}
 	})();
+	MATRIX4 :
 	GL.mat4 = mat4,
 	mat4.create=function(){var r=new Float32Array(16);return r[0]=1, r[1]=0, r[2]=0, r[3]=0, r[4]=0, r[5]=1, r[6]=0, r[7]=0, r[8]=0, r[9]=0, r[10]=1, r[11]=0, r[12]=0, r[13]=0, r[14]=0, r[15]=1, r},
 	mat4.identity=function( t ){return t[0]=1, t[1]=0, t[2]=0, t[3]=0, t[4]=0, t[5]=1, t[6]=0, t[7]=0, t[8]=0, t[9]=0, t[10]=1, t[11]=0, t[12]=0, t[13]=0, t[14]=0, t[15]=1, t},

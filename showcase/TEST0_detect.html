@@ -27,6 +27,12 @@
                 bs.GL.Mesh('box').S('material', '#ee2233', '<',bs.GL, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
             }
         }, '../gl.js')
+
+        bs.Dom('<div id="bsUI_alert" ><div class="msg" id="test">Cache Removed!<br>gnustory</div></div>').S('<','body','down',function($e){
+           console.log($e)
+            console.log(bs.Dom('#'+this.id +' #test' ).S('html'))
+        })
+        console.log(bs.Dom('#bsUI_alert #test' ).S('html'))
     })
 </script>
 </body>
