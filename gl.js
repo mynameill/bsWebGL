@@ -2,58 +2,68 @@
 	'use strict';
 	window.GLMAT_EPSILON=0.000001, window.Float32Array=Float32Array ? Float32Array : Array;
 	var trim=/\s/g, hex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, hex_s=/^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
-	var GL;
-	var cvs, gl, render, draw;
-	var D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0;
+	var GL,UTIL,MOUSE,cvs, gl, render, draw;
 	var IDs={}, CLASSs={}, VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={};
-	var mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile',pickSet={};
+	var D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0;
+	var mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile';
 	var perspectMTX, mat4={}, mC=Math.cos, mS=Math.sin, PI=Math.PI;
-	var mouseMNG={event:null, checkInterval:2, checkPoint:0, target:null};
-	var attrIDX={}
+	var mouseMNG={event:null, checkInterval:2, checkPoint:0, target:null},pickSet={};
+	var attrIDX={};
 	///////////////////////////////////////////
 	// 마우스는 척결대상이고..아예다시짜야함
-	function drawMouse(){
-		var t0, t=GL.children, i=t.length, cont=bs.GL.controller, P, gt, vb, ib, p_vb, p_ib, dirty_vb, dirty_ib
-		if( i == 0 || !cont ) return
-		D_mouseCalls=0, gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] )
-		if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mouseMNG.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
-		gl.viewport( 0, 0, GL._w*FT['mouse'].wScale, GL._h*FT['mouse'].hScale ), gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT ), gl.useProgram( P=Ps['color'] ), gl.enable( gl.DEPTH_TEST ), gl.depthFunc( gl.LESS ), gl.disable( gl.BLEND )
-		while( i-- ) t0=t[i], gt=t0.geoType, p_vb != VBs[gt] ? (vb=VBs[gt], dirty_vb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], dirty_ib=1) : 0,
-			(gt != 'particle' && t0.evt.num) ? (
-				gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha ), gl.uniform3fv( P.uColor, [t0._pickColor.r2, t0._pickColor.g2, t0._pickColor.b2] ),
-				dirty_vb ? (gl.bindBuffer( gl.ARRAY_BUFFER, vb ), gl.vertexAttribPointer( P.aVer, 3, gl.FLOAT, false, 0, 0 )) : 0,
-				dirty_ib ? gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, ib ) : 0,
-				gl.drawElements( gl.TRIANGLES, ib.num, gl.UNSIGNED_SHORT, 0 ), D_mouseCalls++, p_vb=VBs[gt], p_ib=IBs[gt]) : 0;
-		p_vb=null, p_ib=null, gl.bindFramebuffer( gl.FRAMEBUFFER, null )
-	}
-	var mouseFireList=[]
-	function checkMouse(){
-		gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] );
-		if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return  mouseMNG.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
-		var m=mouseMNG, t0, t1;
-		if( m['event'] ){
-			t0=new Uint8Array( 1*1*4 ), t0[3]=1, gl.readPixels( m.event.x*FT['mouse'].wScale, (GL._h-m.event.y)*FT['mouse'].hScale, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, t0 ), t1=pickSet[t0[0]+"::"+t0[1]+"::"+t0[2]]
-			if( t1 ){
-				if( t1['mesh'] ){
-					var target=m.target
-					if( target && target != t1['mesh'] )  mouseFireList.push( target )
-					var ct=m.target=t1['mesh'], evt=ct.evt, type=m.event.type
-					if( evt.overed == 0 && type == 'mousemove' && evt['mouseover'] ) evt['mouseover'].apply( ct ), document.body.style.cursor='pointer'
-					else if( evt.overed > 0 && type == 'mousedown' ){ if( evt['mousedown'] ) evt[type].apply( ct ), document.body.style.cursor='pointer'}
-					else if( evt[type] ) evt[type].apply( ct )
-					evt.overed++, m.event=null
-				}
-			}
-			else{
-				var t=m.target
-				if( t && t.evt.overed > 0 ) t.evt['mouseout'] ? (t.evt['mouseout'].apply( t ), document.body.style.cursor='pointer') : 0 , t.evt.overed=0, t=null
-				m.event=null, document.body.style.cursor='default'
-			}
-			for( var i=0, len=mouseFireList.length; i < len; i++ )mouseFireList[i].evt['mouseout'] ? mouseFireList[i].evt['mouseout'].apply( mouseFireList[i] ) : 0, mouseFireList[i].evt.overed=0, mouseFireList.shift()
+	(function(){
+		var m=mouseMNG,mouseFireList=[]
+		function drawMouse(){
+			var t0, t=GL.children, i=t.length, cont=bs.GL.controller, P, gt, vb, ib, p_vb, p_ib, dirty_vb, dirty_ib
+			if( i == 0 || !cont ) return
+			D_mouseCalls=0, gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] )
+			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mouseMNG.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+			gl.viewport( 0, 0, GL._w*FT['mouse'].wScale, GL._h*FT['mouse'].hScale ), gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT ), gl.useProgram( P=Ps['color'] ), gl.enable( gl.DEPTH_TEST ), gl.depthFunc( gl.LESS ), gl.disable( gl.BLEND )
+			while( i-- ) t0=t[i], gt=t0.geoType, p_vb != VBs[gt] ? (vb=VBs[gt], dirty_vb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], dirty_ib=1) : 0,
+				(gt != 'particle' && t0.evt.num) ? (
+					gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha ), gl.uniform3fv( P.uColor, [t0._pickColor.r2, t0._pickColor.g2, t0._pickColor.b2] ),
+						dirty_vb ? (gl.bindBuffer( gl.ARRAY_BUFFER, vb ), gl.vertexAttribPointer( P.aVer, 3, gl.FLOAT, false, 0, 0 )) : 0,
+						dirty_ib ? gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, ib ) : 0,
+						gl.drawElements( gl.TRIANGLES, ib.num, gl.UNSIGNED_SHORT, 0 ), D_mouseCalls++, p_vb=VBs[gt], p_ib=IBs[gt]) : 0;
+			p_vb=null, p_ib=null, gl.bindFramebuffer( gl.FRAMEBUFFER, null )
 		}
-		m.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
-	}
-	var UTIL
+		function checkMouse(){
+			gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] );
+			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return  mouseMNG.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+			var m=mouseMNG, t0, t1;
+			if( m['event'] ){
+				t0=new Uint8Array( 1*1*4 ), t0[3]=1, gl.readPixels( m.event.x*FT['mouse'].wScale, (GL._h-m.event.y)*FT['mouse'].hScale, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, t0 ), t1=pickSet[t0[0]+"::"+t0[1]+"::"+t0[2]]
+				if( t1 ){
+					if( t1['mesh'] ){
+						var target=m.target
+						if( target && target != t1['mesh'] )  mouseFireList.push( target )
+						var ct=m.target=t1['mesh'], evt=ct.evt, type=m.event.type
+						if( evt.overed == 0 && type == 'mousemove' && evt['mouseover'] ) evt['mouseover'].apply( ct ), document.body.style.cursor='pointer'
+						else if( evt.overed > 0 && type == 'mousedown' ){ if( evt['mousedown'] ) evt[type].apply( ct ), document.body.style.cursor='pointer'}
+						else if( evt[type] ) evt[type].apply( ct )
+						evt.overed++, m.event=null
+					}
+				}
+				else{
+					var t=m.target
+					if( t && t.evt.overed > 0 ) t.evt['mouseout'] ? (t.evt['mouseout'].apply( t ), document.body.style.cursor='pointer') : 0 , t.evt.overed=0, t=null
+					m.event=null, document.body.style.cursor='default'
+				}
+				for( var i=0, len=mouseFireList.length; i < len; i++ )mouseFireList[i].evt['mouseout'] ? mouseFireList[i].evt['mouseout'].apply( mouseFireList[i] ) : 0, mouseFireList[i].evt.overed=0, mouseFireList.shift()
+			}
+			m.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+		}
+		(function tick(){if( m.checkPoint == m.checkInterval ) drawMouse();if( m.checkPoint == m.checkInterval+2 ) checkMouse();m.checkPoint++, requestAnimationFrame( tick )})()
+		MOUSE = {
+			init : function(){
+				GL._eventDiv=bs.Dom( 'body' ),
+					GL._eventDiv.S(
+						'down',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=1},
+						'up',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=0},
+						'move',function($e){if(D_mouseCalls > 0) m.event=$e;if(GL.controller)GL.controller._updateDrag($e)})
+			}
+		}
+	})();
 	(function(){
 		UTIL = {
 			 mkBuffer:function( BO, k, d, size ){
@@ -192,7 +202,7 @@
 				bs.js( function(){ document.getElementById( $id ) ? bs.Dom( $id ) : bs.Dom( "<canvas></canvas>" ).S( '<', 'body', 'position', 'absolute', '@id', $id.substr( 1, $id.length-1 ), 'this' ), GL._init( $id, $end, $fail )}, $shaderSrc )
 			},
 			_init:function( $id, $end, $fail ){
-				var i, k, p, t0=[], m=mouseMNG;
+				var i, k, p, t0=[];
 				var per=Date,last=0, now, delta, debug=GL.debug;
 				var keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/};
 				if( cvs ) return console.log( '중복초기화 방지' );
@@ -203,17 +213,12 @@
 					for( k in GL._shaderData ) k.charAt( 0 ) != '_' ? t0.push( k ) : 0
 					i=t0.length;while( i-- ) UTIL.mkProgram( GL._shaderData[t0[i]] );
 					for( i in Ps ){ p=Ps[i];for( k in attrIDX ) p[k]=gl.getAttribLocation( p, k );console.log( '생성 '+p.UUId, p ) }
-					UTIL.setBaseBuffers(), gl.clearColor( 0.0, 0.0, 0.0, 1.0 ), GL._eventDiv=bs.Dom( 'body' ),
-						GL._eventDiv.S(
-							'down',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=1},
-							'up',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=0},
-							'move',function($e){if(D_mouseCalls > 0) m.event=$e;if(GL.controller)GL.controller._updateDrag($e)}),
-						bs.WIN.sizer( function( w, h ){
-							perspectMTX=mat4.create(), w=w*1, h=h*1, GL._w=w, GL._h=h, cvs.width=w, cvs.height=h, cvs.style.width="100%", cvs.style.height="100%"
-							gl.viewport( 0, 0, w, h ), GL._eventDiv.S( 'width', w, 'height', h ), UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
-						});
+					UTIL.setBaseBuffers(), gl.clearColor( 0.0, 0.0, 0.0, 1.0 ),MOUSE.init()
+					bs.WIN.sizer( function( w, h ){
+						perspectMTX=mat4.create(), w=w*1, h=h*1, GL._w=w, GL._h=h, cvs.width=w, cvs.height=h, cvs.style.width="100%", cvs.style.height="100%"
+						gl.viewport( 0, 0, w, h ), GL._eventDiv.S( 'width', w, 'height', h ), UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
+					});
 					(function tick(){now=per.now(), delta=now-last, debug.fps=1000/delta.toFixed( 2 ), debug.frame++, debug._tfps+=debug.fps, debug.aFps=debug._tfps/debug.frame, debug.mouseCalls=D_mouseCalls, debug.particles=D_par, debug.particlesType=D_parType, debug.triangles=D_tri, last=now, render(), requestAnimationFrame( tick )})(),
-					(function tick(){if( m.checkPoint == m.checkInterval ) drawMouse();if( m.checkPoint == m.checkInterval+2 ) checkMouse();m.checkPoint++, requestAnimationFrame( tick )})(),
 					(function tick(){if( GL.controller ) GL.controller.update( perspectMTX );requestAnimationFrame( tick )})();
 					$end()
 				}
@@ -320,7 +325,7 @@
 			Particle:(function(){ //TODO 이건 다이나믹 타입인데... 향후 비애니타입의 빌보드로 나눠야할듯
 				var UUID=0, k, t0={renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}
 				var Particle=function( type ){
-					this._geoTypeP=type, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='bsParticle_Instance'+UUID++
+					this._geoTypeP=type, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='Particle'+UUID++
 					this.addParticle=function(){
 						var t={}, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, tsP=cp.sPos, tsS=cp.sScale, tsA=cp.sAlpha, tdP=cp.dPos, tdS=cp.dScale, tdA=cp.dAlpha, r=bs.randf
 						t.age=0, t.sP=cp.speedPos, t.sS=cp.speedScale, t.sA=cp.speedAlpha,
@@ -347,19 +352,15 @@
 					}
 				return fn.S=sMethod.prototype.S, fn['<']=parent, function( _k ){ return new Particle( _k )}
 			})(),
-			PostEffect:(function(){
-				var t0='PostEffect_mono,PostEffect_invert,PostEffect_sepia,PostEffect_bloom'.split( ',' ), R='', t1, t2, i=t0.length
-				while( i-- ) t1=t0[i].split( '_' ), t2=t1[1].charAt( 0 ).toUpperCase()+t1[1].substr( 1, t1[1].length-1 ), R+='if(k == "'+t1[1]+'") return new '+new Function( '', "return this.UUId = '"+t1[1]+"', this.uniform = 'u"+t2+"';" )+'();\n'
-				return R=new Function( 'k', R ), R.__list=t0, R.use=0, R.fxaa=0, R.anagraphy=0, R.list=[], R;
-			})(),
 			Controller:(function(){
-				var camera=function(){
+				var camera,ISO,NONE
+				camera = function(){
 					var cam={data:{}, fov:55, near:1, far:15000, cameraMTX:mat4.create(), S:sMethod.prototype.S}, t0='x,y,z,rotationX,rotationY,rotationZ'.split( ',' ), i=t0.length
 					while( i-- ) (function(){var t=t0[i];cam.data[t]=0, cam[t]=function( v ){if( v ) this.data[t]=v;else return this.data[t]}})()
 					cam.perspectiveUpdate=function( $perspectMTX ){ mat4.perspective(cam.fov, GL._w/GL._h, cam.near, cam.far, $perspectMTX);if(!this.enable) return}
 					return cam
 				}
-				var ISO=function(){
+				ISO=function(){
 					var t=new camera(), t0, t1, dx, dy, d3=new Float32Array( 3 ), mC=Math.cos, mS=Math.sin, PI=Math.PI, rTilt=PI/2, rPan=PI/2, mx=GL.mobile ? 'mx0' : 'mx', my=GL.mobile ? 'my0' : 'my'
 					t.distance=500, t.speed=1, t.speedDelay=0.05, t.tilt=PI/2, t.pan=PI/2, t.mouseDowned=0, t.enable=1,
 						t._updateDrag=function( $e ){ this.mouseDowned*this.enable ? (dx=$e[mx], dy= -$e[my], this.tilt+=(dx)/GL._w*PI*this.speed, this.pan+=(dy)/GL._h/2*PI*this.speed ) : 0},
@@ -371,17 +372,18 @@
 						}
 					return t
 				}
-				var NONE=function(){
+				NONE=function(){
 					var t=new camera(), t0, d3=new Float32Array( 3 )
 					t.mouseDowned=0, t.enable=1,
 						t._updateDrag=function( $e ){},
 						t.update=function( $perspectMTX ){
 							this.perspectiveUpdate( $perspectMTX ), t0=this.cameraMTX=mat4.identity( this.cameraMTX ), d3[0]=this.data.x, d3[1]=this.data.y, d3[2]=this.data.z,
-								mat4.rotateX( t0, t0, this.data.rotationX ), mat4.rotateY( t0, t0, this.data.rotationY ), mat4.rotateZ( t0, t0, this.data.rotationZ ), mat4.translate( t0, t0, d3 )
+							mat4.rotateX( t0, t0, this.data.rotationX ), mat4.rotateY( t0, t0, this.data.rotationY ), mat4.rotateZ( t0, t0, this.data.rotationZ ), mat4.translate( t0, t0, d3 )
 							this.cameraMTX=t0
 						}
 					return t
 				}
+				ISO.prototype.S =NONE.prototype.S = sMethod.prototype.S
 				//var SIMPLE // 프리카메라
 				//var WALK // 워킹 액션
 				//var AUTOCAM // 3D파일에서 카메라 애니메이션을 추출 마치 비디오처럼!
@@ -390,6 +392,11 @@
 					else if( $type == 'NONE' ) return new NONE();
 					else console.log( '지원하지 않는 타입입니다.' )
 				}
+			})(),
+			PostEffect:(function(){
+				var t0='PostEffect_mono,PostEffect_invert,PostEffect_sepia,PostEffect_bloom'.split( ',' ), R='', t1, t2, i=t0.length
+				while( i-- ) t1=t0[i].split( '_' ), t2=t1[1].charAt( 0 ).toUpperCase()+t1[1].substr( 1, t1[1].length-1 ), R+='if(k == "'+t1[1]+'") return new '+new Function( '', "return this.UUId = '"+t1[1]+"', this.uniform = 'u"+t2+"';" )+'();\n'
+				return R=new Function( 'k', R ), R.__list=t0, R.use=0, R.fxaa=0, R.anagraphy=0, R.list=[], R;
 			})(),
 			S:sMethod.prototype.S,
 			SkyBox:function(){ return GL.Mesh( 'box' ).S( 'scaleX', 10000, 'scaleY', 10000, 'scaleZ', 10000, 'geoType', 'box' )},
@@ -408,12 +415,12 @@
 		var M, TEX, TEXN, P, PID, gt, vb, uvb, ib, vnb, vb_vnb, ctl , rmode,  pList, renderPass, dColor=new Float32Array( 4 ), aColor=new Float32Array( 4 ), sColor=new Float32Array( 4 );
 		var p_src, p_normal, p_vb, p_vnb, p_uvb, p_ib, p_vb_vnb, d_vb, d_vnb, d_uvb, d_ib, d_vb_vnb, d_P, p_backFace, p_parentMTX;
 		draw=function( $list, $num, $parentMTX ){
-			var i=$num, j=0, t=$list, t0, t1, result, ro=mat4.create(), pos=mat4.create(), mClone=mat4.clone, mIdentity=mat4.identity, mMultiply=mat4.matrixMultiply, mXRotation=mat4.makeXRotation, mYRotation=mat4.makeYRotation, mZRotation=mat4.makeZRotation, mTranslate=mat4.translate;
+			var i=$num, j=0, t=$list, t0, t1, result;
+			var ro=mat4.create(), pos=mat4.create(), mClone=mat4.clone, mIdentity=mat4.identity, mMultiply=mat4.matrixMultiply, mXRotation=mat4.makeXRotation, mYRotation=mat4.makeYRotation, mZRotation=mat4.makeZRotation, mTranslate=mat4.translate;
 			var G_FLOAT=gl.FLOAT, G_AB=gl.ARRAY_BUFFER, G_EAB=gl.ELEMENT_ARRAY_BUFFER, G_BPE=Float32Array.BYTES_PER_ELEMENT, G_TEX2D=gl.TEXTURE_2D, G_TEX0=gl.TEXTURE0;
 			P= null;
 			while(i--){
 				t0=t[j++], d_vb=d_vnb=d_ib=d_vb_vnb=d_uvb=d_P=0, renderPass=1, gt=t0.geoType, (p_backFace != t0.backFace) ? t0.backFace ? gl.enable( gl.CULL_FACE ) : gl.disable( gl.CULL_FACE ) : 0, p_backFace=t0.backFace
-
 				if( gt == 'particle' ) pList.push( t0 )
 				else{
 					if(t0.visible){
@@ -421,23 +428,22 @@
 						M=t0._material, rmode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
 								P != M.program ? ( P=M.program, gl.useProgram( P ), gl.enableVertexAttribArray( P.aVer ), PID=P.pid, d_P=1) : 0,
 							gl.uniformMatrix4fv( P.uParentMTX, false, $parentMTX ), gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha )
-						if( P.useLight ){
-							sColor[0]=M.specularColor.r/255, sColor[1]=M.specularColor.g/255, sColor[2]=M.specularColor.b/255, sColor[4]=1.0,
-								d_P ? gl.enableVertexAttribArray( P.aVerN ) : 0, gl.uniform1f( P.uSpecular, M.specular ), gl.uniform4fv( P.uSpecularColor, sColor ),
-									d_P || d_vb_vnb ? (gl.bindBuffer( G_AB, vb_vnb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0 ), gl.vertexAttribPointer( P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE )) : 0
-						}else d_P || d_vb ? (gl.bindBuffer( G_AB, vb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 3*G_BPE, 0 )) : 0
+						if( P.useLight ) sColor[0]=M.specularColor.r/255, sColor[1]=M.specularColor.g/255, sColor[2]=M.specularColor.b/255, sColor[4]=1.0,
+							d_P ? gl.enableVertexAttribArray( P.aVerN ) : 0, gl.uniform1f( P.uSpecular, M.specular ), gl.uniform4fv( P.uSpecularColor, sColor ),
+							d_P || d_vb_vnb ? (gl.bindBuffer( G_AB, vb_vnb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 6*G_BPE, 0 ), gl.vertexAttribPointer( P.aVerN, 3, G_FLOAT, false, 6*G_BPE, 3*G_BPE )) : 0
+						else d_P || d_vb ? (gl.bindBuffer( G_AB, vb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, false, 3*G_BPE, 0 )) : 0
 						if( PID == 8 ) TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEX ), gl.uniform1i( P.uSamC, 0 )) : 0), p_src=TEX) : renderPass=0
 						else if( PID == 81 ) gl.uniform1i( P.uUseNormal, 0 ),
 								TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEX ), gl.uniform1i( P.uSamC, 0 )) : 0), p_src=TEX) : renderPass=0,
 								TEXN && TEXN.loaded ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 ), (p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, TEXN )) : 0), p_normal=TEXN) : 0
 						else if( PID == 9 )
-							d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
-									TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 ), gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.texImage2D( G_TEX2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, TEX.video )) : 0), p_src=TEX) : renderPass=0,
+								d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
+								TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 ), gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.texImage2D( G_TEX2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, TEX.video )) : 0), p_src=TEX) : renderPass=0,
 								TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
 						else if( PID > 3 ){
-							gl.uniform1i( P.uUseNormal, 0 ),
+								gl.uniform1i( P.uUseNormal, 0 ),
 								d_uvb ? (  d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, uvb ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, false, 0, 0 )) : 0,
-									TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 )) : 0), p_src=TEX) : renderPass=0
+								TEX && TEX.loaded ? ((p_src != TEX ? (gl.activeTexture( G_TEX0 ), gl.bindTexture( G_TEX2D, TEX ), gl.uniform1i( P.uSam, 0 )) : 0), p_src=TEX) : renderPass=0
 							if( PID == 5 ) TEXN ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 )) : 0, TEXN && TEXN.loaded ? ((p_normal != TEXN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TEXN )) : 0), p_normal=TEXN) : 0
 							if( PID >= 6 ) M.useAni ? (M._cGap+=16 , M._cGap >= M._gap ? (M._dirty=1, M._cGap=0, M._cCol++, M._cCol == M.col ? ( M._cCol=0, M._cRow++) : 0, M._cRow == M.row ? M._cRow=0 : 0) : M._dirty=0) : 0,
 								gl.uniform1f( P.uCol, M._cCol/M.col ), gl.uniform1f( P.uPerCol, 1/M.col ), gl.uniform1f( P.uRow, M._cRow/M.row ), gl.uniform1f( P.uPerRow, 1/M.row )
