@@ -21,9 +21,9 @@
 		while( i-- ) t0=t[i], gt=t0.geoType, p_vb != VBs[gt] ? (vb=VBs[gt], dirty_vb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], dirty_ib=1) : 0,
 			(gt != 'particle' && t0.evt.num) ? (
 				gl.uniform3fv( P.uP, [t0.x, t0.y, t0.z] ), gl.uniform3fv( P.uR, [t0.rotationX, t0.rotationY, t0.rotationZ] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, t0.alpha ), gl.uniform3fv( P.uColor, [t0._pickColor.r2, t0._pickColor.g2, t0._pickColor.b2] ),
-					dirty_vb ? (gl.bindBuffer( gl.ARRAY_BUFFER, vb ), gl.vertexAttribPointer( P.aVer, 3, gl.FLOAT, false, 0, 0 )) : 0,
-					dirty_ib ? gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, ib ) : 0,
-					gl.drawElements( gl.TRIANGLES, ib.num, gl.UNSIGNED_SHORT, 0 ), D_mouseCalls++, p_vb=VBs[gt], p_ib=IBs[gt]) : 0;
+				dirty_vb ? (gl.bindBuffer( gl.ARRAY_BUFFER, vb ), gl.vertexAttribPointer( P.aVer, 3, gl.FLOAT, false, 0, 0 )) : 0,
+				dirty_ib ? gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, ib ) : 0,
+				gl.drawElements( gl.TRIANGLES, ib.num, gl.UNSIGNED_SHORT, 0 ), D_mouseCalls++, p_vb=VBs[gt], p_ib=IBs[gt]) : 0;
 		p_vb=null, p_ib=null, gl.bindFramebuffer( gl.FRAMEBUFFER, null )
 	}
 	var mouseFireList=[]
@@ -146,31 +146,32 @@
 			return this;
 		},
 		sMethod.prototype['material']=function( v ){
+			var i, k, v, t, t0, t1, M=GL.Material
 			if(v) {
 				if( v['program'] ) this._material=v
 				else {
 					if( v['type'] ){
-						if( v['type'] == 'cube' ){
-							v['light'] ? (this._material=GL.Material( 'cubeLight' ).S( 'src', v.src ), v['normal'] ? this._material.S( 'normal', v['normal'] ) : 0 ) :
-								this._material = GL.Material('cube').S('src',v.src)
-						}else this._material=GL.Material('environment').S('src', v.src), v['normal'] ? this._material.S('normal', v['normal']) :0
+						if( v['type'] == 'cube' )
+							v['light'] ? (this._material=M( 'cubeLight' ).S( 'src', v.src ), v['normal'] ? this._material.S( 'normal', v['normal'] ) : 0 ) :
+							this._material = M('cube').S('src',v.src)
+						else this._material=M('environment').S('src', v.src), v['normal'] ? this._material.S('normal', v['normal']) :0
 					}else{
-						v=v.replace( trim, '' )
-						var t={}, t0=v.split( ',' ), t1=t0.length-1
-						for( var i=1; i < t1-1; i++ ) t[t0[i++]]=t0[i]
-						if( v.charAt( 0 ) == '#' ){
-							t0[t1] == 'L' ? this._material=GL.Material( 'colorLight' ).S( 'color', t0[0] ) :
-									t0[t1] == 'TL' ? this._material=GL.Material( 'toonLight' ).S( 'color', t0[0] ) :
-									t0[t1] == 'T' ? this._material=GL.Material( 'toon' ).S( 'color', t0[0] ) :
-								this._material=GL.Material( 'color' ).S( 'color', t0[0] )
-						}else if( t0[t1].charAt( 0 ) == 'V' ){
-							t0[t1] == 'V' ? this._material=GL.Material( 'video' ).S( 'src', t0[0] ) :
-								this._material=GL.Material( 'videoLight' ).S( 'src', t0[0], 'normal', t0[t1-1] )
-						}else if( t0[t1] == 'S' ) this._material=GL.Material( 'sprite' ).S( 'src', t0[0], 'col', t['col'], 'row', t['row'], 'time', t['time'] ? t['time'] : 1 )
-						else{
-							t0[t1] == 'B' ? this._material=GL.Material( 'bitmap' ).S( 'src', t0[0] ) :
-									t0[t1] == 'BL' ? this._material=GL.Material( 'bitmapLight' ).S( 'src', t0[0], 'normal', t0[t1-1] ) : 0
-						}
+						v=v.replace( trim, '' ),t={}, t0=v.split( ',' ), t1=t0.length-1
+						for( i=1; i < t1-1; i++ ) t[t0[i++]]=t0[i]
+						k=t0[t1],v = t0[0]
+						if( v.charAt( 0 ) == '#' )
+							k == 'L' ? this._material=M( 'colorLight' ).S( 'color', v ) :
+							k == 'TL' ? this._material=M( 'toonLight' ).S( 'color', v ) :
+							k == 'T' ? this._material=M( 'toon' ).S( 'color', v ) :
+							this._material=M( 'color' ).S( 'color', v )
+						else if( k.charAt( 0 ) == 'V' )
+							k == 'V' ? this._material=M( 'video' ).S( 'src', v ) :
+							this._material=M( 'videoLight' ).S( 'src', v, 'normal', t0[t1-1] )
+						else if( k == 'S' ) this._material=M( 'sprite' ).S( 'src', v, 'col', t['col'], 'row', t['row'], 'time', t['time'] ? t['time'] : 1 )
+						else
+							k == 'B' ? this._material=M( 'bitmap' ).S( 'src', v ) :
+							k == 'BL' ? this._material=M( 'bitmapLight' ).S( 'src', v, 'normal', t0[t1-1] ) : 0
+
 					}
 				}
 			}else return this._material
@@ -191,15 +192,17 @@
 				bs.js( function(){ document.getElementById( $id ) ? bs.Dom( $id ) : bs.Dom( "<canvas></canvas>" ).S( '<', 'body', 'position', 'absolute', '@id', $id.substr( 1, $id.length-1 ), 'this' ), GL._init( $id, $end, $fail )}, $shaderSrc )
 			},
 			_init:function( $id, $end, $fail ){
+				var i, k, p, t0=[], m=mouseMNG;
+				var per=Date,last=0, now, delta, debug=GL.debug;
+				var keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/};
 				if( cvs ) return console.log( '중복초기화 방지' );
 				cvs=document.getElementById( $id.substr( 1, $id.length-1 ) )
-				var keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/}, i=keys.length
+				i=keys.length
 				while( i-- ) if( gl=cvs.getContext( keys[i], keys2 ) ) break
 				if( gl ){
-					var i, p, t0=[], m=mouseMNG, per=Date, last=0, now, delta, t=GL.debug;
-					for( var k in GL._shaderData ) k.charAt( 0 ) != '_' ? t0.push( k ) : 0
+					for( k in GL._shaderData ) k.charAt( 0 ) != '_' ? t0.push( k ) : 0
 					i=t0.length;while( i-- ) UTIL.mkProgram( GL._shaderData[t0[i]] );
-					for( i in Ps ){p=Ps[i];for( k in attrIDX ) p[k]=gl.getAttribLocation( p, k );console.log( '생성 '+p.UUId, p )}
+					for( i in Ps ){ p=Ps[i];for( k in attrIDX ) p[k]=gl.getAttribLocation( p, k );console.log( '생성 '+p.UUId, p ) }
 					UTIL.setBaseBuffers(), gl.clearColor( 0.0, 0.0, 0.0, 1.0 ), GL._eventDiv=bs.Dom( 'body' ),
 						GL._eventDiv.S(
 							'down',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=1},
@@ -209,10 +212,9 @@
 							perspectMTX=mat4.create(), w=w*1, h=h*1, GL._w=w, GL._h=h, cvs.width=w, cvs.height=h, cvs.style.width="100%", cvs.style.height="100%"
 							gl.viewport( 0, 0, w, h ), GL._eventDiv.S( 'width', w, 'height', h ), UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
 						});
-					(function tick(){now=per.now(), delta=now-last, t.fps=1000/delta.toFixed( 2 ), t.frame++, t._tfps+=t.fps, t.aFps=t._tfps/t.frame, t.mouseCalls=D_mouseCalls, t.particles=D_par, t.particlesType=D_parType, t.triangles=D_tri, last=now, render(), requestAnimationFrame( tick )})(),
-						(function tick(){if( m.checkPoint == m.checkInterval ) drawMouse();if( m.checkPoint == m.checkInterval+2 ) checkMouse();m.checkPoint++, requestAnimationFrame( tick )})(),
-						(function tick(){if( GL.controller ) GL.controller.update( perspectMTX );requestAnimationFrame( tick )})();
-//			    setInterval(function(){if(GL.controller) GL.controller.update(perspectMTX)},15) // TODO 이건 모바일일 경우 인터벌이 더나아보이긴하네 -_-;; 이유는!?
+					(function tick(){now=per.now(), delta=now-last, debug.fps=1000/delta.toFixed( 2 ), debug.frame++, debug._tfps+=debug.fps, debug.aFps=debug._tfps/debug.frame, debug.mouseCalls=D_mouseCalls, debug.particles=D_par, debug.particlesType=D_parType, debug.triangles=D_tri, last=now, render(), requestAnimationFrame( tick )})(),
+					(function tick(){if( m.checkPoint == m.checkInterval ) drawMouse();if( m.checkPoint == m.checkInterval+2 ) checkMouse();m.checkPoint++, requestAnimationFrame( tick )})(),
+					(function tick(){if( GL.controller ) GL.controller.update( perspectMTX );requestAnimationFrame( tick )})();
 					$end()
 				}
 				else console.log( msgF2 ), $fail ? $fail() : 0
@@ -295,27 +297,30 @@
 				return function( k ){ return new kind[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 			})(),
 			Mesh:(function(){
-				var UUID=0, t0={visible:1,backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
+				var UUID=0,t, k, t0={visible:1,backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
 				var Mesh=function( k ){
 					this.children=[], this.geoType=k , this.UUId='Mesh'+UUID++, t=UTIL.setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};
 				}, fn=Mesh.prototype=sMethod.prototype
-				for( var t in baseGeoProperty ) fn[t]=baseGeoProperty[t];for( t in t0 ) fn[t]=t0[t]
+				for( k in baseGeoProperty ) fn[k]=baseGeoProperty[k];
+				for( k in t0 ) fn[k]=t0[k]
 				while( i-- ) (function(){ // 마우스관련 전면 폐기하고 다시짜야함
 					var t=evts[i];fn[t]=function( v ){return this.setEvent( t, v )}
 				})();
 				fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},
-					fn['class']=function(v){this.class = v,CLASSs[v] ? 0 : CLASSs[v] = [], CLASSs[v].push(this)},
-					fn['setEvent']=function( $type, v ){
-						if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
-						else return this.evt[$type];
-					}, fn['material']=sMethod.prototype.material, fn['<']=parent, fn['>']=child, fn['setRotationByMat4']=function( m ){this.x=m[12], this.y=m[13], this.z=m[14], this.rotationX= -Math.atan2( m[6], m[10] ), this.rotationY=Math.asin( m[2] ), this.rotationZ= -Math.atan2( m[1], m[0] )}
+				fn['class']=function(v){this.class = v,CLASSs[v] ? 0 : CLASSs[v] = [], CLASSs[v].push(this)},
+				fn['material']=sMethod.prototype.material, fn['<']=parent, fn['>']=child,
+				fn['setRotationByMat4']=function( m ){this.x=m[12], this.y=m[13], this.z=m[14], this.rotationX= -Math.atan2( m[6], m[10] ), this.rotationY=Math.asin( m[2] ), this.rotationZ= -Math.atan2( m[1], m[0] )},
+				fn['setEvent']=function( $type, v ){
+					if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
+					else return this.evt[$type];
+				}
 				// TODO fn['filter'], fn['blendMode']
 				return function( $k ){ return VBs[$k] ? new Mesh( $k ) : null}
 			})(),
 			Particle:(function(){ //TODO 이건 다이나믹 타입인데... 향후 비애니타입의 빌보드로 나눠야할듯
-				var UUID=0, t0={renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}, Particle=function( k ){
-					for( var t in baseGeoProperty ) this[t]=baseGeoProperty[t];for( t in t0 ) this[t]=t0[t]
-					this._geoTypeP=k, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='bsParticle_Instance'+UUID++
+				var UUID=0, k, t0={renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}
+				var Particle=function( type ){
+					this._geoTypeP=type, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='bsParticle_Instance'+UUID++
 					this.addParticle=function(){
 						var t={}, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, tsP=cp.sPos, tsS=cp.sScale, tsA=cp.sAlpha, tdP=cp.dPos, tdS=cp.dScale, tdA=cp.dAlpha, r=bs.randf
 						t.age=0, t.sP=cp.speedPos, t.sS=cp.speedScale, t.sA=cp.speedAlpha,
@@ -326,6 +331,8 @@
 						return t
 					}
 				}, fn=Particle.prototype, newA=[]
+				for( k in baseGeoProperty ) fn[k]=baseGeoProperty[k];
+				for( k in t0 ) fn[k]=t0[k]
 				fn['material']=sMethod.prototype.material,
 					fn.update=function(){
 						var sP, sA, sS, o, ic, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, t0, t1, perPI=Math.PI/30, k, len=ps.length, i=ps.length
@@ -514,5 +521,3 @@
 	GL.S( 'directionalLight', GL.Light( 'directional' ).S( 'color', '#ffffff', 'alpha', 0.1, 'x', 1, 'y', -1, 'z', -1, 'intensity', 0.8 ), 'ambientLight', GL.Light( 'ambient' ).S( 'color', '#333333' ), 'controller', GL.Controller( 'ISO' ) )
 	return exports.GL = GL
 })();
-
-
