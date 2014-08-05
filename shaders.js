@@ -294,7 +294,7 @@
 			' vAlpha = uAlpha;\n'+
 			' gl_Position = uPerspectMTX * uCameraMTX * vertex;',
 		fFunc:''+
-			'vec4 src = texture2D(uSam, vec2(vTexC.s*uPerCol+uCol, vTexC.t*uPerRow+uRow));\n'+
+			'vec4 src = texture2D(uSam, vec2(vTexC.s*uPerCol+uCol, vTexC.t*uPerRow-uRow));\n'+
 			'float alpha = src.a;\n'+
 			' if(alpha<0.1) discard;\n'
 	}
