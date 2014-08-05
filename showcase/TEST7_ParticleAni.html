@@ -25,85 +25,62 @@
 <body>
 
 <script>
-    bs.debug(0), bs.repository('./');
-    bs(function(){
-        bs.require(function(){
-            bs.GL.init('#glCanvas', '../shaders.js', init)
+    bs.debug( 0 ), bs.repository( './' );
+    bs( function(){
+        bs.require( function(){
+            bs.GL.init( '#glCanvas', '../shaders.js', init )
             function init(){
                 var i
-                    var skyMap=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
-                    bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
-                    var headMap=bs.GL.Material('bitmapLight').S('src', 'assets/head_diffuse.jpg', 'specularColor', {r:bs.rand(0, 255), g:bs.rand(0, 255), b:bs.rand(0, 255)})
-                    var headMap2=bs.GL.Material('bitmapLight').S('src', 'assets/head_diffuse.jpg', 'normal', 'assets/head_normals.jpg', 'specularColor', {r:bs.rand(0, 255), g:bs.rand(0, 255), b:bs.rand(0, 255)})
-                    bs.get(function($data){
-                        var r=bs.GL.parserOBJ($data)
-                        bs.GL.makeBufferSet('head', r.vs, r.is, r.cs)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap2, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', 0)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', 500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', -500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', 250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'LINES')
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', -250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'POINTS', 'pointSize', bs.rand(0.5, 3))
-                        if(!bs.GL.mobile){
-                            i=50
-                            while(i--){
-
-                                bs.GL.Mesh('head').S('<',bs.GL, 'material', headMap, 'x', Math.random()*3000-1500, 'y', Math.random()*3000-1500, 'scaleX', 1, 'scaleY', 1, 'scaleZ', 1, 'z', Math.random()*3000-1500)
-                            }
-                        }
-                    }, 'assets/head.obj')
-                    var particle=bs.GL.Material('bitmap').S('src', 'assets/particle.png')
-                    var particle2=bs.GL.Material('bitmap').S('src', 'assets/snowflake1.png')
-                    i=bs.GL.mobile ? 50 : 250
-                    while(i--){
-                        bs.GL.Particle('particle_fire1_'+i%10).S('<',bs.GL, 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle, 'x', Math.random()*2000-1000, 'y', Math.random()*2000-1000, 'z', Math.random()*2000-1000, 'changeProperty', {
-                                    max:100,
-                                    sPos:[-3, 3, 0, 0, 0, 0],
-                                    dPos:[-100, 100, 100, 300, -100, 100],
-                                    sScale:[25, 35],
-                                    dScale:[0, 25],
-                                    sAlpha:[0, 0],
-                                    dAlpha:[0, 1],
-                                    speedPos:0.01,
-                                    speedScale:0.03,
-                                    speedAlpha:0.05,
-                                    // 계산추가하기
-                                    addMath:{
-                                        //   속성 : [ 함수, 변화강도, 속도]
-                                        x:['sin', bs.randf(-4, 4), 0.3],
-                                        y:['cos', bs.randf(-3, 3), 0.3],
-                                        z:['sin', bs.randf(-3, 3), 0.3]
-                                    },
-                                    gravity:{x:1, y:0, z:1}
-                                });
+                var skyMap=bs.GL.Material( 'sky' ).S( 'src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"],'this')
+                bs.GL.S( 'skybox', bs.GL.SkyBox().S( 'material', skyMap, 'this' ) )
+                bs.get( function( $data ){
+                    var r=bs.GL.parserOBJ( $data )
+                    var matStr='assets/head_diffuse.jpg, normal,assets/head_normals.jpg,BL'
+                    bs.GL.makeBufferSet( 'head', r.vs, r.is, r.cs )
+                    bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', 0 )
+                    bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', 500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500 )
+                    bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', -500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500 )
+                    bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', 250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'LINES' )
+                    bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', -250, 'y', 300, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -1000, 'renderMode', 'POINTS', 'pointSize', bs.rand( 0.5, 3 ) )
+                    if( !bs.GL.mobile ){
+                        i=50
+                        while( i-- ) bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', Math.random()*3000-1500, 'y', Math.random()*3000-1500, 'scaleX', 1, 'scaleY', 1, 'scaleZ', 1, 'z', Math.random()*3000-1500 )
                     }
-//                    if(!bs.GL.mobile){
-//                        bs.GL.Particle('particle_snow').S('<',bs.GL, 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle2, 'x', 0, 'y', 0, 'changeProperty', {
-//                                    max:200,
-//                                    sPos:[-1000, 1000, 350, 350, -350, 50],
-//                                    dPos:[-1000, 1000, -500, -500, -350, 50],
-//                                    sScale:[10, 30],
-//                                    dScale:[0, 1],
-//                                    sAlpha:[1, 1],
-//                                    dAlpha:[0, 0],
-//                                    speedPos:0.003,
-//                                    speedScale:0.001,
-//                                    speedAlpha:0.01,
-//                                    addMath:{
-//                                        x:['sin', 0.3, 0.3],
-//                                        z:['cos', 0.3, 0.3]
-//                                    }
-//                                });
-//                    }
-                    var time=0, ms=Math.sin, mc=Math.cos
-                    bs.ANI.ani({
-                        ANI:function(){
-                            time+=0.05
-                            bs.GL.directionalLight.x=Math.sin(time) == 0 ? 0.01 : ms(time),bs.GL.directionalLight.y= mc(time) == 0 ? 0.01 : mc(time),bs.GL.directionalLight.z= -1
-                        }
-                    })
+                }, 'assets/head.obj' )
+                var particle=bs.GL.Material( 'bitmap' ).S( 'src', 'assets/particle.png' ,'this')
+                i=bs.GL.mobile ? 50 : 250
+                while( i-- ){
+                    bs.GL.Particle( 'particle_fire1_'+i%10 ).S( '<', bs.GL, 'pointSize', 1, 'zSort', 1, 'alpha', 1, 'material', particle, 'x', Math.random()*2000-1000, 'y', Math.random()*2000-1000, 'z', Math.random()*2000-1000, 'changeProperty', {
+                        max:100,
+                        sPos:[-3, 3, 0, 0, 0, 0],
+                        dPos:[-100, 100, 100, 300, -100, 100],
+                        sScale:[25, 35],
+                        dScale:[0, 25],
+                        sAlpha:[0, 0],
+                        dAlpha:[0, 1],
+                        speedPos:0.01,
+                        speedScale:0.03,
+                        speedAlpha:0.05,
+                        // 계산추가하기
+                        addMath:{
+                            //   속성 : [ 함수, 변화강도, 속도]
+                            x:['sin', bs.randf( -4, 4 ), 0.3],
+                            y:['cos', bs.randf( -3, 3 ), 0.3],
+                            z:['sin', bs.randf( -3, 3 ), 0.3]
+                        },
+                        gravity:{x:1, y:0, z:1}
+                    } );
                 }
-        }, '../gl.js')
-    })
+                var time=0, ms=Math.sin, mc=Math.cos
+                bs.ANI.ani( {
+                    ANI:function(){
+                        time+=0.05
+                        bs.GL.directionalLight.x=Math.sin( time ) == 0 ? 0.01 : ms( time ), bs.GL.directionalLight.y=mc( time ) == 0 ? 0.01 : mc( time ), bs.GL.directionalLight.z= -1
+                    }
+                } )
+            }
+        }, '../gl.js' )
+    } )
 
 </script>
 </body>
