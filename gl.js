@@ -2,7 +2,7 @@
 	'use strict';
 	window.GLMAT_EPSILON=0.000001, window.Float32Array=Float32Array ? Float32Array : Array;
 	var trim=/\s/g, hex=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, hex_s=/^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
-	var GL,UTIL,MOUSE,cvs, gl, render, draw;
+	var GL,UTIL,MOUSE,cvs, gl, render, draw,UUID=0;
 	var IDs={}, CLASSs={}, VBs={}, UVBs={}, VNBs={}, IBs={}, VSs={}, FSs={}, VB_VNBs={}, Ps={}, TEXTURES={}, FT={}, FB={};
 	var D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0;
 	var mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile';
@@ -57,11 +57,11 @@
 		(function tick(){if( m.checkPoint == m.checkInterval ) drawMouse();if( m.checkPoint == m.checkInterval+2 ) checkMouse();m.checkPoint++, requestAnimationFrame( tick )})()
 		MOUSE = {
 			init : function(){
-				GL._eventDiv=bs.Dom( 'body' ),
-					GL._eventDiv.S(
+					bs.Dom('body').S(
 						'down',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=1},
 						'up',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=0},
-						'move',function($e){if(D_mouseCalls > 0) m.event=$e;if(GL.controller)GL.controller._updateDrag($e)})
+						'move',function($e){if(D_mouseCalls > 0) m.event=$e;if(GL.controller)GL.controller._updateDrag($e)}
+					)
 			}
 		}
 	})();
@@ -208,7 +208,7 @@
 					UTIL.setPrograms(),UTIL.setBaseBuffers(),MOUSE.init(), gl.clearColor( 0.0, 0.0, 0.0, 1.0 ),
 					bs.WIN.sizer( function( w, h ){
 						perspectMTX=mat4.create(), w=w*1, h=h*1, GL._w=w, GL._h=h, cvs.width=w, cvs.height=h, cvs.style.width="100%", cvs.style.height="100%"
-						gl.viewport( 0, 0, w, h ), GL._eventDiv.S( 'width', w, 'height', h ), UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
+						gl.viewport( 0, 0, w, h ),  UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
 					});
 					(function tick(){now=per.now(), delta=now-last, debug.fps=1000/delta.toFixed( 2 ), debug.frame++, debug._tfps+=debug.fps, debug.aFps=debug._tfps/debug.frame, debug.mouseCalls=D_mouseCalls, debug.particles=D_par, debug.particlesType=D_parType, debug.triangles=D_tri, last=now, render(), requestAnimationFrame( tick )})(),
 					(function tick(){if( GL.controller ) GL.controller.update( perspectMTX );requestAnimationFrame( tick )})();
@@ -217,10 +217,9 @@
 				else console.log( msgF2 ), $fail ? $fail() : 0
 			},
 			Light:(function(){ //TODO POINT,SPOT
-				var Light=function(){}, t;
-				Light.fn = Light.prototype = { intensity : 1.0,r:255,g:255,b:255,alpha:1,_color:'#ffffff',color:sMethod.prototype['color'],x:0,y:0,z:0,S:sMethod.prototype.S}
-				// 음 라이트가 똑같네 -_-;;
-				return function( k ){return t=new Light(), t.type=k,t}
+				var Light=function( type ){this.type=type}, type={directional:1,ambient:1} // 음 라이트가 똑같네 -_-;;
+				Light.fn=Light.prototype={ intensity:1.0, r:255, g:255, b:255, alpha:1, _color:'#ffffff', color:sMethod.prototype['color'], x:0, y:0, z:0, S:sMethod.prototype.S}
+				return function( k ){if( type[k] ) return new Light( k ); else throw '지원하지않는 타입의 라이트 입니다.'}
 			})(),
 			Material:(function(){
 				var t=function(){}, r=bs.rand, uniforms='uC,uL,uD,uN,useCube,video,text'.split( ',' ), kind, t1, i, k, _fn
@@ -270,7 +269,7 @@
 				return function( k ){ return new kind[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 			})(),
 			Mesh:(function(){
-				var UUID=0, t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
+				var t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
 				var Mesh=function( k ){
 					this.children=[], this.geoType=k , this.UUId='Mesh'+UUID++, t=UTIL.setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};
 				}, fn=Mesh.prototype=sMethod.prototype
@@ -291,7 +290,7 @@
 				return function( $k ){ return VBs[$k] ? new Mesh( $k ) : null}
 			})(),
 			Particle:(function(){ //TODO 이건 다이나믹 타입인데... 향후 비애니타입의 빌보드로 나눠야할듯
-				var UUID=0, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, pointSize:1.0, userData:{},renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}
+				var k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, pointSize:1.0, userData:{},renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}
 				var Particle=function( type ){
 					this._geoTypeP=type, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='Particle'+UUID++
 					this.addParticle=function(){
@@ -307,17 +306,17 @@
 				Particle.fn = fn
 				for( k in tfn ) fn[k]=tfn[k]
 				fn['material']=sMethod.prototype.material,
-					fn.update=function(){
-						var sP, sA, sS, o, ic, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, t0, t1, perPI=Math.PI/30, k, len=ps.length, i=ps.length
-						while( i-- ){
-							o=ps[i], sP=o.sP, sA=o.sA, sS=o.sS,
-								o.x+=(o.dX-o.x)*sP, o.y+=(o.dY-o.y)*sP, o.z+=(o.dZ-o.z)*sP, o.scale+=(o.dS-o.scale)*sS, o.alpha+=(o.dA-o.alpha)*sA,
-								ic=i*3, v[ic]=o.x, v[ic+1]=o.y, v[ic+2]=o.z, p[ic]=o.age++, p[ic+1]=o.alpha, p[ic+2]=o.scale
-							if( t0=o.addMath ) for( k in t0 ) t1=t0[k], o[k]+=Math[t1[0]]( perPI*o.age*t1[2] )*t1[1] // while로 변환하는 방향으로 개선하자..
-							if( t0=o.gravity ) for( k in t0 ) t1=t0[k], o.gravityR[k]+=t1*.1, o[k]+=o.gravityR[k]
-						}
-						len < cp.max ? this.addParticle() : (ps.shift(), v.shift(), v.shift(), v.shift(), p.shift(), p.shift(), p.shift()), UTIL.makeBufferSet( this._geoTypeP, v, newA, newA, p, 3 )
+				fn['update']=function(){
+					var sP, sA, sS, o, ic, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, t0, t1, perPI=Math.PI/30, k, len=ps.length, i=ps.length
+					while( i-- ){
+						o=ps[i], sP=o.sP, sA=o.sA, sS=o.sS,
+							o.x+=(o.dX-o.x)*sP, o.y+=(o.dY-o.y)*sP, o.z+=(o.dZ-o.z)*sP, o.scale+=(o.dS-o.scale)*sS, o.alpha+=(o.dA-o.alpha)*sA,
+							ic=i*3, v[ic]=o.x, v[ic+1]=o.y, v[ic+2]=o.z, p[ic]=o.age++, p[ic+1]=o.alpha, p[ic+2]=o.scale
+						if( t0=o.addMath ) for( k in t0 ) t1=t0[k], o[k]+=Math[t1[0]]( perPI*o.age*t1[2] )*t1[1] // while로 변환하는 방향으로 개선하자..
+						if( t0=o.gravity ) for( k in t0 ) t1=t0[k], o.gravityR[k]+=t1*.1, o[k]+=o.gravityR[k]
 					}
+					len < cp.max ? this.addParticle() : (ps.shift(), v.shift(), v.shift(), v.shift(), p.shift(), p.shift(), p.shift()), UTIL.makeBufferSet( this._geoTypeP, v, newA, newA, p, 3 )
+				}
 				return fn.S=sMethod.prototype.S, fn['<']=parent, function( _k ){ return new Particle( _k )}
 			})(),
 			Controller:(function(){
@@ -356,9 +355,9 @@
 				//var SIMPLE // 프리카메라
 				//var WALK // 워킹 액션
 				//var AUTOCAM // 3D파일에서 카메라 애니메이션을 추출 마치 비디오처럼!
-				return function( $type ){
-					if( $type == 'ISO' ) return new ISO();
-					else if( $type == 'NONE' ) return new NONE();
+				return function( k ){
+					if( k == 'ISO' ) return new ISO();
+					else if( k == 'NONE' ) return new NONE();
 					else console.log( '지원하지 않는 타입입니다.' )
 				}
 			})(),
