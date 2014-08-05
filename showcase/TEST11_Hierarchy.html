@@ -33,7 +33,7 @@
                     var map=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
                     var cubeMap=bs.GL.Material('cube').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
-                    var colorLight2=bs.GL.Material('colorLight').S('r', 255, 'g', 255, 'b', 255),colorLight3=bs.GL.Material('colorLight').S('r', 255, 'g', Math.random(), 'b', 255)
+                    var colorLight2=bs.GL.Material('colorLight').S('color','#334455'),colorLight3=bs.GL.Material('colorLight').S('r', 255, 'g', Math.random(), 'b', 255)
                     var i=bs.GL.mobile ? 40 : 200
                     while(i--)
                         bs.GL.Mesh('box').S(

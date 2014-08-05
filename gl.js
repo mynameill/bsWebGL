@@ -240,7 +240,7 @@
 				return function( k ){ if( type[k] ) return new Light( k );else throw '지원하지않는 타입의 라이트 입니다.'}
 			})(),
 			Material:(function(){
-				var t=function(){}, r=bs.rand, uniforms='uC,uL,uD,uN,useCube,video,text'.split( ',' ), kind, t1, i, k, _fn
+				var t=function(){}, uniforms='uC,uL,uD,uN,useCube,video,text'.split( ',' ), kind, t1, i, k, _fn;
 				t.prototype.S=sMethod.prototype.S, kind={ Color:{uC:1}, ColorLight:{uC:1, uL:1}, Toon:{uC:1, uL:1}, ToonLight:{uC:1, uL:1}, Bitmap:{uD:1}, BitmapLight:{uL:1, uD:1, uN:1}, Video:{uD:1, video:1}, VideoLight:{uL:1, uD:1, uN:1, video:1}, Environment:{uL:1, useCube:1, uN:1}, Cube:{uL:0, useCube:1}, CubeLight:{uL:1, useCube:1, uN:1}, Sky:{useCube:1}, PointLightTest:{uL:1, useCube:1}}
 				kind.Text={}
 				for( k in kind ){ // LINEAR_MIPMAP_LINEAR, NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_NEAREST,NEAREST,LINEAR 못외우것음 -_-
@@ -369,7 +369,8 @@
 					else console.log( '지원하지 않는 타입입니다.' )
 				}
 			})(),
-			PostEffect:(function(){
+			Filter:function(){/*TODO 필터처리*/},
+			PostEffect:(function(){// 이놈도 개별로 어케 적용할지 고민좀 해봐야함
 				var t0='PostEffect_mono,PostEffect_invert,PostEffect_sepia,PostEffect_bloom'.split( ',' ), R='', t1, t2, i=t0.length
 				while( i-- ) t1=t0[i].split( '_' ), t2=t1[1].charAt( 0 ).toUpperCase()+t1[1].substr( 1, t1[1].length-1 ), R+='if(k == "'+t1[1]+'") return new '+new Function( '', "return this.UUId = '"+t1[1]+"', this.uniform = 'u"+t2+"';" )+'();\n'
 				return R=new Function( 'k', R ), R.__list=t0, R.use=0, R.fxaa=0, R.anagraphy=0, R.list=[], R;
