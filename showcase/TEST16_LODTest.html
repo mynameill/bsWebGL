@@ -28,9 +28,9 @@
         bs.require( function(){
             bs.GL.init( '#glCanvas', '../shaders.js', init )
             function init(){
-                var i = 2000
+                var i = 1000
                 while(i--){
-                    bs.GL.Mesh( 'sphere').S( 'useLOD', 1, 'distanceLOD',1200, 'renderMode','LINES',
+                    bs.GL.Mesh( 'sphere').S( 'useLOD', 1, 'distanceLOD',200, 'renderMode','LINES',
                             'material', 'assets/t1.jpg,BL', 'scaleX', 75, 'scaleY', 75, 'scaleZ', 75, '<', bs.GL, 'x', bs.rand( -1000, 1000 ), 'y', bs.rand( -1000, 1000 ), 'z', bs.rand( -1000, 1000 )
                     )
                 }
