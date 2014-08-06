@@ -443,7 +443,7 @@
 			var i=$num, j=0, t=$list, t0, t1, result;
 			var rot=mat4.create(), pos=mat4.create(), mClone=mat4.clone, mIden=mat4.identity, mMul=mat4.matrixMultiply, mXRot=mat4.makeXRotation, mYRot=mat4.makeYRotation, mZRot=mat4.makeZRotation, mTran=mat4.translate;
 			var G_FLOAT=gl.FLOAT, G_AB=gl.ARRAY_BUFFER, G_EAB=gl.ELEMENT_ARRAY_BUFFER, G_BPE=Float32Array.BYTES_PER_ELEMENT, G_TEX2D=gl.TEXTURE_2D, G_TEX0=gl.TEXTURE0;
-			var dst = squaredDistance, dst2 =0,camPosition = [GL.controller.data.x,GL.controller.data.y,GL.controller.data.z]
+			var dst = squaredDistance, dst2 =0,dst3,camPosition = [GL.controller.data.x,GL.controller.data.y,GL.controller.data.z]
 			P= null;
 			while(i--){
 				t0=t[j++], d_vb=d_vnb=d_ib=d_vb_vnb=d_uvb=d_P=0, renderPass=1, gt=t0.geoType, (p_backFace != t0.backFace) ? t0.backFace ? gl.enable( gl.CULL_FACE ) : gl.disable( gl.CULL_FACE ) : 0, p_backFace=t0.backFace
@@ -453,8 +453,8 @@
 						// TODO LOD 실험중
 
 						t0.useLOD ? (
-							dst2 = Math.sqrt(dst([t0.x,t0.y,t0.z],camPosition)),
-							gt = dst2 >t0.distanceLOD ? (VBs[gt+'_level'+parseInt(dst2/t0.distanceLOD)] ? gt+'_level'+parseInt(dst2/t0.distanceLOD) : gt) : gt
+							dst2 = Math.sqrt(dst([t0.x,t0.y,t0.z],camPosition)),dst3=parseInt(dst2/t0.distanceLOD), dst3 = dst3 >= 5 ? 5 : dst3,
+							(gt =='rect' || gt =='tri' || gt=='box') ? 0 : (gt = dst2 >t0.distanceLOD ? (VBs[gt+'_level'+dst3] ? gt+'_level'+dst3 : gt) : gt)
 							) : 0
 
 						p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
