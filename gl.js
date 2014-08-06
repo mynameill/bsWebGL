@@ -88,6 +88,7 @@
 			},
 			mkBuffer2:function( BO, k, v, n, size ){
 				var t=gl.createBuffer(), t1=[], t2, i, j, len
+
 				for(i=0, len=v.length/size; i < len; i++){for(j=0; j < size; j++) t1.push(v[i*size+j]);for(j=0; j < size; j++) t1.push(n[i*size+j])}
 				t2=new Float32Array(t1), gl.bindBuffer(gl.ARRAY_BUFFER, t), gl.bufferData(gl.ARRAY_BUFFER, t2, gl.STATIC_DRAW), t.size=size*2, t.num=t1.length, BO[k]=t
 			},
@@ -292,7 +293,7 @@
 				return function( k ){ return new kind[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 			})(),
 			Mesh:(function(){
-				var t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, useLOD:0, distanceLOD:750,visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
+				var t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, useLOD:0, distanceLOD:500,visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
 				var Mesh=function( type ){ this.children=[], this.geoType=type , this.UUId='Mesh'+UUID++, t=UTIL.setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};}, fn=Mesh.prototype=sMethod.prototype
 				for( k in tfn ) fn[k]=tfn[k]
 				Mesh.fn = fn,
@@ -436,7 +437,12 @@
 				if( gt == 'particle' ) pList.push( t0 )
 				else{
 					if(t0.visible){
-						t0.useLOD ? (gt = Math.sqrt(dst([t0.x,t0.y,t0.z],camPosition))>t0.distanceLOD ? 'box' : gt) : 0,
+						// TODO LOD 실험중
+						t0.useLOD ? (
+							gt = Math.sqrt(dst([t0.x,t0.y,t0.z],camPosition))>t0.distanceLOD ? 'box' : gt,
+							P = Ps['bitmap']
+							) : 0,
+
 						p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
 						M=t0._material, rmode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
 								P != M.program ? ( P=M.program, gl.useProgram( P ), gl.enableVertexAttribArray( P.aVer ), PID=P.pid, d_P=1) : 0,
