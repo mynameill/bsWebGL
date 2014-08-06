@@ -102,11 +102,11 @@
 				UTIL.makeBufferSet('box',vs,i,c)
 				var vs=[], is=[], cs=[], w=32, h=32, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
 				UTIL.makeBufferSet('sphere',vs,is,cs)
-				var vs=[], is=[], cs=[], w=24, h=24, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
+				var vs=[], is=[], cs=[], w=16, h=16, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
 				UTIL.makeBufferSet('sphere_level2',vs,is,cs)
-				var vs=[], is=[], cs=[], w=18, h=18, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
+				var vs=[], is=[], cs=[], w=8, h=8, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
 				UTIL.makeBufferSet('sphere_level3',vs,is,cs)
-				var vs=[], is=[], cs=[], w=9, h=9, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
+				var vs=[], is=[], cs=[], w=4, h=4, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
 				UTIL.makeBufferSet('sphere_level4',vs,is,cs)
 				var vs=[], is=[], cs=[], w=3, h=3, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
 				UTIL.makeBufferSet('sphere_level5',vs,is,cs)
@@ -451,12 +451,10 @@
 				else{
 					if(t0.visible){
 						// TODO LOD 실험중
-
 						t0.useLOD ? (
 							dst2 = Math.sqrt(dst([t0.x,t0.y,t0.z],camPosition)),dst3=parseInt(dst2/t0.distanceLOD), dst3 = dst3 >= 5 ? 5 : dst3,
 							(gt =='rect' || gt =='tri' || gt=='box') ? 0 : (gt = dst2 >t0.distanceLOD ? (VBs[gt+'_level'+dst3] ? gt+'_level'+dst3 : gt) : gt)
 							) : 0
-
 						p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
 						M=t0._material, rmode=t0.renderMode, TEX=M.texture, TEXN=M.textureNormal,
 								P != M.program ? ( P=M.program, gl.useProgram( P ), gl.enableVertexAttribArray( P.aVer ), PID=P.pid, d_P=1) : 0,
@@ -482,8 +480,7 @@
 								gl.uniform1f( P.uCol, M._cCol/M.col ), gl.uniform1f( P.uPerCol, 1/M.col ), gl.uniform1f( P.uRow, M._cRow/M.row ), gl.uniform1f( P.uPerRow, 1/M.row )
 							// 현재 row값이 제대로 안되는데...텍스쳐 uv에 대한 뭔가 이해가 잘못되었음....공부해!
 						}else gl.uniform3fv( P.uColor, [M._r/255, M._g/255, M._b/255] )
-
-						renderPass ? (D_tri+=ib.num/3, rmode != 'POINTS' ? ( gl.bindBuffer( G_EAB, ib ), gl.drawElements( gl[rmode], ib.num, gl.UNSIGNED_SHORT, 0 )) : (vb=VBs[gt], gl.uniform1f( P.uPointSize, 1 ), gl.bindBuffer( G_AB, vb ), gl.drawArrays( gl.POINTS, 0, vb.num ))) : 0
+						renderPass ? (D_tri+=ib.num/3, rmode != 'POINTS' ? ( gl.bindBuffer( G_EAB, ib ), gl.drawElements( gl[rmode], ib.num, gl.UNSIGNED_SHORT, 0 )) : (vb=VBs[gt], gl.uniform1f( P.uPointSize, t0.pointSize ), gl.bindBuffer( G_AB, vb ), gl.drawArrays( gl.POINTS, 0, vb.num ))) : 0
 						// TODO 부모매트릭스와 자기 매트릭스 캐시해야됨
 						t1=t0.children, t1.length ? (result=mClone( $parentMTX ), mIden( rot ), mIden( pos ), rot=mMul( rot, mXRot( -t0.rotationX ) ), rot=mMul( rot, mYRot( -t0.rotationY ) ), rot=mMul( rot, mZRot( -t0.rotationZ ) ), mTran( pos, pos, [t0.x, t0.y, t0.z] ), draw( t1, t1.length, mMul( mMul( rot, result ), pos ) )) : 0
 					}
