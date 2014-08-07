@@ -19,6 +19,7 @@ tutorial sample - http://projectbs.github.io/bsWebGL/camp/
 update List
 
     2014.08.06
+    . bs.Ani.gl 적용 - 메쉬에 기본 트윈 적용가능
     . 컬러재질군에 노멀맵적용
     . 노멀맵 판단 최적화
     . GL.parserOBJ(src,type,callback)으로 편의성 향상

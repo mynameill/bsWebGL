@@ -541,11 +541,14 @@
 	})();
 	bs.ANI.fn('gl', {
         target:'(arg[0]["instanceOf"]=="Mesh" ? arg[0] : bs.GL.Mesh(arg[0]))', targetAni0:'t0', targetAni1:null,
-        key:'k', from:'t0[0].S(k)', option:'0',
-        circle:'0', bezierKey:'null', bezierOption:'null',
-        aniTarget:'k', ani:'t0[i++] ? 0 : t1.S(k,v) ,t1[k] = v',
-        aniCircle:'null',
-        aniBezier:'null'
+//        key:'k', from:'t0[0].S(k)', option:'0',
+		key:'k', from:'t0[0][k]', option:'0',
+        circle:	't0.x0 = 0, t0.y0 = 0',
+		bezierKey:'null', bezierOption:'0',
+        aniTarget:'k', ani:'t0[i++] ? t1.S(k,v) : 0 ,t1[k] = v',
+		aniCircle:' t1[ckx] = cvx, t1[cky] = cvy ,t1.S(ckx,cvx,cky,cvy)', //TODO ckz도추가해야겠군!
+		aniBezier:'null'
+
     });
 	GL.S( 'directionalLight', GL.Light( 'directional' ).S( 'color', '#ffffff', 'alpha', 0.1, 'x', 1, 'y', -1, 'z', -1, 'intensity', 0.8 ), 'ambientLight', GL.Light( 'ambient' ).S( 'color', '#333333' ), 'controller', GL.Controller( 'ISO' ) )
 	return exports.GL =bs.GL= GL

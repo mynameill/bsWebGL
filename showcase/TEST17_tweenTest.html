@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>Normal Material Draft Demo</title>
+    <title>bs.ANI.gl 테스트중</title>
     <meta name="keywords" content="redcamel, webs.GL, bsjs"/>
     <meta name="description" content="redcamel, webs.GL, bsjs"/>
     <meta charset="utf-8"/>
@@ -26,6 +26,10 @@
 <body>
 <div style="position:absolute;background:#666; z-index:1;margin:10px;padding:8px;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
     <a href="https://github.com/projectBS/bsWebGL" target="_blank" style="text-decoration:none;color:#fff">https://github.com/projectBS/bsWebGL</a>
+    <div>
+        <li>메쉬에 트윈적용가능</li>
+        <li>서클애니와 베지어 테스트중</li>
+    </div>
 </div>
 <script>
     bs.debug(1), bs(function(){
@@ -36,53 +40,43 @@
 
                 var map=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                 bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
-                bs.GL.controller.S('distance', 50)
-                var m1=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg', 'normal', 'assets/normal/normal.jpg')
-                var m2=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg', 'normal', 'assets/normal/normal2.png')
-                var m3=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg', 'normal', 'assets/normal/normal3.png')
-                var m4=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg', 'normal', 'assets/normal/normal4.jpg')
-                var m5=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg', 'normal', 'assets/normal/normal5.jpg')
-                var m6=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg')
-                var maps=[m1, m2, m3, m4, m5, m6, m1, m2, m3, m4, m5, m6]
-                var max=100, i=max, mesh, gap, s=10
-                while(i--){
-                    gap=bs.GL.mobile ? 300 : 750
-                    mesh=bs.GL.Mesh('sphere')
-                    mesh.S('x', Math.sin(i*360/6*Math.PI/180)*15, 'y', Math.cos(i*360/6*Math.PI/180)*15, 'scaleX', s, 'scaleY', s, 'scaleZ', s, 'material', maps[bs.rand(0,maps.length-1)], '<', bs.GL, 'mouseup', function(){
-                                console.log(this.UUId, 'mouseup')
-                                this.S('alpha', 1)
-                            }, 'mouseover', function(){
-                                console.log(this.UUId, 'mouseover')
-                                this.S('alpha', 0.5)
-                            }, 'mouseout', function(){
-                                console.log(this.UUId, 'mouseout')
-                                this.S('alpha', 1)
-                            }, 'mousedown', function(){
-                                console.log(this.UUId, 'mousedown')
-                                this.S('alpha', 0.1)
-                            }, 'mousemove', function(){
-                                console.log(this.UUId, 'mousemove')
-                            },
-                            'id', 'test'+i
+
+
+                var max=1000, i=max, gap=bs.GL.mobile ? 300 : 750, s=10
+//
+                for(var i=0; i<max; i++){
+                    var mesh=bs.GL.Mesh('box')
+                    s = bs.randf(10,30)
+                    mesh.S( 'scaleX', s, 'scaleY', s, 'scaleZ', s, 'material',  '#1122'+bs.rand(10,99)+',L', '<', bs.GL)
+                    bs.ANI.gl(mesh,
+                            'x', bs.rand(-300-i ,300+i), 'y', bs.rand(-300-i ,300+i), 'z', bs.rand(-300-i ,300+i), 'loop', 0, 'yoyo', 1, 'ease', 'backInOut', 'time', bs.randf(4,6),
+                            'scaleX', s, 'scaleY', s, 'scaleZ', s,
+                            'rotationX', Math.PI*Math.random(),'rotationY', Math.PI*Math.random(),'rotationZ', Math.PI*Math.random()
                     )
                 }
-                var list=bs.GL.S('children'), i=list.length
-//                while(i--) bs.ANI.gl('#test'+i,
-//                        'x', bs.rand(-150, 150), 'y', bs.rand(-150, 150), 'z', bs.rand(-150, 150), 'loop', 0, 'yoyo', 1, 'ease', 'backInOut', 'time', 3,
-//                        'scaleX',10,'scaleY',10,'scaleZ',10
-//                )
-                while(i--) bs.ANI.gl(list[i],
-                        'x', bs.rand(-150, 150), 'y', bs.rand(-150, 150), 'z', bs.rand(-150, 150), 'loop', 0, 'yoyo', 1, 'ease', 'backInOut', 'time', 3,
-                        'scaleX',10,'scaleY',10,'scaleZ',10
-                )
+
+//                for(var i=max; i<max+max; i++){
+//                    var mesh=bs.GL.Mesh('box')
+//                    mesh.S('scaleX', s, 'scaleY', s, 'scaleZ', s, 'material', m2, '<', bs.GL)
+//                    var s0=bs.rand(5, 30), s1=bs.rand(15, 30)
+//                    bs.ANI.gl(mesh,
+//                            'x', bs.randf(-100, 100), 'y', bs.randf(-100, 100),
+//                            'circle', {
+//                                center:'200,0',
+//                                offsetX:s1* -.5, offsetY:s1* -.5,
+//                                angle0:bs.rand(-1000, 1000), angle1:bs.rand(-1080, 1000),
+//                                radius0:bs.rand(10, 150), radius1:bs.rand(10, 150),
+//                                x:'x', y:'y'
+//                            },
+//                            'loop', 0, 'yoyo', 1, 'ease', 'backInOut', 'time', 6
+//                    )
+//                }
 
                 var time=0, ms=Math.sin, mc=Math.cos
                 bs.ANI.ani({
                     ANI:function(){
                         time+=0.01
-                        var list=bs.GL.S('children'), i=list.length, t0
-                        while(i--) t0=list[i], t0.rotationX+=.01, t0.rotationY+=.01, t0.rotationZ+=.01
-                        bs.GL.controller.tilt+=0.01
+
                         bs.GL.directionalLight.x=Math.sin(time)==0 ? 0.01 : ms(time), bs.GL.directionalLight.y=mc(time)==0 ? 0.01 : mc(time), bs.GL.directionalLight.z= -1
                     }
                 })
