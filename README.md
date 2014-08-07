@@ -33,6 +33,9 @@ tutorial sample - http://projectbs.github.io/bsWebGL/camp/
 </pre>
 
 update List
+    2014.08.06
+    . 컬러재질군에 노멀맵적용
+    . 노멀맵 판단 최적화
 
     2014.08.05
     . S매서드 표준화
