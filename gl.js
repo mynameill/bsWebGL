@@ -256,7 +256,11 @@
 			})(),
 			Material:(function(){
 				var t=function(){}, uniforms='uC,uL,uD,uN,useCube,video,text'.split( ',' ), kind, t1, i, k, _fn;
-				t.prototype.S=sMethod.prototype.S, kind={ Color:{uC:1}, ColorLight:{uC:1, uL:1,uN:1}, Toon:{uC:1, uL:1}, ToonLight:{uC:1, uL:1,uN:1}, Bitmap:{uD:1}, BitmapLight:{uL:1, uD:1, uN:1}, Video:{uD:1, video:1}, VideoLight:{uL:1, uD:1, uN:1, video:1}, Environment:{uL:1, useCube:1, uN:1}, Cube:{uL:0, useCube:1}, CubeLight:{uL:1, useCube:1, uN:1}, Sky:{useCube:1}, PointLightTest:{uL:1, useCube:1}}
+				t.prototype.S=sMethod.prototype.S, kind={
+					Color:{uC:1}, ColorLight:{uC:1, uL:1,uN:1}, Toon:{uC:1, uL:1}, ToonLight:{uC:1, uL:1,uN:1},
+					Bitmap:{uD:1}, BitmapLight:{uL:1, uD:1, uN:1}, Video:{uD:1, video:1}, VideoLight:{uL:1, uD:1, uN:1, video:1},
+					Environment:{uL:1, useCube:1, uN:1}, Cube:{uL:0, useCube:1}, CubeLight:{uL:1, useCube:1, uN:1}, Sky:{useCube:1}
+				}
 				kind.Text={}
 				for( k in kind ){ // LINEAR_MIPMAP_LINEAR, NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_NEAREST,NEAREST,LINEAR 못외우것음 -_-
 					(function(){
@@ -396,9 +400,7 @@
 			getElementsByClassName:function(v){return CLASSs[v].concat()},
 			makeBufferSet:UTIL.makeBufferSet,makeTexture:UTIL.makeTexture,
 			skyBox:null,controller:null,directionalLight:null, ambientLight:null,
-			children:[],debug:debuger,mobile:mobile,mat4:mat4,
-			pointLight:null,// 이건실험용
-			fog:{use:0, density:1.0, r:255.0, g:255.0, b:255.0}// 이건실험용
+			children:[],debug:debuger,mobile:mobile,mat4:mat4
 		},
 		GL['skybox']=function( $t ){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child,
 		GL['parserOBJ']=function(src,type,callback){
@@ -496,10 +498,9 @@
 				gl.viewport(0, 0, GL._w, GL._h), gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT),
 				dColor[0]=GL.directionalLight._r/255, dColor[1]=GL.directionalLight._g/255, dColor[2]=GL.directionalLight._b/255, dColor[3]=GL.directionalLight.alpha, aColor[0]=GL.ambientLight._r/255, aColor[1]=GL.ambientLight._g/255, aColor[2]=GL.ambientLight._b/255, aColor[3]=GL.ambientLight.alpha
 			for( k in Ps ) gl.useProgram( P=Ps[k] ), gl.uniformMatrix4fv( P.uPerspectMTX, 0, perspectMTX ), gl.uniformMatrix4fv( P.uCameraMTX, 0, ctl.cameraMTX ), gl.uniformMatrix4fv( P.uParentMTX, 0, parentMTX ),
-				GL.fog.use ? (gl.uniform1i( P.uFog, 1 ), gl.uniform1f( P.uFogDensity, GL.fog.density ), gl.uniform3fv( P.uFogColor, [GL.fog._r/255, GL.fog._g/255, GL.fog._b/255] ) ) : 0,
+//				GL.fog.use ? (gl.uniform1i( P.uFog, 1 ), gl.uniform1f( P.uFogDensity, GL.fog.density ), gl.uniform3fv( P.uFogColor, [GL.fog._r/255, GL.fog._g/255, GL.fog._b/255] ) ) : 0,
 				P.useLight ? (gl.uniform4fv( P.uDLightColor, dColor ), gl.uniform4fv( P.uALightColor, aColor ), gl.uniform3fv( P.uDLightD, [GL.directionalLight.x, GL.directionalLight.y, GL.directionalLight.z] ), gl.uniform1f( P.uDIntensity, GL.directionalLight.intensity ), gl.uniform1f( P.uAIntensity, GL.ambientLight.intensity ),
-					GL.pointLight ? (gl.uniform3fv( P.uPLightPos, [GL.pointLight.x, GL.pointLight.y, GL.pointLight.z] )) : 0
-					) : 0
+				GL.pointLight ? (gl.uniform3fv( P.uPLightPos, [GL.pointLight.x, GL.pointLight.y, GL.pointLight.z] )) : 0) : 0
 			if( GL.skyBox ) gl.disable( gl.DEPTH_TEST ), gl.disable( gl.BLEND ), t0=GL.skyBox.obj, M=t0._material,
 				M.texture.loaded ? (gl.enableVertexAttribArray( P.aVer ), gt=t0.geoType, ib=IBs[gt], vb_vnb=VB_VNBs[gt], uvb=UVBs[gt], vb=VBs[gt],
 					gl.useProgram( P=M.program ), gl.uniform3fv( P.uP, [0, 0, 0] ), gl.uniform3fv( P.uR, [0, 0, 0] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, 1 ),

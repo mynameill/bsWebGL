@@ -313,49 +313,49 @@
 	addShader(sprite)
 
 
-	var pointLightTest={
-		UUId:'pointLightTest',useLight:1,pid:8,
-		attribute:['vec3_aVer','vec3_aVerN'],
-		v_uniform:['vec3_uDLightD','float_uSpecular','vec3_uPLightPos'],
-		f_uniform:['samplerCube_uSamC','float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
-		varying : ['vec3_vCubeCoord','float_vAlpha','float_lambertDirection','float_vSpecular','float_vSpecularPoint','float_lambertPoint','float_uPointLightDistance'],
-		vFunc:''+
-			' gl_PointSize = uPointSize;\n'+
-			' vec4 cubeNormal =  mv *vec4(-aVerN, 0.0);\n'+
-			' vCubeCoord = cubeNormal.xyz;\n'+
-			' vAlpha = uAlpha;\n'+
-			' gl_Position = uPerspectMTX * uCameraMTX * vertex;\n'+
-
-			' vec4 PL = uPerspectMTX * vec4(-uPLightPos,1.0);\n'+
-			' vec4 position = uPerspectMTX * vertex;\n'+
-			' vec3 PLD = normalize(PL.xyz-vertex.xyz);\n'+
-//			' PLD = reflect(PLD,vec3(0.0,0.0,0.0));\n'+
-			' N = normalize(vec3(mv *  vec4(aVer, 0.0)));\n'+
-			' lambertPoint =clamp(dot(N,PLD),0.0,1.0);\n'+
-			' vSpecularPoint=pow( max(lambertPoint,0.0), uSpecular);\n'+
-
-			' float d = length(PL);\n'+
-			' uPointLightDistance = 1.0/(.01+.01*d+0.2*d*d);\n',
-		fFunc:''+
-			'vec4 src = textureCube(uSamC, vCubeCoord);\n'+
-			'float alpha = src.a;\n'+
-
-			' vec4 ia = vec4(0.0, 0.0, 0.0, 1.0);\n'+
-			' vec4 id = vec4(0.0, 0.0, 0.0, 1.0);\n'+
-			' vec4 is = vec4(0.0, 0.0, 0.0, 1.0);\n'+
-			' ia =src*uALightColor*uAIntensity;\n'+
-			' id =src*uDLightColor*lambertDirection*uDIntensity;\n'+
-			' is =uSpecularColor*vSpecular*lambertDirection*uDIntensity;\n'+
-			' src = ia+id+is;\n'+
-
-			' id =vec4(0.0, 3.0, 0.0, 0.0);\n'+
-
-			' ia =uALightColor*(1.0-lambertPoint);\n'+
-			' id =src*id*lambertPoint;\n'+
-			' is =uSpecularColor*vSpecularPoint*lambertPoint;\n'+
-			' src = src+ia+id+is;\n'
-	}
-	addShader(pointLightTest)
+//	var pointLightTest={
+//		UUId:'pointLightTest',useLight:1,pid:8,
+//		attribute:['vec3_aVer','vec3_aVerN'],
+//		v_uniform:['vec3_uDLightD','float_uSpecular','vec3_uPLightPos'],
+//		f_uniform:['samplerCube_uSamC','float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
+//		varying : ['vec3_vCubeCoord','float_vAlpha','float_lambertDirection','float_vSpecular','float_vSpecularPoint','float_lambertPoint','float_uPointLightDistance'],
+//		vFunc:''+
+//			' gl_PointSize = uPointSize;\n'+
+//			' vec4 cubeNormal =  mv *vec4(-aVerN, 0.0);\n'+
+//			' vCubeCoord = cubeNormal.xyz;\n'+
+//			' vAlpha = uAlpha;\n'+
+//			' gl_Position = uPerspectMTX * uCameraMTX * vertex;\n'+
+//
+//			' vec4 PL = uPerspectMTX * vec4(-uPLightPos,1.0);\n'+
+//			' vec4 position = uPerspectMTX * vertex;\n'+
+//			' vec3 PLD = normalize(PL.xyz-vertex.xyz);\n'+
+////			' PLD = reflect(PLD,vec3(0.0,0.0,0.0));\n'+
+//			' N = normalize(vec3(mv *  vec4(aVer, 0.0)));\n'+
+//			' lambertPoint =clamp(dot(N,PLD),0.0,1.0);\n'+
+//			' vSpecularPoint=pow( max(lambertPoint,0.0), uSpecular);\n'+
+//
+//			' float d = length(PL);\n'+
+//			' uPointLightDistance = 1.0/(.01+.01*d+0.2*d*d);\n',
+//		fFunc:''+
+//			'vec4 src = textureCube(uSamC, vCubeCoord);\n'+
+//			'float alpha = src.a;\n'+
+//
+//			' vec4 ia = vec4(0.0, 0.0, 0.0, 1.0);\n'+
+//			' vec4 id = vec4(0.0, 0.0, 0.0, 1.0);\n'+
+//			' vec4 is = vec4(0.0, 0.0, 0.0, 1.0);\n'+
+//			' ia =src*uALightColor*uAIntensity;\n'+
+//			' id =src*uDLightColor*lambertDirection*uDIntensity;\n'+
+//			' is =uSpecularColor*vSpecular*lambertDirection*uDIntensity;\n'+
+//			' src = ia+id+is;\n'+
+//
+//			' id =vec4(0.0, 3.0, 0.0, 0.0);\n'+
+//
+//			' ia =uALightColor*(1.0-lambertPoint);\n'+
+//			' id =src*id*lambertPoint;\n'+
+//			' is =uSpecularColor*vSpecularPoint*lambertPoint;\n'+
+//			' src = src+ia+id+is;\n'
+//	}
+//	addShader(pointLightTest)
 
 	var cube={
 		UUId:'cube',useLight:0,pid:8,
