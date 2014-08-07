@@ -107,26 +107,32 @@
 	addShader(color)
 	var colorLight={
 		UUId:'colorLight',useLight:1,pid:1,
-		attribute:['vec3_aVer','vec3_aVerN'],
+		attribute:['vec3_aVer','vec3_aVerN','vec2_aTexC'],
 		v_uniform:['vec3_uColor','vec3_uDLightD','float_uSpecular','mat4_test'],
-		f_uniform:['float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
-		varying : ['vec4_vColor','float_vAlpha','float_lambertDirection','float_vSpecular'],
+		f_uniform:['float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor','sampler2D_uSamN','bool_uUseNormal'],
+		varying : ['vec4_vColor','float_vAlpha','float_lambertDirection','float_vSpecular','vec2_vTexC'],
 		vFunc:''+
 			' gl_PointSize = uPointSize;\n'+
 			' vColor = vec4(uColor,1.0);\n'+
 			' vAlpha = uAlpha;\n'+
+			' vTexC = aTexC;\n'+
 			' gl_Position = uPerspectMTX * uCameraMTX * vertex;\n',
 		fFunc:''+
 			'vec4 src  = vColor;\n'+
 			'float alpha = src.a;\n'+
-
 			' vec4 ia = vec4(0.0, 0.0, 0.0, 0.0);\n'+
 			' vec4 id = vec4(0.0, 0.0, 0.0, 0.0);\n'+
 			' vec4 is = vec4(0.0, 0.0, 0.0, 0.0);\n'+
 			' ia =src*uALightColor*uAIntensity;\n'+
 			' id =src*uDLightColor*lambertDirection*uDIntensity;\n'+
 			' is =uSpecularColor*vSpecular*lambertDirection*uDIntensity;\n'+
-			' src = ia+id+is;\n'
+			'if(uUseNormal){\n'+
+			'  vec4 normal = texture2D(uSamN, vec2(vTexC.s, vTexC.t));\n'+
+			'  src = (ia+id)*0.5+is+(ia*normal.r+id*normal.g+is*normal.b);\n'+
+
+			'}else{\n'+
+			'  src = ia+id+is;\n'+
+			'}\n'
 	}
 	addShader(colorLight)
 	var toon={
@@ -151,14 +157,15 @@
 	addShader(toon)
 	var toonLight={
 		UUId:'toonLight',useLight:1,pid:3,
-		attribute:['vec3_aVer','vec3_aVerN'],
+		attribute:['vec3_aVer','vec3_aVerN','vec2_aTexC'],
 		v_uniform:['vec3_uColor','vec3_uDLightD','float_uSpecular'],
-		f_uniform:['float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor'],
-		varying : ['vec4_vColor','float_vAlpha','float_lambertDirection','float_vSpecular'],
+		f_uniform:['float_uAIntensity','vec4_uDLightColor', 'float_uDIntensity','vec4_uALightColor','vec4_uSpecularColor','sampler2D_uSamN','bool_uUseNormal'],
+		varying : ['vec4_vColor','float_vAlpha','float_lambertDirection','float_vSpecular','vec2_vTexC'],
 		vFunc:''+
 			' gl_PointSize = uPointSize;\n'+
 			' vColor = vec4(uColor,1.0);\n'+
 			' vAlpha = uAlpha;\n'+
+			' vTexC = aTexC;\n'+
 			' gl_Position = uPerspectMTX * uCameraMTX *  vertex;\n',
 		fFunc:''+
 			'vec4 src  = vColor;\n'+
@@ -174,7 +181,12 @@
 			' ia =src*uALightColor*uAIntensity;\n'+
 			' id =src*uDLightColor*lambertDirection*uDIntensity;\n'+
 			' is =uSpecularColor*vSpecular*lambertDirection*uDIntensity;\n'+
-			' src = ia+id+is;\n'
+			'if(uUseNormal){\n'+
+			'  vec4 normal = texture2D(uSamN, vec2(vTexC.s, vTexC.t));\n'+
+			'  src = (ia+id)*0.5+is+(ia*normal.r+id*normal.g+is*normal.b);\n'+
+			'}else{\n'+
+			'  src = ia+id+is;\n'+
+			'}\n'
 	}
 	addShader(toonLight)
 	var bitmap={

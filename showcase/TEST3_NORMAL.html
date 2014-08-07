@@ -44,7 +44,7 @@
                     var m5=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg', 'normal', 'assets/normal/normal5.jpg')
                     var m6=bs.GL.Material('bitmapLight').S('src', 'assets/t3.jpg')
                     var maps=[m1, m2, m3, m4, m5, m6, m1, m2, m3, m4, m5, m6]
-                    var i=6, mesh, gap, s=5
+                    var i=6, mesh, gap, s=10
                     while(i--){
                         gap=bs.GL.mobile ? 300 : 750
                         mesh=bs.GL.Mesh('sphere')
@@ -64,6 +64,7 @@
                             console.log(this.UUId, 'mousemove')
                         })
                     }
+                    bs.GL.Mesh('sphere' ).S('material','#116622,normal,assets/normal/normal2.png,L','<',bs.GL, 'scaleX', s, 'scaleY', s, 'scaleZ', s)
                     var time=0, ms=Math.sin, mc=Math.cos
                     bs.ANI.ani({
                         ANI:function(){
