@@ -255,45 +255,45 @@
 				return function( k ){ if( type[k] ) return new Light( k );else throw '지원하지않는 타입의 라이트 입니다.'}
 			})(),
 			Material:(function(){
-				var t=function(){}, uniforms='uC,uL,uD,uN,useCube,video,text'.split( ',' ), kind, t1, i, k, _fn;
-				t.prototype.S=sMethod.prototype.S, kind={
+				var t=function(){}, uniforms='uC,uL,uD,uN,useCube,video,text'.split( ',' ), t0, etc, i, k, fn;
+				t.prototype.S=sMethod.prototype.S, t0={
 					Color:{uC:1}, ColorLight:{uC:1, uL:1,uN:1}, Toon:{uC:1, uL:1}, ToonLight:{uC:1, uL:1,uN:1},
 					Bitmap:{uD:1}, BitmapLight:{uL:1, uD:1, uN:1}, Video:{uD:1, video:1}, VideoLight:{uL:1, uD:1, uN:1, video:1},
 					Environment:{uL:1, useCube:1, uN:1}, Cube:{uL:0, useCube:1}, CubeLight:{uL:1, useCube:1, uN:1}, Sky:{useCube:1}
 				}
-				kind.Text={}
-				for( k in kind ){ // LINEAR_MIPMAP_LINEAR, NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_NEAREST,NEAREST,LINEAR 못외우것음 -_-
+				t0.Text={}
+				for( k in t0 ){ // LINEAR_MIPMAP_LINEAR, NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_NEAREST,NEAREST,LINEAR 못외우것음 -_-
 					(function(){
 						i=uniforms.length
-						while( i-- ) kind[k][uniforms[i]] ? 0 : (kind[k][uniforms[i]]=0)
-						var pk=k.charAt( 0 ).toLowerCase()+k.substr( 1, k.length-1 ), t6=kind[k], t3=t6['uL'], t4=t6['uN'], t5=t6['video'] ? 1 : (t6['text'] ? 2 : 0)
-						if( t6['uC'] ) t6=function(){this._color='#ffffff', this._r=255, this._g=255, this._b=255, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['color']=sMethod.prototype['color']
-						else if( t6['uD'] ) t6=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function( src ){ this.texture=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5 )}
-						else if( t6['useCube'] ) t6=function(){this.texture=null, this.program=Ps[pk]}, _fn=t6.prototype=new t, _fn['src']=function( src ){ this.texture=UTIL.makeTexture( src )}
-						t3 ? (_fn.specular=50, _fn.specularColor={r:255, g:255, b:255}) : 0
-						t4 ? (_fn['normal']=function( src ){ this.textureNormal=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0 )}) : 0,
-						_fn['class']=sMethod.prototype.class,
-						kind[k]=t6,kind[k].fn = _fn
+						while( i-- ) t0[k][uniforms[i]] ? 0 : (t0[k][uniforms[i]]=0)
+						var pk=k.charAt( 0 ).toLowerCase()+k.substr( 1, k.length-1 ), mat=t0[k], uL=mat['uL'], uN=mat['uN'], t5=mat['video'] ? 1 : (mat['text'] ? 2 : 0)
+						mat['uC'] ? (mat=function(){this._color='#ffffff', this._r=255, this._g=255, this._b=255, this.program=Ps[pk]}, fn=mat.prototype=new t, fn['color']=sMethod.prototype['color']) :
+						mat['uD'] ? (mat=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, fn=mat.prototype=new t, fn['src']=function( src ){ this.texture=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5 )}) :
+						mat['useCube'] ? (mat=function(){this.texture=null, this.program=Ps[pk]}, fn=mat.prototype=new t, fn['src']=function( src ){ this.texture=UTIL.makeTexture( src )}) : 0
+						uL ? (fn.specular=50, fn.specularColor={r:255, g:255, b:255}) : 0
+						uN ? (fn['normal']=function( src ){ this.textureNormal=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0 )}) : 0,
+						fn['class']=sMethod.prototype.class,
+						t0[k]=mat,t0[k].fn = fn
 					})()
 				}
-				t1=kind['Sprite']=function(){this.texture=null, this.program=Ps['sprite'], this.col=this.row=0, this._cCol=this._cRow=0, this.useAni=1, this._dirty=0, this._cGap=0, this._gap=16, this._time=1000}, _fn=t1.prototype=new t
-				_fn['time']=function( v ){if( !v ) return this._time;else this._time=v*1000, this._gap=this._time/(this.col*this.row)}
-				_fn['src']=function( src ){ this.texture=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0 )}
-				_fn['stop']=function(){this.useAni=0}, _fn['play']=function(){this.useAni=1}, _fn['gotoAndPlay']=function( f ){this.useAni=1, this._cCol=f%this.col, this._cRow=parseInt( f/this.row )}
-				_fn['class']=sMethod.prototype.class,
-				t1=kind['Text']=function(){
+				etc=t0['Sprite']=function(){this.texture=null, this.program=Ps['sprite'], this.col=this.row=0, this._cCol=this._cRow=0, this.useAni=1, this._dirty=0, this._cGap=0, this._gap=16, this._time=1000}, fn=etc.prototype=new t
+				fn['time']=function( v ){if( !v ) return this._time;else this._time=v*1000, this._gap=this._time/(this.col*this.row)}
+				fn['src']=function( src ){ this.texture=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', 0 )}
+				fn['stop']=function(){this.useAni=0}, fn['play']=function(){this.useAni=1}, fn['gotoAndPlay']=function( f ){this.useAni=1, this._cCol=f%this.col, this._cRow=parseInt( f/this.row )}
+				fn['class']=sMethod.prototype.class,
+				etc=t0['Text']=function(){
 					this.program=Ps['text'], this.texture=gl.createTexture(), this.texture.loaded=0, this.texture.canvas=document.createElement( 'canvas' ), this.texture.context=this.texture.canvas.getContext( "2d" )
 					this._lineHeight=35, this.maxWidth=512, this.maxHeight=512,
-						this._align='left', this._color='#000000', this._bgColor='#ffff80', this._useBgColor=0, this._size=12, this._drawY=this._size, this._text=' ', this._textBaseline='top', this._fontWeight='', this._font, this._fontStyle='normal'
+					this._align='left', this._color='#000000', this._bgColor='#ffff80', this._useBgColor=0, this._size=12, this._drawY=this._size, this._text=' ', this._textBaseline='top', this._fontWeight='', this._font, this._fontStyle='normal'
 					this._updateTexture=function( t ){
 						gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.bindTexture( gl.TEXTURE_2D, t ), gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, t.canvas ),
-							gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ), gl.bindTexture( gl.TEXTURE_2D, null ), t.loaded=1
+						gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ), gl.bindTexture( gl.TEXTURE_2D, null ), t.loaded=1
 						// TODO 밉맵생성에 대해서 고민...좀..
 					}
-				}, _fn=t1.prototype=new t,_fn['class']=sMethod.prototype.class, _fn['_draw']=function(){
+				}, fn=etc.prototype=new t,fn['class']=sMethod.prototype.class, fn['_draw']=function(){
 					var ctx=this.texture.context, cvs=this.texture.canvas, drawText=this._text, tmp='', tmp2=[], splits=drawText.split( ' ' ), result=[], i=splits.length, j=0, pop
 					ctx.clearRect( 0, 0, this.maxWidth, this.maxHeight ), this.texture.loaded=0, cvs.width=this.maxWidth, cvs.height=this.maxHeight, this._useBgColor ? (ctx.rect( 0, 0, this.maxWidth, this.maxHeight ), ctx.fillStyle=this._bgColor, ctx.fill()) : 0,
-						ctx.font=this._fontStyle+' '+this._fontWeight+' '+this._size+"px "+this._font, ctx.fillStyle=this._color, ctx.textAlign=this._align, ctx.textBaseline=this._textBaseline
+					ctx.font=this._fontStyle+' '+this._fontWeight+' '+this._size+"px "+this._font, ctx.fillStyle=this._color, ctx.textAlign=this._align, ctx.textBaseline=this._textBaseline
 					while( i-- ){ // TODO 줄바꿈 처리를 어디까지 가져갈것인가!
 						tmp2.push( splits[j] ), tmp+=splits[j++]
 						ctx.measureText( tmp ).width >= this.maxWidth ? (pop=tmp2.pop(), result.push( tmp2.join( '' ) ), tmp2=[pop], tmp=pop) : 0
@@ -302,10 +302,10 @@
 					while( i-- ) ctx.fillText( result[j], this._align == 'center' ? this.maxWidth/2 : this._align == 'right' ? this.maxWidth : 0, this._drawY+(j*this._lineHeight) ), j++
 					this._updateTexture( this.texture )
 				}
-				t1.fn = _fn
+				etc.fn = fn
 				var textFn='text,size,color,align,textBaseline,lineHeight,fontWeight,font,fontStyle,bgColor,useBgColor'.split( ',' ), i=textFn.length
-				while(i--) (function(){var k=textFn[i], k2='_'+k;_fn[k]=function(v){if(v!=undefined) this[k2]=v, this._draw(this._text);else return this[k2]}})()
-				return function( k ){ return new kind[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
+				while(i--) (function(){var k=textFn[i], k2='_'+k;fn[k]=function(v){if(v!=undefined) this[k2]=v, this._draw(this._text);else return this[k2]}})()
+				return function( k ){ return new t0[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 			})(),
 			Mesh:(function(){
 				var t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, useLOD:0, distanceLOD:500,visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
@@ -330,6 +330,7 @@
 				var Particle=function( type ){ this._geoTypeP=type, this.vs=[], this.changeProperty={}, this._propertyBufferData=[], this._particles=[], this.UUID='Particle'+UUID++}, fn=Particle.prototype, newA=[]
 				for( k in tfn ) fn[k]=tfn[k]
 				Particle.fn = fn,
+				fn['material']=sMethod.prototype.material,fn['S']=sMethod.prototype.S, fn['<']=parent,
 				fn['addParticle']=function(){
 					var t={}, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, tsP=cp.sPos, tsS=cp.sScale, tsA=cp.sAlpha, tdP=cp.dPos, tdS=cp.dScale, tdA=cp.dAlpha, r=bs.randf
 					t.age=0, t.sP=cp.speedPos, t.sS=cp.speedScale, t.sA=cp.speedAlpha,
@@ -339,7 +340,6 @@
 						t.gravity=cp.gravity, t.gravityR={x:0, y:0, z:0}
 					return t
 				},
-				fn['material']=sMethod.prototype.material,
 				fn['update']=function(){
 					var sP, sA, sS, o, ic, v=this.vs, p=this._propertyBufferData, ps=this._particles, cp=this.changeProperty, t0, t1, perPI=Math.PI/30, k, len=ps.length, i=ps.length
 					while( i-- ){
@@ -351,7 +351,7 @@
 					}
 					len < cp.max ? this.addParticle() : (ps.shift(), v.shift(), v.shift(), v.shift(), p.shift(), p.shift(), p.shift()), UTIL.makeBufferSet( this._geoTypeP, v, newA, newA, p, 3 )
 				}
-				return fn.S=sMethod.prototype.S, fn['<']=parent, function( _k ){ return new Particle( _k )}
+				return function( _k ){ return new Particle( _k )}
 			})(),
 			Controller:(function(){
 				var camera=function(){},ISO,NONE;
