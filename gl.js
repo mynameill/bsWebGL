@@ -26,7 +26,7 @@
 	(function(){
 		var mng={event:null, checkInterval:2, checkPoint:0, target:null},mouseFireList=[],pickSet={};
 		function drawMouse(){
-			var t0, t=GL.children, i=t.length, cont=bs.GL.controller, P, gt, vb, ib, p_vb, p_ib, dirty_vb, dirty_ib;
+			var t0, t=GL.children, i=t.length, cont=GL.controller, P, gt, vb, ib, p_vb, p_ib, dirty_vb, dirty_ib;
 			if( i == 0 || !cont ) return
 			D_mouseCalls=0, gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] )
 			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mng.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
@@ -155,7 +155,7 @@
 			}
 		}
 		function mkProgram(t){ // 여긴어케 더 정리를 먼저 할꺼냐...쉐이더 메이커를 좀더 안정화 고도화 시킬꺼냐 -_-;;
-			var _data=bs.GL._shaderData, vShader=gl.createShader( gl.VERTEX_SHADER ), fShader=gl.createShader( gl.FRAGMENT_SHADER ),
+			var _data=GL._shaderData, vShader=gl.createShader( gl.VERTEX_SHADER ), fShader=gl.createShader( gl.FRAGMENT_SHADER ),
 				base_uniform="uP,uR,uS,uAlpha,uFog,uFogDensity,uFogColor,uPointSize,uPerspectMTX,uCameraMTX,uParentMTX".split( ',' ), vType='attribute,v_uniform,f_uniform,varying'.split( ',' ),
 				p,pid=t.UUId, t1, t3, t4, i, j=vType.length, tKey, sKey,
 				vStr="precision mediump float;\n"+_data._BASE_VERTEX_UNIFORM+_data._MTX_FUNC,
@@ -233,7 +233,7 @@
 			this.parent=v, this.parent ? this.parent.children.push( this ) : 0
 		}
 		function child( v ){this == GL ? GL.children.push( v ) : this.children.push( v )} //TODO 각종 child관련 매서드 추가해야됨
-		bs.GL=GL={
+		GL={
 			init:(function(){
 				function _init( id, endCallBack, failCallback ){
 					var i,keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/};
@@ -317,7 +317,7 @@
 				for( k in tfn ) fn[k]=tfn[k]
 				Mesh.fn = fn,
 				fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},fn['class']=sMethod.prototype.class,
-				fn['material']=sMethod.prototype.material, fn['<']=parent, fn['>']=child,
+				fn['material']=sMethod.prototype.material, fn['<']=parent, fn['>']=child,fn.instanceOf='Mesh',
 				fn['setRotationByMat4']=function( m ){this.x=m[12], this.y=m[13], this.z=m[14], this.rotationX= -Math.atan2( m[6], m[10] ), this.rotationY=Math.asin( m[2] ), this.rotationZ= -Math.atan2( m[1], m[0] )}
 				fn['setEvent']=MOUSE.setEvent
 				// 마우스관련 전면 폐기하고 다시짜야함
@@ -540,6 +540,5 @@
 		}
 	})();
 	GL.S( 'directionalLight', GL.Light( 'directional' ).S( 'color', '#ffffff', 'alpha', 0.1, 'x', 1, 'y', -1, 'z', -1, 'intensity', 0.8 ), 'ambientLight', GL.Light( 'ambient' ).S( 'color', '#333333' ), 'controller', GL.Controller( 'ISO' ) )
-
-	return exports.GL = GL
+	return exports.GL =bs.GL= GL
 })();

@@ -50,6 +50,7 @@
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3000)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3500)
                         console.log(bs.GL.Mesh('#idTest'))
+                        console.log(bs.GL.Mesh('#idTest' ).instanceOf)
                     })
                     bs.GL.parserOBJ('assets/ruins.obj','ruins',function(){
                         bs.GL.Mesh('ruins').S('<',bs.GL, 'material', 'assets/crate.gif,,normal,assets/normal/normal3.png,BL', 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0)
