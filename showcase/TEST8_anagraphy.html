@@ -47,16 +47,13 @@
                     var video = bs.GL.Material('video')
                     video.S('src','assets/mov_bbb.mp4')
 
-                    bs.get(function($data){
-                        var r=bs.GL.parserOBJ($data)
-                        bs.GL.makeBufferSet('head',r.vs,r.is,r.cs)
-                        bs.GL.Mesh('head').S('<',bs.GL,'material',videoL,'scaleX',6,'scaleY',6,'scaleZ',6,'z',0)
-
+                  bs.GL.parserOBJ('assets/woman.obj','head',function(){
+                        bs.GL.Mesh('head').S('<',bs.GL,'material',videoL,'scaleX',16,'scaleY',16,'scaleZ',16,'z',0)
                         for(var i=0; i<10; i++){
                             bs.GL.Mesh('sphere').S('<',bs.GL,'material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',Math.sin(Math.PI/5*i)*1000,'z',Math.cos(Math.PI/5*i)*1000,'rotationY',Math.PI)
                             bs.GL.Mesh('sphere').S('<',bs.GL,'material',videoL,'scaleX',50,'scaleY',50,'scaleZ',50,'y',Math.sin(Math.PI/5*i)*1000,'z',Math.cos(Math.PI/5*i)*1000,'rotationY',Math.PI)
                         }
-                    },'assets/head.obj')
+                    })
                     bs.GL.PostEffect.use=1
                     bs.GL.PostEffect.anagraphy=1
                 }

@@ -39,9 +39,9 @@
 
                     var womanMap=bs.GL.Material('bitmapLight').S('src', 'assets/plate1diffuse1.png', 'normal', 'assets/plate1normal2.png')
                     var womanEnvMap=bs.GL.Material('environment').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
-                    bs.get(function($data){
-                        var r=bs.GL.parserOBJ($data)
-                        bs.GL.makeBufferSet('head', r.vs, r.is, r.cs)
+
+                    // src, type, callback
+                    bs.GL.parserOBJ('assets/woman.obj','head',function(){
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -500)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1000)
@@ -50,8 +50,10 @@
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2500)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3000)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3500)
+                    })
 
-                    }, 'assets/woman.obj')
+
+
                     var time=0, ms=Math.sin, mc=Math.cos
                     bs.ANI.ani({
                         ANI:function(){

@@ -401,30 +401,33 @@
 			fog:{use:0, density:1.0, r:255.0, g:255.0, b:255.0}// 이건실험용
 		},
 		GL['skybox']=function( $t ){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child,
-		GL['parserOBJ']=function($d){ console.log('블렌더obj를 파싱')
-			// TODO 파서는 나중에 좀더 파자.............잘몰것다 -_-// TODO 다중 재질 어케파싱할건가에 대한 고려필요// TODO 애니메이션 어케파싱할건가에 대한 고려...
-			var v=[], n=[], c=[], _hi={}, _index=0, _v=[], _n=[], _c=[], _i=[], t0=$d.split('\n'), i=0, j, len, len2,t1;
-			len=t0.length
-			while(len--){ t1=t0[i],i++
-				switch(t1.substr(0,2)){
-					case "v ":t1=t1.slice(2).split(" ");len2=t1.length,j=0;while(len2--) v.push(t1[j]),j++;break;
-					case "vt":t1=t1.slice(3).split(" ");len2=t1.length,j=0;while(len2--) c.push(t1[j]),j++;break
-					case "f ":
-						var quad=false;
-						t1=t1.slice(2).split(" ");
-						for(j=0; j < t1.length; j++){
-							if(j === 3 && !quad) j=2, quad=true;
-							if(t1[j] in _hi) _i.push(_hi[t1[j]]);
-							else{
-								var vt=t1[ j ].split('/');
-								for(var k=0; k < 3; k++) _v.push(v[(vt[0]-1)*3+k]), _n.push(n[(vt[2]-1)*3+j]);
-								_c.push(c[(vt[1]-1)*2+0]), _c.push(c[(vt[1]-1)*2+1]), _hi[t1[j]]=_index, _i.push(_index), _index+=1
-							}
-							if(j === 3 && quad) _i.push(_hi[t1[0]]);
-						};break
+		GL['parserOBJ']=function(src,type,callback){
+			bs.get(function(data){
+				// TODO 파서는 나중에 좀더 파자.............잘몰것다 -_-// TODO 다중 재질 어케파싱할건가에 대한 고려필요// TODO 애니메이션 어케파싱할건가에 대한 고려...
+				var v=[], n=[], c=[], _hi={}, _index=0, _v=[], _n=[], _c=[], _i=[], t0=data.split('\n'), i=0, j, len, len2,t1;
+				len=t0.length
+				while(len--){ t1=t0[i],i++
+					switch(t1.substr(0,2)){
+						case "v ":t1=t1.slice(2).split(" ");len2=t1.length,j=0;while(len2--) v.push(t1[j]),j++;break;
+						case "vt":t1=t1.slice(3).split(" ");len2=t1.length,j=0;while(len2--) c.push(t1[j]),j++;break
+						case "f ":
+							var quad=false;
+							t1=t1.slice(2).split(" ");
+							for(j=0; j < t1.length; j++){
+								if(j === 3 && !quad) j=2, quad=true;
+								if(t1[j] in _hi) _i.push(_hi[t1[j]]);
+								else{
+									var vt=t1[ j ].split('/');
+									for(var k=0; k < 3; k++) _v.push(v[(vt[0]-1)*3+k]), _n.push(n[(vt[2]-1)*3+j]);
+									_c.push(c[(vt[1]-1)*2+0]), _c.push(c[(vt[1]-1)*2+1]), _hi[t1[j]]=_index, _i.push(_index), _index+=1
+								}
+								if(j === 3 && quad) _i.push(_hi[t1[0]]);
+							};break
+					}
 				}
-			}
-			return {vs:_v, vns:_n, cs:_c, is:_i}
+				GL.makeBufferSet(type, _v, _i, _c)
+				callback ? callback() : 0
+			},src)
 		}
 	})()
 	RENDER :

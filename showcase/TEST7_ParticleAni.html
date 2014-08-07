@@ -35,10 +35,8 @@
                 var i
                 var skyMap=bs.GL.Material( 'sky' ).S( 'src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"],'this')
                 bs.GL.S( 'skybox', bs.GL.SkyBox().S( 'material', skyMap, 'this' ) )
-                bs.get( function( $data ){
-                    var r=bs.GL.parserOBJ( $data )
-                    var matStr='assets/head_diffuse.jpg, normal,assets/head_normals.jpg,BL'
-                    bs.GL.makeBufferSet( 'head', r.vs, r.is, r.cs )
+                var matStr='assets/head_diffuse.jpg, normal,assets/head_normals.jpg,BL'
+                bs.GL.parserOBJ('assets/head.obj','head',function(){
                     bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', 0 )
                     bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', 500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500 )
                     bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', -500, 'scaleX', 3, 'scaleY', 3, 'scaleZ', 3, 'z', -500 )
@@ -48,7 +46,7 @@
                         i=50
                         while( i-- ) bs.GL.Mesh( 'head' ).S( '<', bs.GL, 'material', matStr, 'x', Math.random()*3000-1500, 'y', Math.random()*3000-1500, 'scaleX', 1, 'scaleY', 1, 'scaleZ', 1, 'z', Math.random()*3000-1500 )
                     }
-                }, 'assets/head.obj' )
+                })
                 var particle=bs.GL.Material( 'bitmap' ).S( 'src', 'assets/particle.png' ,'this')
                 var particle2=bs.GL.Material( 'bitmap' ).S( 'src', 'assets/particle2.png' ,'this')
                 i=bs.GL.mobile ? 50 : 250
