@@ -67,7 +67,11 @@
                     )
                 }
                 var list=bs.GL.S('children'), i=list.length
-                while(i--) bs.ANI.gl('#test'+i,
+//                while(i--) bs.ANI.gl('#test'+i,
+//                        'x', bs.rand(-150, 150), 'y', bs.rand(-150, 150), 'z', bs.rand(-150, 150), 'loop', 0, 'yoyo', 1, 'ease', 'backInOut', 'time', 3,
+//                        'scaleX',10,'scaleY',10,'scaleZ',10
+//                )
+                while(i--) bs.ANI.gl(list[i],
                         'x', bs.rand(-150, 150), 'y', bs.rand(-150, 150), 'z', bs.rand(-150, 150), 'loop', 0, 'yoyo', 1, 'ease', 'backInOut', 'time', 3,
                         'scaleX',10,'scaleY',10,'scaleZ',10
                 )

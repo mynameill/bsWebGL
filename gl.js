@@ -538,12 +538,11 @@
 				gl.uniform1i( P.uFXAA, GL.PostEffect.fxaa ), gl.uniform1i( P.uAnaglyph, GL.PostEffect.anagraphy ), gl.bindBuffer( G_EAB, ib=IBs['rect'] ), gl.drawElements( gl['TRIANGLES'], ib.num, gl.UNSIGNED_SHORT, 0 );
 			}
 		}
-	})();        bs.ANI.fn('gl', {
-        target:'bs.GL.Mesh(arg[0])',
-        targetAni0:'t0', targetAni1:null,
-        key:'k', from:'t0[0].S(k)', option:'typeof k == "function" ? 1 : 0',
-        circle:'0',
-        bezierKey:'null', bezierOption:'null',
+	})();
+	bs.ANI.fn('gl', {
+        target:'(arg[0]["instanceOf"]=="Mesh" ? arg[0] : bs.GL.Mesh(arg[0]))', targetAni0:'t0', targetAni1:null,
+        key:'k', from:'t0[0].S(k)', option:'0',
+        circle:'0', bezierKey:'null', bezierOption:'null',
         aniTarget:'k', ani:'t0[i++] ? 0 : t1.S(k,v) ,t1[k] = v',
         aniCircle:'null',
         aniBezier:'null'
