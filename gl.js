@@ -7,7 +7,6 @@
 	var D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0;
 	var mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile';
 	var perspectMTX, mat4={}, mC=Math.cos, mS=Math.sin, PI=Math.PI;
-
 	mat4.create=function(){var r=new Float32Array(16);return r[0]=1,r[1]=0,r[2]=0,r[3]=0,r[4]=0,r[5]=1,r[6]=0,r[7]=0,r[8]=0,r[9]=0,r[10]=1,r[11]=0,r[12]=0,r[13]=0,r[14]=0,r[15]=1,r},
 	mat4.identity=function( t ){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},
 	mat4.matrixMultiply=function( a,b ) {var a00=a[0*4+0],a01=a[0*4+1],a02=a[0*4+2],a03=a[0*4+3],a10=a[1*4+0],a11=a[1*4+1],a12=a[1*4+2],a13=a[1*4+3],a20=a[2*4+0],a21=a[2*4+1],a22=a[2*4+2],a23=a[2*4+3],a30=a[3*4+0],a31=a[3*4+1],a32=a[3*4+2],a33=a[3*4+3],b00=b[0*4+0],b01=b[0*4+1],b02=b[0*4+2],b03=b[0*4+3],b10=b[1*4+0],b11=b[1*4+1],b12=b[1*4+2],b13=b[1*4+3],b20=b[2*4+0],b21=b[2*4+1],b22=b[2*4+2],b23=b[2*4+3],b30=b[3*4+0],b31=b[3*4+1],b32=b[3*4+2],b33=b[3*4+3];return [a00*b00+a01*b10+a02*b20+a03*b30,a00*b01+a01*b11+a02*b21+a03*b31,a00*b02+a01*b12+a02*b22+a03*b32,a00*b03+a01*b13+a02*b23+a03*b33,a10*b00+a11*b10+a12*b20+a13*b30,a10*b01+a11*b11+a12*b21+a13*b31,a10*b02+a11*b12+a12*b22+a13*b32,a10*b03+a11*b13+a12*b23+a13*b33,a20*b00+a21*b10+a22*b20+a23*b30,a20*b01+a21*b11+a22*b21+a23*b31,a20*b02+a21*b12+a22*b22+a23*b32,a20*b03+a21*b13+a22*b23+a23*b33,a30*b00+a31*b10+a32*b20+a33*b30,a30*b01+a31*b11+a32*b21+a33*b31,a30*b02+a31*b12+a32*b22+a33*b32,a30*b03+a31*b13+a32*b23+a33*b33];},
@@ -27,7 +26,7 @@
 	(function(){
 		var mng={event:null, checkInterval:2, checkPoint:0, target:null},mouseFireList=[],pickSet={};
 		function drawMouse(){
-			var t0, t=GL.children, i=t.length, cont=bs.GL.controller, P, gt, vb, ib, p_vb, p_ib, dirty_vb, dirty_ib
+			var t0, t=GL.children, i=t.length, cont=bs.GL.controller, P, gt, vb, ib, p_vb, p_ib, dirty_vb, dirty_ib;
 			if( i == 0 || !cont ) return
 			D_mouseCalls=0, gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] )
 			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mng.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
@@ -66,7 +65,6 @@
 			}
 			mng.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
 		}
-		(function tick(){if( mng.checkPoint == mng.checkInterval ) drawMouse();if( mng.checkPoint == mng.checkInterval+2 ) checkMouse();mng.checkPoint++, requestAnimationFrame( tick )})()
 		MOUSE = {
 			init : function(){
 					bs.Dom('body').S(
@@ -78,7 +76,8 @@
 				if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
 				else return this.evt[$type];
 			},pickSet : pickSet
-		}
+		};
+		(function tick(){if( mng.checkPoint == mng.checkInterval ) drawMouse();if( mng.checkPoint == mng.checkInterval+2 ) checkMouse();mng.checkPoint++, requestAnimationFrame( tick )})()
 	})();
 	UTIL :
 	(function(){
@@ -100,6 +99,7 @@
 				UTIL.makeBufferSet('rect',vs=[ -0.5,-0.5,0.0,0.5,-0.5,0.0,0.5,0.5,0.0,-0.5,0.5,0.0], i=[0,1,2,0,2,3], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0])
 				UTIL.makeBufferSet('tri',vs=[0,0.5,0,-0.5,-0.5,0,0.5,-0.5,0], i=[0,1,2], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0])
 				UTIL.makeBufferSet('box',vs=[-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5], i=[0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23], c=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0])
+				//TODO 이걸 LOD적용할수있도록 자동화해야됨 -_-;;
 				var vs=[], is=[], cs=[], w=32, h=32, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
 				UTIL.makeBufferSet('sphere',vs,is,cs)
 				var vs=[], is=[], cs=[], w=16, h=16, radius=0.5, t, st, ct;for(var i=0; i <= w; i++){t=i*PI/w;st=mS(t), ct=mC(t);for(var j=0; j <= h; j++){var phi=j*2*PI/h, sinPhi=mS(phi), cosPhi=mC(phi), x=cosPhi*st, y=ct, z=sinPhi*st, u=1-(j/h), v=1-(i/w);cs.push(u), cs.push(v), vs.push(radius*x), vs.push(radius*y), vs.push(-radius*z);}};for(var i=0; i < w; i++){for(var longNumber=0; longNumber < h; longNumber++){var first=(i*(h+1))+longNumber, second=first+h+1;is.push(first), is.push(second), is.push(first+1), is.push(second), is.push(second+1), is.push(first+1);}};
@@ -233,7 +233,6 @@
 			this.parent=v, this.parent ? this.parent.children.push( this ) : 0
 		}
 		function child( v ){this == GL ? GL.children.push( v ) : this.children.push( v )} //TODO 각종 child관련 매서드 추가해야됨
-
 		bs.GL=GL={
 			init:(function(){
 				function _init( id, endCallBack, failCallback ){
@@ -324,7 +323,10 @@
 				// 마우스관련 전면 폐기하고 다시짜야함
 				while( i-- ) (function(){ var t=evts[i];fn[t]=function( v ){return this.setEvent( t, v )}})();
 				// TODO fn['filter'], fn['blendMode']
-				return function( $k ){ return VBs[$k] ? new Mesh( $k ) : null}
+				return function( $k ){
+					if($k.charAt(0) == '#') return GL.getElementByID($k)
+					return VBs[$k] ? new Mesh( $k ) : null
+				}
 			})(),
 			Particle:(function(){ //TODO 이건 다이나믹 타입인데... 향후 비애니타입의 빌보드로 나눠야할듯
 				var k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, pointSize:1.0, userData:{}, renderMode:'POINTS', blendMode:0, zSort:0, geoType:'particle'}
@@ -438,13 +440,10 @@
 		var M, T, TN, P, PID, gt, vb, uvb, ib, vnb, vb_vnb, ctl, rmode, pList, renderPass, dColor=new Float32Array( 4 ), aColor=new Float32Array( 4 ), sColor=new Float32Array( 4 );
 		var p_src, p_normal, p_vb, p_vnb, p_uvb, p_ib, p_vb_vnb, p_backFace, p_parentMTX;
 		var d_vb, d_vnb, d_uvb, d_ib, d_vb_vnb, d_P;
-		var squaredDistance = function(a, b) {
-			var x = b[0] - a[0],y = b[1] - a[1],z = b[2] - a[2]
-			return x*x + y*y + z*z;
-		}
+		var squaredDistance = function(a, b) { var x = b[0] - a[0],y = b[1] - a[1],z = b[2] - a[2];return x*x + y*y + z*z;}
 		draw=function( $list, $num, $parentMTX ){
 			var i=$num, j=0, t=$list, t0, t1, result;
-			var rot=mat4.create(), pos=mat4.create(), mClone=mat4.clone, mIden=mat4.identity, mMul=mat4.matrixMultiply, mXRot=mat4.makeXRotation, mYRot=mat4.makeYRotation, mZRot=mat4.makeZRotation, mTran=mat4.translate;
+			var sqrt=Math.sqrt,rot=mat4.create(), pos=mat4.create(), mClone=mat4.clone, mIden=mat4.identity, mMul=mat4.matrixMultiply, mXRot=mat4.makeXRotation, mYRot=mat4.makeYRotation, mZRot=mat4.makeZRotation, mTran=mat4.translate;
 			var G_FLOAT=gl.FLOAT, G_AB=gl.ARRAY_BUFFER, G_EAB=gl.ELEMENT_ARRAY_BUFFER, G_BPE=Float32Array.BYTES_PER_ELEMENT, G_TEX2D=gl.TEXTURE_2D, G_TEX0=gl.TEXTURE0;
 			var dst = squaredDistance, dst2 =0,dst3,camPosition = [GL.controller.data.x,GL.controller.data.y,GL.controller.data.z]
 			P= null;
@@ -455,7 +454,7 @@
 					if(t0.visible){
 						// TODO LOD 실험중
 						t0.useLOD ? (
-							dst2 = Math.sqrt(dst([t0.x,t0.y,t0.z],camPosition)),dst3=parseInt(dst2/t0.distanceLOD), dst3 = dst3 >= 5 ? 5 : dst3,
+							dst2 = sqrt(dst([t0.x,t0.y,t0.z],camPosition)),dst3=parseInt(dst2/t0.distanceLOD), dst3 = dst3 >= 5 ? 5 : dst3,
 							(gt =='rect' || gt =='tri' || gt=='box') ? 0 : (gt = dst2 >t0.distanceLOD ? (VBs[gt+'_level'+dst3] ? gt+'_level'+dst3 : gt) : gt)
 							) : 0
 						p_vb != VBs[gt] ? (vb=VBs[gt], d_vb=1) : 0, p_vnb != VNBs[gt] ? (vnb=VNBs[gt], d_vnb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], d_ib=1) : 0, p_vb_vnb != VB_VNBs[gt] ? (vb_vnb=VB_VNBs[gt], d_vb_vnb=1) : 0, p_uvb != UVBs[gt] ? (uvb=UVBs[gt], d_uvb=1) : 0
@@ -500,11 +499,10 @@
 				dColor[0]=GL.directionalLight._r/255, dColor[1]=GL.directionalLight._g/255, dColor[2]=GL.directionalLight._b/255, dColor[3]=GL.directionalLight.alpha, aColor[0]=GL.ambientLight._r/255, aColor[1]=GL.ambientLight._g/255, aColor[2]=GL.ambientLight._b/255, aColor[3]=GL.ambientLight.alpha
 			for( k in Ps ) gl.useProgram( P=Ps[k] ), gl.uniformMatrix4fv( P.uPerspectMTX, 0, perspectMTX ), gl.uniformMatrix4fv( P.uCameraMTX, 0, ctl.cameraMTX ), gl.uniformMatrix4fv( P.uParentMTX, 0, parentMTX ),
 //				GL.fog.use ? (gl.uniform1i( P.uFog, 1 ), gl.uniform1f( P.uFogDensity, GL.fog.density ), gl.uniform3fv( P.uFogColor, [GL.fog._r/255, GL.fog._g/255, GL.fog._b/255] ) ) : 0,
-				P.useLight ? (gl.uniform4fv( P.uDLightColor, dColor ), gl.uniform4fv( P.uALightColor, aColor ), gl.uniform3fv( P.uDLightD, [GL.directionalLight.x, GL.directionalLight.y, GL.directionalLight.z] ), gl.uniform1f( P.uDIntensity, GL.directionalLight.intensity ), gl.uniform1f( P.uAIntensity, GL.ambientLight.intensity ),
-				GL.pointLight ? (gl.uniform3fv( P.uPLightPos, [GL.pointLight.x, GL.pointLight.y, GL.pointLight.z] )) : 0) : 0
+				P.useLight ? (gl.uniform4fv( P.uDLightColor, dColor ), gl.uniform4fv( P.uALightColor, aColor ), gl.uniform3fv( P.uDLightD, [GL.directionalLight.x, GL.directionalLight.y, GL.directionalLight.z] ), gl.uniform1f( P.uDIntensity, GL.directionalLight.intensity ), gl.uniform1f( P.uAIntensity, GL.ambientLight.intensity )) : 0
 			if( GL.skyBox ) gl.disable( gl.DEPTH_TEST ), gl.disable( gl.BLEND ), t0=GL.skyBox.obj, M=t0._material,
 				M.texture.loaded ? (gl.enableVertexAttribArray( P.aVer ), gt=t0.geoType, ib=IBs[gt], vb_vnb=VB_VNBs[gt], uvb=UVBs[gt], vb=VBs[gt],
-					gl.useProgram( P=M.program ), gl.uniform3fv( P.uP, [0, 0, 0] ), gl.uniform3fv( P.uR, [0, 0, 0] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, 1 ),
+				gl.useProgram( P=M.program ), gl.uniform3fv( P.uP, [0, 0, 0] ), gl.uniform3fv( P.uR, [0, 0, 0] ), gl.uniform3fv( P.uS, [t0.scaleX, t0.scaleY, t0.scaleZ] ), gl.uniform1f( P.uAlpha, 1 ),
 					gl.uniform1i( P.uSamC, 0 ), gl.activeTexture( gl.TEXTURE0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, M.texture ),
 					gl.bindBuffer( G_AB, vb ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, 0, 0, 0 ), gl.bindBuffer( G_EAB, ib ), gl.drawElements( gl[t0.renderMode], ib.num, gl.UNSIGNED_SHORT, 0 ), D_tri+=8 ) : 0;
 			if( list.length == 0 ) return;
@@ -542,5 +540,6 @@
 		}
 	})();
 	GL.S( 'directionalLight', GL.Light( 'directional' ).S( 'color', '#ffffff', 'alpha', 0.1, 'x', 1, 'y', -1, 'z', -1, 'intensity', 0.8 ), 'ambientLight', GL.Light( 'ambient' ).S( 'color', '#333333' ), 'controller', GL.Controller( 'ISO' ) )
+
 	return exports.GL = GL
 })();

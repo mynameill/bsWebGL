@@ -34,7 +34,6 @@
             function init(){
                     var skyMap=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
                     bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
-
                     bs.GL.controller.S('distance',700)
 
                     var womanMap=bs.GL.Material('bitmapLight').S('src', 'assets/plate1diffuse1.png', 'normal', 'assets/plate1normal2.png')
@@ -42,19 +41,21 @@
 
                     // src, type, callback
                     bs.GL.parserOBJ('assets/woman.obj','head',function(){
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -500)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1000)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1500)
-                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2000)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0,'id','idTest')
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', womanEnvMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', '#3322aa,L', 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1000)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', '#883344,TL', 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -1500)
+                        bs.GL.Mesh('head').S('<',bs.GL, 'material', 'assets/mov_bbb.mp4, VL', 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2000)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -2500)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3000)
                         bs.GL.Mesh('head').S('<',bs.GL, 'material', womanMap, 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', -3500)
+                        console.log(bs.GL.Mesh('#idTest'))
+                    })
+                    bs.GL.parserOBJ('assets/ruins.obj','ruins',function(){
+                        bs.GL.Mesh('ruins').S('<',bs.GL, 'material', 'assets/crate.gif,,normal,assets/normal/normal3.png,BL', 'scaleX', 6, 'scaleY', 6, 'scaleZ', 6, 'z', 0)
                     })
 
-
-
-                    var time=0, ms=Math.sin, mc=Math.cos
+                var time=0, ms=Math.sin, mc=Math.cos
                     bs.ANI.ani({
                         ANI:function(){
                             time+=0.01
