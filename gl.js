@@ -74,6 +74,9 @@
 						'up',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=0},
 						'move',function($e){if(D_mouseCalls > 0) m.event=$e;if(GL.controller)GL.controller._updateDrag($e)}
 					)
+			},setEvent:function( $type, v ){
+				if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
+				else return this.evt[$type];
 			}
 		}
 	})();
@@ -151,22 +154,24 @@
 				for( i in Ps ){ p=Ps[i];for( k in attrIDX ) p[k]=gl.getAttribLocation( p, k );console.log( '생성 '+p.UUId, p ) }
 			}
 		}
-		function mkProgram(k){ // 여긴어케 더 정리를 먼저 할꺼냐...쉐이더 메이커를 좀더 안정화 고도화 시킬꺼냐 -_-;;
+		function mkProgram(t){ // 여긴어케 더 정리를 먼저 할꺼냐...쉐이더 메이커를 좀더 안정화 고도화 시킬꺼냐 -_-;;
 			var _data=bs.GL._shaderData, vShader=gl.createShader( gl.VERTEX_SHADER ), fShader=gl.createShader( gl.FRAGMENT_SHADER ),
-				t0="uP,uR,uS,uAlpha,uFog,uFogDensity,uFogColor,uPointSize,uPerspectMTX,uCameraMTX,uParentMTX".split( ',' ), t1, t2=k.UUId, t3, t4, t5='attribute,v_uniform,f_uniform,varying'.split( ',' ), j=t5.length, i, p, targetKey, splitKey,
-				vStr="precision mediump float;\n"+_data._BASE_VERTEX_UNIFORM+_data._MTX_FUNC, fStr="precision mediump float;\n"+_data._BASE_FRAGMENT_UNIFORM+(t2 == 'last' ? _data._FXAA : '')
+				base_uniform="uP,uR,uS,uAlpha,uFog,uFogDensity,uFogColor,uPointSize,uPerspectMTX,uCameraMTX,uParentMTX".split( ',' ), vType='attribute,v_uniform,f_uniform,varying'.split( ',' ),
+				p,pid=t.UUId, t1, t3, t4, i, j=vType.length, tKey, sKey,
+				vStr="precision mediump float;\n"+_data._BASE_VERTEX_UNIFORM+_data._MTX_FUNC,
+				fStr="precision mediump float;\n"+_data._BASE_FRAGMENT_UNIFORM+(pid == 'last' ? _data._FXAA : '')
 			while( j-- ){
-				targetKey=t5[j], splitKey=targetKey.split( '_' ), i=k[targetKey].length
-				while( i-- ) t1=k[targetKey][i].split( '_' ), t4=splitKey[splitKey.length-1], (splitKey[0] == 'f' || splitKey == 'varying') ? fStr+=t4+' '+t1[0]+' '+t1[1]+';\n' : 0, splitKey[0] != 'f' ? vStr+=t4+' '+t1[0]+' '+t1[1]+';\n' : 0;
+				tKey=vType[j], sKey=tKey.split( '_' ), i=t[tKey].length
+				while( i-- ) t1=t[tKey][i].split( '_' ), t4=sKey[sKey.length-1], (sKey[0] == 'f' || sKey == 'varying') ? fStr+=t4+' '+t1[0]+' '+t1[1]+';\n' : 0, sKey[0] != 'f' ? vStr+=t4+' '+t1[0]+' '+t1[1]+';\n' : 0;
 			}
-			vStr+='\nvoid main(void) {\n'+_data._MAKE_VERTEX+(k.useLight ? _data._BASE_VERTEX_LIGHT_CAL : '')+k.vFunc+'\n}', t2 == 'last' ? (fStr+='\nvoid main(void) {\n'+k.fFunc+'\n}') : (fStr+='\nvoid main(void) {\n'+k.fFunc+'\n'+_data._BASE_FRAGMENT_RESULT+'\n}')
-			gl.shaderSource( vShader, vStr ), gl.compileShader( vShader ), VSs[t2]=vShader;if( !gl.getShaderParameter( vShader, gl.COMPILE_STATUS ) ) return alert( gl.getShaderInfoLog( vShader ) );
-			gl.shaderSource( fShader, fStr ), gl.compileShader( fShader ), FSs[t2]=fShader;if( !gl.getShaderParameter( fShader, gl.COMPILE_STATUS ) ) return alert( gl.getShaderInfoLog( fShader ) );
-			Ps[t2]=p=gl.createProgram(), p.UUId=t2, gl.attachShader( p, VSs[t2] ), gl.attachShader( p, FSs[t2] ), gl.linkProgram( p ),
-				gl.getProgramParameter( p, gl.LINK_STATUS ) ? ( gl.useProgram( p ), p.useLight=k.useLight, p.pid=k.pid ) : alert( "쉐이더 초기화에 실패했습니다." )
-			for( i in t0 ) t2=t0[i], p[t2]=gl.getUniformLocation( p, t2 );
-			i=k.v_uniform.length;while( i-- ) p[t3=k.v_uniform[i].split( '_' )[1]]=gl.getUniformLocation( p, t3 );i=k.f_uniform.length;while( i-- ) p[t3=k.f_uniform[i].split( '_' )[1]]=gl.getUniformLocation( p, t3 )
-			i=k.attribute.length;while( i-- ) attrIDX[k.attribute[i].split( '_' )[1]]= -1
+			vStr+='\nvoid main(void) {\n'+_data._MAKE_VERTEX+(t.useLight ? _data._BASE_VERTEX_LIGHT_CAL : '')+t.vFunc+'\n}', pid == 'last' ? (fStr+='\nvoid main(void) {\n'+t.fFunc+'\n}') : (fStr+='\nvoid main(void) {\n'+t.fFunc+'\n'+_data._BASE_FRAGMENT_RESULT+'\n}')
+			gl.shaderSource( vShader, vStr ), gl.compileShader( vShader ), VSs[pid]=vShader;if( !gl.getShaderParameter( vShader, gl.COMPILE_STATUS ) ) return alert( gl.getShaderInfoLog( vShader ) );
+			gl.shaderSource( fShader, fStr ), gl.compileShader( fShader ), FSs[pid]=fShader;if( !gl.getShaderParameter( fShader, gl.COMPILE_STATUS ) ) return alert( gl.getShaderInfoLog( fShader ) );
+			Ps[pid]=p=gl.createProgram(), p.UUId=pid, gl.attachShader( p, VSs[pid] ), gl.attachShader( p, FSs[pid] ), gl.linkProgram( p ),
+			gl.getProgramParameter( p, gl.LINK_STATUS ) ? ( gl.useProgram( p ), p.useLight=t.useLight, p.pid=t.pid ) : alert( "쉐이더 초기화에 실패했습니다." )
+			for( i in base_uniform ) pid=base_uniform[i], p[pid]=gl.getUniformLocation( p, pid );
+			i=t.v_uniform.length;while( i-- ) p[t3=t.v_uniform[i].split( '_' )[1]]=gl.getUniformLocation( p, t3 );i=t.f_uniform.length;while( i-- ) p[t3=t.f_uniform[i].split( '_' )[1]]=gl.getUniformLocation( p, t3 )
+			i=t.attribute.length;while( i-- ) attrIDX[t.attribute[i].split( '_' )[1]]= -1
 		}
 	})();
 	GL :
@@ -312,16 +317,12 @@
 				var Mesh=function( type ){ this.children=[], this.geoType=type , this.UUId='Mesh'+UUID++, t=UTIL.setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};}, fn=Mesh.prototype=sMethod.prototype
 				for( k in tfn ) fn[k]=tfn[k]
 				Mesh.fn = fn,
-				fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},
-				fn['class']=sMethod.prototype.class,
+				fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},fn['class']=sMethod.prototype.class,
 				fn['material']=sMethod.prototype.material, fn['<']=parent, fn['>']=child,
 				fn['setRotationByMat4']=function( m ){this.x=m[12], this.y=m[13], this.z=m[14], this.rotationX= -Math.atan2( m[6], m[10] ), this.rotationY=Math.asin( m[2] ), this.rotationZ= -Math.atan2( m[1], m[0] )}
+				fn['setEvent']=MOUSE.setEvent
 				// 마우스관련 전면 폐기하고 다시짜야함
 				while( i-- ) (function(){ var t=evts[i];fn[t]=function( v ){return this.setEvent( t, v )}})();
-				fn['setEvent']=function( $type, v ){
-					if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
-					else return this.evt[$type];
-				}
 				// TODO fn['filter'], fn['blendMode']
 				return function( $k ){ return VBs[$k] ? new Mesh( $k ) : null}
 			})(),
