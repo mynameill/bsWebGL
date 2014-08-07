@@ -538,7 +538,16 @@
 				gl.uniform1i( P.uFXAA, GL.PostEffect.fxaa ), gl.uniform1i( P.uAnaglyph, GL.PostEffect.anagraphy ), gl.bindBuffer( G_EAB, ib=IBs['rect'] ), gl.drawElements( gl['TRIANGLES'], ib.num, gl.UNSIGNED_SHORT, 0 );
 			}
 		}
-	})();
+	})();        bs.ANI.fn('gl', {
+        target:'bs.GL.Mesh(arg[0])',
+        targetAni0:'t0', targetAni1:null,
+        key:'k', from:'t0[0].S(k)', option:'typeof k == "function" ? 1 : 0',
+        circle:'0',
+        bezierKey:'null', bezierOption:'null',
+        aniTarget:'k', ani:'t0[i++] ? 0 : t1.S(k,v) ,t1[k] = v',
+        aniCircle:'null',
+        aniBezier:'null'
+    });
 	GL.S( 'directionalLight', GL.Light( 'directional' ).S( 'color', '#ffffff', 'alpha', 0.1, 'x', 1, 'y', -1, 'z', -1, 'intensity', 0.8 ), 'ambientLight', GL.Light( 'ambient' ).S( 'color', '#333333' ), 'controller', GL.Controller( 'ISO' ) )
 	return exports.GL =bs.GL= GL
 })();
