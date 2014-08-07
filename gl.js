@@ -7,7 +7,7 @@
 	var D_tri=0, D_par=0, D_parType=0, D_mouseCalls=0;
 	var mobile=bs.DETECT.device == 'tablet' || bs.DETECT.device == 'mobile';
 	var perspectMTX, mat4={}, mC=Math.cos, mS=Math.sin, PI=Math.PI;
-	var mouseMNG={event:null, checkInterval:2, checkPoint:0, target:null},pickSet={};
+
 	mat4.create=function(){var r=new Float32Array(16);return r[0]=1,r[1]=0,r[2]=0,r[3]=0,r[4]=0,r[5]=1,r[6]=0,r[7]=0,r[8]=0,r[9]=0,r[10]=1,r[11]=0,r[12]=0,r[13]=0,r[14]=0,r[15]=1,r},
 	mat4.identity=function( t ){return t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t},
 	mat4.matrixMultiply=function( a,b ) {var a00=a[0*4+0],a01=a[0*4+1],a02=a[0*4+2],a03=a[0*4+3],a10=a[1*4+0],a11=a[1*4+1],a12=a[1*4+2],a13=a[1*4+3],a20=a[2*4+0],a21=a[2*4+1],a22=a[2*4+2],a23=a[2*4+3],a30=a[3*4+0],a31=a[3*4+1],a32=a[3*4+2],a33=a[3*4+3],b00=b[0*4+0],b01=b[0*4+1],b02=b[0*4+2],b03=b[0*4+3],b10=b[1*4+0],b11=b[1*4+1],b12=b[1*4+2],b13=b[1*4+3],b20=b[2*4+0],b21=b[2*4+1],b22=b[2*4+2],b23=b[2*4+3],b30=b[3*4+0],b31=b[3*4+1],b32=b[3*4+2],b33=b[3*4+3];return [a00*b00+a01*b10+a02*b20+a03*b30,a00*b01+a01*b11+a02*b21+a03*b31,a00*b02+a01*b12+a02*b22+a03*b32,a00*b03+a01*b13+a02*b23+a03*b33,a10*b00+a11*b10+a12*b20+a13*b30,a10*b01+a11*b11+a12*b21+a13*b31,a10*b02+a11*b12+a12*b22+a13*b32,a10*b03+a11*b13+a12*b23+a13*b33,a20*b00+a21*b10+a22*b20+a23*b30,a20*b01+a21*b11+a22*b21+a23*b31,a20*b02+a21*b12+a22*b22+a23*b32,a20*b03+a21*b13+a22*b23+a23*b33,a30*b00+a31*b10+a32*b20+a33*b30,a30*b01+a31*b11+a32*b21+a33*b31,a30*b02+a31*b12+a32*b22+a33*b32,a30*b03+a31*b13+a32*b23+a33*b33];},
@@ -25,12 +25,12 @@
 	mat4.frustum =function ( a,b,c,d,e,g,f ) {var h=b - a,i=d - c,j=g - e;return f||(f=mat4.create()),f[0]=e*2 / h,f[1]=0,f[2]=0,f[3]=0,f[4]=0,f[5]=e*2 / i,f[6]=0,f[7]=0,f[8]=(b+a) / h,f[9]=(d+c) / i,f[10]=-(g+e) / j,f[11]= -1,f[12]=0,f[13]=0,f[14]=-(g*e*2) / j,f[15]=0,f}
 	MOUSE : // 마우스는 척결대상이고..아예다시짜야함
 	(function(){
-		var m=mouseMNG,mouseFireList=[]
+		var mng={event:null, checkInterval:2, checkPoint:0, target:null},mouseFireList=[],pickSet={};
 		function drawMouse(){
 			var t0, t=GL.children, i=t.length, cont=bs.GL.controller, P, gt, vb, ib, p_vb, p_ib, dirty_vb, dirty_ib
 			if( i == 0 || !cont ) return
 			D_mouseCalls=0, gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] )
-			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mouseMNG.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mng.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
 			gl.viewport( 0, 0, GL._w*FT['mouse'].wScale, GL._h*FT['mouse'].hScale ), gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT ), gl.useProgram( P=Ps['color'] ), gl.enable( gl.DEPTH_TEST ), gl.depthFunc( gl.LESS ), gl.disable( gl.BLEND )
 			while( i-- ) t0=t[i], gt=t0.geoType, p_vb != VBs[gt] ? (vb=VBs[gt], dirty_vb=1) : 0, p_ib != IBs[gt] ? (ib=IBs[gt], dirty_ib=1) : 0,
 				(gt != 'particle' && t0.evt.num) ? (
@@ -42,42 +42,42 @@
 		}
 		function checkMouse(){
 			gl.bindFramebuffer( gl.FRAMEBUFFER, FB['mouse'] );
-			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mouseMNG.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
-			var m=mouseMNG, t0, t1;
-			if( m['event'] ){
-				t0=new Uint8Array( 1*1*4 ), t0[3]=1, gl.readPixels( m.event.x*FT['mouse'].wScale, (GL._h-m.event.y)*FT['mouse'].hScale, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, t0 ), t1=pickSet[t0[0]+"::"+t0[1]+"::"+t0[2]]
+			if( gl.checkFramebufferStatus( gl.FRAMEBUFFER ) != gl.FRAMEBUFFER_COMPLETE ) return mng.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+			var t0, t1;
+			if( mng['event'] ){
+				t0=new Uint8Array( 1*1*4 ), t0[3]=1, gl.readPixels( mng.event.x*FT['mouse'].wScale, (GL._h-mng.event.y)*FT['mouse'].hScale, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, t0 ), t1=pickSet[t0[0]+"::"+t0[1]+"::"+t0[2]]
 				if( t1 ){
 					if( t1['mesh'] ){
-						var target=m.target
+						var target=mng.target
 						if( target && target != t1['mesh'] ) mouseFireList.push( target )
-						var ct=m.target=t1['mesh'], evt=ct.evt, type=m.event.type
+						var ct=mng.target=t1['mesh'], evt=ct.evt, type=mng.event.type
 						if( evt.overed == 0 && type == 'mousemove' && evt['mouseover'] ) evt['mouseover'].apply( ct ), document.body.style.cursor='pointer'
 						else if( evt.overed > 0 && type == 'mousedown' ){ if( evt['mousedown'] ) evt[type].apply( ct ), document.body.style.cursor='pointer'}
 						else if( evt[type] ) evt[type].apply( ct )
-						evt.overed++, m.event=null
+						evt.overed++, mng.event=null
 					}
 				}
 				else{
-					var t=m.target
+					var t=mng.target
 					if( t && t.evt.overed > 0 ) t.evt['mouseout'] ? (t.evt['mouseout'].apply( t ), document.body.style.cursor='pointer') : 0 , t.evt.overed=0, t=null
-					m.event=null, document.body.style.cursor='default'
+					mng.event=null, document.body.style.cursor='default'
 				}
 				for( var i=0, len=mouseFireList.length; i < len; i++ )mouseFireList[i].evt['mouseout'] ? mouseFireList[i].evt['mouseout'].apply( mouseFireList[i] ) : 0, mouseFireList[i].evt.overed=0, mouseFireList.shift()
 			}
-			m.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+			mng.checkPoint=0, gl.bindFramebuffer( gl.FRAMEBUFFER, null );
 		}
-		(function tick(){if( m.checkPoint == m.checkInterval ) drawMouse();if( m.checkPoint == m.checkInterval+2 ) checkMouse();m.checkPoint++, requestAnimationFrame( tick )})()
+		(function tick(){if( mng.checkPoint == mng.checkInterval ) drawMouse();if( mng.checkPoint == mng.checkInterval+2 ) checkMouse();mng.checkPoint++, requestAnimationFrame( tick )})()
 		MOUSE = {
 			init : function(){
 					bs.Dom('body').S(
-						'down',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=1},
-						'up',function($e){m.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=0},
-						'move',function($e){if(D_mouseCalls > 0) m.event=$e;if(GL.controller)GL.controller._updateDrag($e)}
+						'down',function($e){mng.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=1},
+						'up',function($e){mng.event=$e, checkMouse();if(GL.controller) GL.controller.mouseDowned=0},
+						'move',function($e){if(D_mouseCalls > 0) mng.event=$e;if(GL.controller)GL.controller._updateDrag($e)}
 					)
 			},setEvent:function( $type, v ){
 				if( v ) v == null ? this.evt.num-- : (this.evt[$type]=v, this.evt.num++)
 				else return this.evt[$type];
-			}
+			},pickSet : pickSet
 		}
 	})();
 	UTIL :
@@ -143,9 +143,9 @@
 				else if( type == 1 ) t1=document.createElement( 'video' ), t0.video=t1, t1.src=src, t1.style.position='absolute', t1.play(), t1.style.display='none', t1.addEventListener( "canplaythrough", onLoad, true ), document.body.appendChild( t1 );
 				return t0.loaded=0, TEXTURES[src]=t0
 			},
-			setUniqueColor:(function(){
+			getUniqueColor:(function(){
 				var color=1677215, r=0, g=0, b=0, r1=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r, g, b, t0;
-				return function(){return t0=r1.exec(color.toString(16)), color--, r=parseInt(t0[1], 16), g=parseInt(t0[2], 16), b=parseInt(t0[3], 16), pickSet[r+'::'+g+'::'+b]={r:r, g:g, b:b, r2:(r/255), g2:(g/255), b2:(b/255)}}
+				return function(){return t0=r1.exec(color.toString(16)), color--, r=parseInt(t0[1], 16), g=parseInt(t0[2], 16), b=parseInt(t0[3], 16), MOUSE.pickSet[r+'::'+g+'::'+b]={r:r, g:g, b:b, r2:(r/255), g2:(g/255), b2:(b/255)}}
 			})(),
 			setPrograms:function(){
 				var i, k, p,t0=[]
@@ -314,7 +314,7 @@
 			})(),
 			Mesh:(function(){
 				var t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, useLOD:0, distanceLOD:500,visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
-				var Mesh=function( type ){ this.children=[], this.geoType=type , this.UUId='Mesh'+UUID++, t=UTIL.setUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};}, fn=Mesh.prototype=sMethod.prototype
+				var Mesh=function( type ){ this.children=[], this.geoType=type , this.UUId='Mesh'+UUID++, t=UTIL.getUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};}, fn=Mesh.prototype=sMethod.prototype
 				for( k in tfn ) fn[k]=tfn[k]
 				Mesh.fn = fn,
 				fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},fn['class']=sMethod.prototype.class,
