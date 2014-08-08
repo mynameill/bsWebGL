@@ -17,11 +17,12 @@ tutorial sample - http://projectbs.github.io/bsWebGL/camp/
 </pre>
 
 update List
-    2014.08.07
+    2014.08.08
     . bs.GL.Mesh('#id')  id가있는놈을 검색할수있음!
     . MeshType@ID로 메쉬생성가능 bs.GL.Mesh('box@testID')
+    . bs.GL.backgroundColor('#224455') 추가
 
-    2014.08.06
+    2014.08.07
     . bs.Ani.gl 적용 - 메쉬에 기본 트윈 적용가능
     . 컬러재질군에 노멀맵적용
     . 노멀맵 판단 최적화
