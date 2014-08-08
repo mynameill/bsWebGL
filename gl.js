@@ -246,7 +246,7 @@
 							gl.viewport( 0, 0, w, h ), UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
 						}),
 						(function tick(){debuger.render(), render(), requestAnimationFrame( tick )})(),(function tick(){if( GL.controller ) GL.controller.update( perspectMTX );requestAnimationFrame( tick )})(),
-						gl.clearColor( 0.0, 0.0, 0.0, 1.0 ),endCallBack()
+						GL.backgroundColor('#000'),endCallBack()
 					else console.log( 'WEBGL을 지원하지 않는 브라우져입니다' ), failCallback ? failCallback() : 0
 				}
 				return function( id, shaderSrc, endCallBack, failCallback ){
@@ -411,7 +411,14 @@
 			getElementsByClassName:function(v){return CLASSs[v].concat()},
 			makeBufferSet:UTIL.makeBufferSet,makeTexture:UTIL.makeTexture,
 			skyBox:null,controller:null,directionalLight:null, ambientLight:null,
-			children:[],debug:debuger,mobile:mobile,mat4:mat4
+			children:[],debug:debuger,mobile:mobile,mat4:mat4,
+            backgroundColor:(function(){
+                var t0,r,g,b;
+                return function(v){
+                    (t0=hex.exec( v )) ? (r=parseInt( t0[1], 16 ), g=parseInt( t0[2], 16 ), b=parseInt( t0[3], 16 )) : (t0=hex_s.exec( v ), r=parseInt( t0[1]+t0[1], 16 ), g=parseInt( t0[2]+t0[2], 16 ), b=parseInt( t0[3]+t0[3], 16 ))
+                    gl.clearColor( r/255,g/255,b/255, 1.0 )
+                }
+            })()
 		},
 		GL['skybox']=function( $t ){GL.skyBox=$t ? {obj:$t} : GL.skyBox=null}, GL['>']=child,
 		GL['parserOBJ']=function(src,type,callback){
@@ -556,7 +563,6 @@
         aniTarget:'k', ani:'t0[i++] ? t1.S(k,v) : 0 ,t1[k] = v',
 		aniCircle:' t1[ckx] = cvx, t1[cky] = cvy', //TODO ckz도추가해야겠군!
 		aniBezier:'null'
-
     });
 	GL.S( 'directionalLight', GL.Light( 'directional' ).S( 'color', '#ffffff', 'alpha', 0.1, 'x', 1, 'y', -1, 'z', -1, 'intensity', 0.8 ), 'ambientLight', GL.Light( 'ambient' ).S( 'color', '#333333' ), 'controller', GL.Controller( 'ISO' ) )
 	return exports.GL =bs.GL= GL
