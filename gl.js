@@ -554,7 +554,7 @@
         circle:	't0.x0 = 0, t0.y0 = 0',
 		bezierKey:'null', bezierOption:'0',
         aniTarget:'k', ani:'t0[i++] ? t1.S(k,v) : 0 ,t1[k] = v',
-		aniCircle:' t1[ckx] = cvx, t1[cky] = cvy ,t1.S(ckx,cvx,cky,cvy)', //TODO ckz도추가해야겠군!
+		aniCircle:' t1[ckx] = cvx, t1[cky] = cvy', //TODO ckz도추가해야겠군!
 		aniBezier:'null'
 
     });
