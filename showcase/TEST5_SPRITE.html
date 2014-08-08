@@ -1,89 +1,94 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <!--
-    1. 마우스
-    -->
-    <title>Sprite Material Draft Demo</title>
-    <meta name="keywords" content="redcamel, webgl, bsjs"/>
-    <meta name="description" content="redcamel, webgl, bsjs"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-    <!--<meta UUId="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"/>-->
-    <style>
-        body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
+	<!--
+	1. 마우스
+	-->
+	<title>Sprite Material Draft Demo</title>
+	<meta name="keywords" content="redcamel, webgl, bsjs" />
+	<meta name="description" content="redcamel, webgl, bsjs" />
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+	<!--<meta UUId="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"/>-->
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-size: 8px;
+			overflow: hidden
+		}
 
-        p, li, div, b {
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -o-user-select: none;
-            user-select: none;
-        }
-    </style>
-    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+		p, li, div, b {
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+		}
+	</style>
+	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
 <div style="position:absolute;background:#666; z-index:1;margin:10px;padding:8px;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
-    <a href="https://github.com/projectBS/bsWebGL" target="_blank" style="text-decoration:none;color:#fff">https://github.com/projectBS/bsWebGL</a>
+	<a href="https://github.com/projectBS/bsWebGL" target="_blank" style="text-decoration:none;color:#fff">https://github.com/projectBS/bsWebGL</a>
 </div>
 <script>
-    bs.debug(0);
-    bs(function(){
-        bs.require(function(){
-            bs.GL.init('#glCanvas', '../shaders.js', init)
-            function init(){
-                var i,str = '<div style="position:absolute;color:#fff;top:50px"><input type="button" id="stop" value="stop"><input type="button" id="play" value="play"><input type="button" id="gotoAndPlay" value="gotoAndPlay"><input type="button" id="randomStartPlay" value="randomStartPlay"></div>'
-                bs.Dom(str).S('<','body')
-                    bs.Dom('#stop').S('down', function(){
-                        var t=bs.GL.S('children'), j=t.length
-                        while(j--)t[j].S('material').stop()
-                    })
-                    bs.Dom('#play').S('down', function(){
-                        var t=bs.GL.S('children'), j=t.length
-                        while(j--)t[j].S('material').play()
-                    })
-                    bs.Dom('#gotoAndPlay').S('down', function(){
-                        var t=bs.GL.S('children'), j=t.length
-                        while(j--)t[j].S('material').gotoAndPlay(0)
-                    })
-                    bs.Dom('#randomStartPlay').S('down', function(){
-                        var t=bs.GL.S('children'), j=t.length
-                        while(j--)t[j].S('material').gotoAndPlay(bs.rand(0, 4))
-                    })
-                    var map=bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
-                    bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
-                    var mobile=bs.GL.mobile, gap=mobile ? 700 : 2500, max=mobile ? 300 : 2000
-                    i=max/2
-                    while(i--){
-                        var m1=bs.GL.Material('sprite').S('src', 'assets/sprite3.png', 'col', 4, 'row', 4, 'time', 0.3)
-                        m1._cCol=1
-                        var s
-                        s=Math.random()+0.5
-                        bs.GL.Mesh('rect').S('material', m1, '<',bs.GL, 'scaleX', 60*s, 'scaleY', 60*s, 'scaleZ', 1*s, 'x', Math.random()*gap-gap/2, 'y', Math.random()*gap-gap/2, 'z', Math.random()*gap-gap/2)
-                    }
-                    i=max/2
-                    while(i--){
-                        var m1=bs.GL.Material('sprite').S('src', 'assets/sprite.png', 'col', 5, 'row', 3, 'time', 0.3)
-                        m1._cCol=1
-                        var s
-                        s=Math.random()+0.5
-                        bs.GL.Mesh('rect').S('material', m1, '<',bs.GL, 'scaleX', 64*s, 'scaleY', 64*s, 'scaleZ', 1*s, 'x', Math.random()*gap-gap/2, 'y', Math.random()*gap-gap/2, 'z', Math.random()*gap-gap/2)
-                    }
-                    var time=0, ms=Math.sin, mc=Math.cos
-                    bs.ANI.ani({
-                        ANI:function(){
-                            time+=0.01
-                            bs.GL.directionalLight.x=Math.sin(time) == 0 ? 0.01 : ms(time),bs.GL.directionalLight.y= mc(time) == 0 ? 0.01 : mc(time),bs.GL.directionalLight.z= -1
-                        }
-                    })
-                }
-        }, '../gl.js')
-    })
+	bs.debug(0);
+	bs(function () {
+		bs.require(function () {
+			bs.GL.init('#glCanvas', '../shaders.js', init)
+			function init() {
+				var i, str = '<div style="position:absolute;color:#fff;top:50px"><input type="button" id="stop" value="stop"><input type="button" id="play" value="play"><input type="button" id="gotoAndPlay" value="gotoAndPlay"><input type="button" id="randomStartPlay" value="randomStartPlay"></div>'
+				bs.Dom(str).S('<', 'body')
+				bs.Dom('#stop').S('down', function () {
+					var t = bs.GL.S('children'), j = t.length
+					while (j--)t[j].S('material').stop()
+				})
+				bs.Dom('#play').S('down', function () {
+					var t = bs.GL.S('children'), j = t.length
+					while (j--)t[j].S('material').play()
+				})
+				bs.Dom('#gotoAndPlay').S('down', function () {
+					var t = bs.GL.S('children'), j = t.length
+					while (j--)t[j].S('material').gotoAndPlay(0)
+				})
+				bs.Dom('#randomStartPlay').S('down', function () {
+					var t = bs.GL.S('children'), j = t.length
+					while (j--)t[j].S('material').gotoAndPlay(bs.rand(0, 4))
+				})
+				var map = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+				bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
+				var mobile = bs.GL.mobile, gap = mobile ? 700 : 2500, max = mobile ? 300 : 2000
+				i = max / 2
+				while (i--) {
+					var m1 = bs.GL.Material('sprite').S('src', 'assets/sprite3.png', 'col', 4, 'row', 4, 'time', 0.3)
+					m1._cCol = 1
+					var s
+					s = Math.random() + 0.5
+					bs.GL.Mesh('rect').S('material', m1, '<', bs.GL, 'scaleX', 60 * s, 'scaleY', 60 * s, 'scaleZ', 1 * s, 'x', Math.random() * gap - gap / 2, 'y', Math.random() * gap - gap / 2, 'z', Math.random() * gap - gap / 2)
+				}
+				i = max / 2
+				while (i--) {
+					var m1 = bs.GL.Material('sprite').S('src', 'assets/sprite.png', 'col', 5, 'row', 3, 'time', 0.3)
+					m1._cCol = 1
+					var s
+					s = Math.random() + 0.5
+					bs.GL.Mesh('rect').S('material', m1, '<', bs.GL, 'scaleX', 64 * s, 'scaleY', 64 * s, 'scaleZ', 1 * s, 'x', Math.random() * gap - gap / 2, 'y', Math.random() * gap - gap / 2, 'z', Math.random() * gap - gap / 2)
+				}
+				var time = 0, ms = Math.sin, mc = Math.cos
+				bs.ANI.ani({
+					ANI: function () {
+						time += 0.01
+						bs.GL.directionalLight.x = Math.sin(time) == 0 ? 0.01 : ms(time), bs.GL.directionalLight.y = mc(time) == 0 ? 0.01 : mc(time), bs.GL.directionalLight.z = -1
+					}
+				})
+			}
+		}, '../gl.js')
+	})
 </script>
 </body>
 </html>

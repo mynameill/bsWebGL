@@ -1,88 +1,94 @@
-﻿﻿<html lang="ko">
+﻿﻿
+<html lang="ko">
 <head>
-    <title>With Oimo</title>
-    <meta name="keywords" content="redcamel, webs.GL, bsjs"/>
-    <meta name="description" content="redcamel, webs.GL, bsjs"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-    <style>
-        body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
-        p, li, div, b {
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -o-user-select: none;
-            user-select: none;
-        }
-    </style>
-    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
-    <script src="../Oimo.js"></script>
+	<title>With Oimo</title>
+	<meta name="keywords" content="redcamel, webs.GL, bsjs" />
+	<meta name="description" content="redcamel, webs.GL, bsjs" />
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-size: 8px;
+			overflow: hidden
+		}
+
+		p, li, div, b {
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+		}
+	</style>
+	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+	<script src="../Oimo.js"></script>
 </head>
 <body>
 <div style="position:absolute;background:#666; z-index:1;margin:10px;padding:8px;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
-    <a href="https://github.com/projectBS/bsWebGL" target="_blank" style="text-decoration:none;color:#fff">https://github.com/projectBS/bsWebGL</a>
+	<a href="https://github.com/projectBS/bsWebGL" target="_blank" style="text-decoration:none;color:#fff">https://github.com/projectBS/bsWebGL</a>
 </div>
 <script>
-    bs.debug(0);
-    bs(function(){
-        bs.require(function(){
-            var world,ground,bodys = [],meshs = []
-            bs.GL.init('#glCanvas', '../shaders.js', init)
-            function init(){
-                bs.Dom('<button id="add" style="position:absolute;height:100px;top:60px;left:10px">추가하기</button>').S('<','body')
-                    var mobile=bs.GL.mobile, max=mobile ? 50 : 500, mat=bs.GL.Material('bitmapLight').S('src','assets/t1.jpg')
-                    bs.Dom('#add').S('down',function(){
-                        bs.GL.Mesh('box').S('<',bs.GL, 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
-                        bs.GL.Mesh('box').S('<',bs.GL, 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
-                        var i=10
-                        while(i--) addBox()
-                    })
+	bs.debug(0);
+	bs(function () {
+		bs.require(function () {
+			var world, ground, bodys = [], meshs = []
+			bs.GL.init('#glCanvas', '../shaders.js', init)
+			function init() {
+				bs.Dom('<button id="add" style="position:absolute;height:100px;top:60px;left:10px">추가하기</button>').S('<', 'body')
+				var mobile = bs.GL.mobile, max = mobile ? 50 : 500, mat = bs.GL.Material('bitmapLight').S('src', 'assets/t1.jpg')
+				bs.Dom('#add').S('down', function () {
+					bs.GL.Mesh('box').S('<', bs.GL, 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
+					bs.GL.Mesh('box').S('<', bs.GL, 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
+					var i = 10
+					while (i--) addBox()
+				})
 
-                    var map=bs.GL.Material('sky').S('src',["assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"])
-                    bs.GL.S('skybox',bs.GL.SkyBox().S('material',map))
-                    bs.GL.S('controller',bs.GL.Controller('ISO'))
-                    bs.GL.S('controller').S('distance',2000)
+				var map = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+				bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
+				bs.GL.S('controller').S('distance', 2000)
 
-                    function setDesign(){
-                        world=new OIMO.World(),ground=new OIMO.Body({size:[10000, 10, 10000], pos:[0, -500, 0], world:world});
-                        bs.GL.Mesh('box').S('<',bs.GL, 'scaleX', 10000, 'scaleY', 10, 'scaleZ', 10000, 'y', -500, 'material', mat)
-                        var i=max
-                        while(i--) addBox()
-                    }
-                    setDesign()
-                    function addBox(){
-                        var mesh, gap=mobile ? 1000 : 2500, s=1, x, y,z
-                        mesh=bs.GL.Mesh('box'),s=100*Math.random()+50,x=gap*Math.random()-gap/2,y=500*Math.random()+gap*Math.random(),z=Math.random()*gap-gap/2
-                        mesh.S(
-                                'x',x,'y',y,'z',z,
-                                'rotationX',Math.PI/180*45,'rotationY',Math.PI/180*45,
-                                'rotationX',Math.random()*360,'rotationY',Math.random()*360,'rotationZ',Math.random()*360,
-                                'scaleX',s,'scaleY',s,'scaleZ',s,
-                                'material',mat,
-                                '<',bs.GL
-                        )
-                        bodys.push(new OIMO.Body({type:"box", size:[s, s, s], pos:[x, y, z], rot:[mesh.S('rotationX'), mesh.S('rotationY'), mesh.S('rotationZ')], move:true, world:world, name:mesh.UUId  }))
-                        meshs.push(mesh)
-                    }
-//                    bs.GL.fog.use=1
-//                    bs.GL.fog.density=3.0
-                    var time=0, ms=Math.sin, mc=Math.cos
-                    bs.ANI.ani({
-                        ANI:function(){
-                            time+=0.01,
-                                    bs.GL.directionalLight.x=Math.sin(time) == 0 ? 0.01 : ms(time),bs.GL.directionalLight.y= mc(time) == 0 ? 0.01 : mc(time),bs.GL.directionalLight.z= -1
-                            world.step();
-                            var i=meshs.length,mesh
-                            while(i--) mesh=meshs[i], mesh.setRotationByMat4(bodys[i].body.getMatrix())
-                        }
-                    })
-                }
-        }, '../gl.js')
-    })
+				function setDesign() {
+					world = new OIMO.World(), ground = new OIMO.Body({size: [10000, 10, 10000], pos: [0, -500, 0], world: world});
+					bs.GL.Mesh('box').S('<', bs.GL, 'scaleX', 10000, 'scaleY', 10, 'scaleZ', 10000, 'y', -500, 'material', mat)
+					var i = max
+					while (i--) addBox()
+				}
+
+				setDesign()
+				function addBox() {
+					var mesh, gap = mobile ? 1000 : 2500, s = 1, x, y, z
+					mesh = bs.GL.Mesh('box'), s = 100 * Math.random() + 50, x = gap * Math.random() - gap / 2, y = 500 * Math.random() + gap * Math.random(), z = Math.random() * gap - gap / 2
+					mesh.S(
+							'x', x, 'y', y, 'z', z,
+							'rotationX', Math.PI / 180 * 45, 'rotationY', Math.PI / 180 * 45,
+							'rotationX', Math.random() * 360, 'rotationY', Math.random() * 360, 'rotationZ', Math.random() * 360,
+							'scaleX', s, 'scaleY', s, 'scaleZ', s,
+							'material', mat,
+							'<', bs.GL
+					)
+					bodys.push(new OIMO.Body({type: "box", size: [s, s, s], pos: [x, y, z], rot: [mesh.S('rotationX'), mesh.S('rotationY'), mesh.S('rotationZ')], move: true, world: world, name: mesh.UUId  }))
+					meshs.push(mesh)
+				}
+
+				var time = 0, ms = Math.sin, mc = Math.cos
+				bs.ANI.ani({
+					ANI: function () {
+						time += 0.01,
+								bs.GL.directionalLight.x = Math.sin(time) == 0 ? 0.01 : ms(time), bs.GL.directionalLight.y = mc(time) == 0 ? 0.01 : mc(time), bs.GL.directionalLight.z = -1
+						world.step();
+						var i = meshs.length, mesh
+						while (i--) mesh = meshs[i], mesh.setRotationByMat4(bodys[i].body.getMatrix())
+					}
+				})
+			}
+		}, '../gl.js')
+	})
 </script>
 </body>
 </html>

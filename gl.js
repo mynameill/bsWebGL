@@ -312,11 +312,18 @@
 				return function( k ){ return new t0[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 			})(),
 			Mesh:(function(){
-				var t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, useLOD:0, distanceLOD:500,visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
-				var Mesh=function( type ){ this.children=[], this.geoType=type , this.UUId='Mesh'+UUID++, t=UTIL.getUniqueColor(), t.mesh=this, this._pickColor=t, this.evt={overed:0, num:0};}, fn=Mesh.prototype=sMethod.prototype
+				var arg,t, k, tfn={x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0, scaleX:1, scaleY:1, scaleZ:1, alpha:1, _material:null, renderMode:'TRIANGLES', pointSize:1.0, userData:{}, useLOD:0, distanceLOD:500,visible:1, backFace:0, blendMode:0}, evts='mousedown,mouseup,mouseover,mouseout,mousemove'.split( ',' ), i=evts.length
+				var Mesh=function( ){
+                    arg = arguments,arg[1] ? this.id(arg[1]) : 0, this.children = [], this.geoType = arg[0] , this.UUId = 'Mesh' + UUID++, t = UTIL.getUniqueColor(), t.mesh = this, this._pickColor = t, this.evt = {overed: 0, num: 0};
+                }, fn=Mesh.prototype=sMethod.prototype
 				for( k in tfn ) fn[k]=tfn[k]
 				Mesh.fn = fn,
-				fn['id']=function(v){this.id = '#'+v,IDs['#'+v] = v==null ? null : this},fn['class']=sMethod.prototype.class,
+                fn['id'] = function (v) {
+                    if(v===null) { delete IDs['#' + this._id];this._id=null}
+                    else if(v) this._id =  v, IDs['#' + v] =this
+                    else return this._id
+                },
+                fn['class']=sMethod.prototype.class,
 				fn['material']=sMethod.prototype.material, fn['<']=parent, fn['>']=child,fn.instanceOf='Mesh',
 				fn['setRotationByMat4']=function( m ){this.x=m[12], this.y=m[13], this.z=m[14], this.rotationX= -Math.atan2( m[6], m[10] ), this.rotationY=Math.asin( m[2] ), this.rotationZ= -Math.atan2( m[1], m[0] )}
 				fn['setEvent']=MOUSE.setEvent
@@ -324,8 +331,9 @@
 				while( i-- ) (function(){ var t=evts[i];fn[t]=function( v ){return this.setEvent( t, v )}})();
 				// TODO fn['filter'], fn['blendMode']
 				return function( $k ){
+                    var t0 = $k.split('@')
 					if($k.charAt(0) == '#') return GL.getElementByID($k)
-					return VBs[$k] ? new Mesh( $k ) : null
+					return VBs[t0[0]] ? new Mesh( t0[0],t0[1] ) : null
 				}
 			})(),
 			Particle:(function(){ //TODO 이건 다이나믹 타입인데... 향후 비애니타입의 빌보드로 나눠야할듯

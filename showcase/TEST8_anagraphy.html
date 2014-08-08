@@ -1,64 +1,67 @@
 ﻿<html lang="ko">
 <head>
-    <title>Anagraphy Draft Demo</title>
-    <meta name="keywords" content="redcamel, webs.GL, bsjs"/>
-    <meta name="description" content="redcamel, webs.GL, bsjs"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-    <style>
-        body { margin: 0; padding: 0; font-size: 8px; overflow: hidden }
-        p, li, div, b {
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -o-user-select: none;
-            user-select: none;
-        }
-    </style>
+	<title>Anagraphy Draft Demo</title>
+	<meta name="keywords" content="redcamel, webs.GL, bsjs" />
+	<meta name="description" content="redcamel, webs.GL, bsjs" />
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-size: 8px;
+			overflow: hidden
+		}
 
-    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+		p, li, div, b {
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+		}
+	</style>
+
+	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
 <div style="position:absolute;background:#666; z-index:1;margin:10px;padding:8px;opacity:0.9;font-size:11px;border-radius:10px;box-shadow:inset 0 1px 0 #333">
-    <a href="https://github.com/projectBS/bsWebGL" target="_blank" style="text-decoration:none;color:#fff">https://github.com/projectBS/bsWebGL</a>
+	<a href="https://github.com/projectBS/bsWebGL" target="_blank" style="text-decoration:none;color:#fff">https://github.com/projectBS/bsWebGL</a>
 </div>
 
 <script>
-    bs.debug(0),
-    bs(function(){
-        bs.require(function(){
-            bs.GL.init('#glCanvas', '../shaders.js', init)
-            function init(){
+	bs.debug(0),
+			bs(function () {
+				bs.require(function () {
+					bs.GL.init('#glCanvas', '../shaders.js', init)
+					function init() {
+						bs.GL.S('controller').S('distance', 3000)
+						// 재질생성
+						var skyMap = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+						bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
 
-                    // 컨트롤러는 무조건 입력해야함
-                    bs.GL.S('controller',bs.GL.Controller('ISO'))
-                    bs.GL.S('controller').S('distance',3000)
-                    // 재질생성
-                    var skyMap=bs.GL.Material('sky').S('src',["assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"])
-                    bs.GL.S('skybox',bs.GL.SkyBox().S('material',skyMap))
+						var environment = bs.GL.Material('environment').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+						var videoL = bs.GL.Material('videoLight')
+						videoL.S('src', 'assets/mov_bbb.mp4')
+						var video = bs.GL.Material('video')
+						video.S('src', 'assets/mov_bbb.mp4')
 
-                    var environment=bs.GL.Material('environment').S('src',["assets/environ/right.jpg","assets/environ/left.jpg","assets/environ/bottom.jpg","assets/environ/top.jpg","assets/environ/front.jpg","assets/environ/back.jpg"])
-                    var videoL = bs.GL.Material('videoLight')
-                    videoL.S('src','assets/mov_bbb.mp4')
-                    var video = bs.GL.Material('video')
-                    video.S('src','assets/mov_bbb.mp4')
-
-                  bs.GL.parserOBJ('assets/woman.obj','head',function(){
-                        bs.GL.Mesh('head').S('<',bs.GL,'material',videoL,'scaleX',16,'scaleY',16,'scaleZ',16,'z',0)
-                        for(var i=0; i<10; i++){
-                            bs.GL.Mesh('sphere').S('<',bs.GL,'material',videoL,'scaleX',100,'scaleY',100,'scaleZ',100,'x',Math.sin(Math.PI/5*i)*1000,'z',Math.cos(Math.PI/5*i)*1000,'rotationY',Math.PI)
-                            bs.GL.Mesh('sphere').S('<',bs.GL,'material',videoL,'scaleX',50,'scaleY',50,'scaleZ',50,'y',Math.sin(Math.PI/5*i)*1000,'z',Math.cos(Math.PI/5*i)*1000,'rotationY',Math.PI)
-                        }
-                    })
-                    bs.GL.PostEffect.use=1
-                    bs.GL.PostEffect.anagraphy=1
-                }
-        }, '../gl.js')
-    })
+						bs.GL.parserOBJ('assets/woman.obj', 'head', function () {
+							bs.GL.Mesh('head').S('<', bs.GL, 'material', videoL, 'scaleX', 16, 'scaleY', 16, 'scaleZ', 16, 'z', 0)
+							for (var i = 0; i < 10; i++) {
+								bs.GL.Mesh('sphere').S('<', bs.GL, 'material', videoL, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100, 'x', Math.sin(Math.PI / 5 * i) * 1000, 'z', Math.cos(Math.PI / 5 * i) * 1000, 'rotationY', Math.PI)
+								bs.GL.Mesh('sphere').S('<', bs.GL, 'material', videoL, 'scaleX', 50, 'scaleY', 50, 'scaleZ', 50, 'y', Math.sin(Math.PI / 5 * i) * 1000, 'z', Math.cos(Math.PI / 5 * i) * 1000, 'rotationY', Math.PI)
+							}
+						})
+						bs.GL.PostEffect.use = 1
+						bs.GL.PostEffect.anagraphy = 1
+					}
+				}, '../gl.js')
+			})
 </script>
 </body>
 </html>

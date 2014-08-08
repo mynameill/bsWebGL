@@ -1,39 +1,38 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>001_디텍팅_심화</title>
-    <meta name="keywords" content="redcamel, webgl, bsjs"/>
-    <meta name="description" content="redcamel, webgl, bsjs"/>
-    <meta charset="utf-8"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="format-detection" content="telephone=no"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-    <meta name="viewport"
-          content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi"/>
-    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-    <style>body { margin: 0; padding: 0; font-size: 11px }</style>
-    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+	<title>001_디텍팅_심화</title>
+	<meta name="keywords" content="redcamel, webgl, bsjs" />
+	<meta name="description" content="redcamel, webgl, bsjs" />
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="viewport"
+	      content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi" />
+	<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+	<style>body {
+		margin: 0;
+		padding: 0;
+		font-size: 11px
+	}</style>
+	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
 <script>
-    bs.debug(0)
-    bs(function(){
-        bs.require(function(){
-            bs.GL.init('#glCanvas', '../shaders.js', init)
-            function init(){
-                alert('초기화성공!')
-                bs.GL.Mesh('box').S('material', bs.GL.Material('color'), '<',bs.GL, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
-                bs.GL.Mesh('box').S('material', '#ee2233', '<',bs.GL, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
-            }
-        }, '../gl.js')
+	bs.debug(0)
+	bs(function () {
+		bs.require(function () {
+			bs.GL.init('#glCanvas', '../shaders.js', init)
+			function init() {
+				bs.GL.Mesh('box').S('material', bs.GL.Material('color'), '<', bs.GL, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
+				bs.GL.Mesh('box').S('material', '#ee2233', '<', bs.GL, 'scaleX', 100, 'scaleY', 100, 'scaleZ', 100)
+			}
+		}, '../gl.js')
 
-        bs.Dom('<div id="bsUI_alert" ><div class="msg" id="test">Cache Removed!<br>gnustory</div></div>').S('<','body','down',function($e){
-           console.log($e)
-            console.log(bs.Dom('#'+this.id +' #test' ).S('html'))
-        })
-        console.log(bs.Dom('#bsUI_alert #test' ).S('html'))
-    })
+		console.log(bs.Dom('#bsUI_alert #test').S('html'))
+	})
 </script>
 </body>
 </html>
