@@ -3,7 +3,7 @@
 	function addShader($obj){bs.GL._shaderData[$obj.UUId]=$obj}
 	bs.GL._shaderData._BASE_VERTEX_UNIFORM = ''+
 		'uniform mat4 uPerspectMTX;\n'+'uniform mat4 uCameraMTX;\n'+'uniform mat4 uParentMTX;\n'+
-		'uniform vec3 uP;\n'+'uniform vec3 uR;\n'+'uniform vec3 uS;\n'+
+		'uniform vec3 uP;\n'+'uniform vec3 uR;\n'+'uniform vec3 uS;\n'+'uniform vec3 uPivot;\n'+
 		'uniform float uAlpha;\n'+
 		'uniform float uPointSize;\n'
 
@@ -37,7 +37,9 @@
 		'mat4 scaleMTX(vec3 t){ return mat4(t[0],0,0,0, 0,t[1],0,0, 0,0,t[2],0, 0,0,0, 1); }\n\n'
 
 	bs.GL._shaderData._MAKE_VERTEX=''+
-		' mat4 rot = rotationMTX(uR);\n'+' mat4 pos = positionMTX(uP);\n'+' mat4 mv = uParentMTX*pos *rot *  scaleMTX(uS);\n'+
+		' mat4 rot = rotationMTX(uR);\n'+' mat4 pos = positionMTX(uP);\n'+
+		' mat4 pivot = positionMTX(uPivot);\n'+
+		' mat4 mv = uParentMTX*pos *rot *positionMTX(uPivot)* scaleMTX(uS);\n'+
 		' vec4 vertex =  mv *vec4(aVer, 1.0);\n'
 
 	bs.GL._shaderData._BASE_VERTEX_LIGHT_CAL=''+

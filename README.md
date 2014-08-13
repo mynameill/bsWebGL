@@ -18,6 +18,10 @@ tutorial sample - http://projectbs.github.io/bsWebGL/camp/
 
 update List
 
+    2014.08.13
+    . draw mode 판별 변경
+    . Mesh군에 pivotX, pivotY, pivotZ 적용
+
     2014.08.08
     . bs.GL.Mesh('#id')  id가있는놈을 검색할수있음!
     . MeshType@ID로 메쉬생성가능 bs.GL.Mesh('box@testID')

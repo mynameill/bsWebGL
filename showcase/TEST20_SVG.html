@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>svg파서 개발을 위한 초기 테스트</title>
+	<meta name="keywords" content="redcamel, webgl, bsjs, bsWebGL" />
+	<meta name="description" content="redcamel, webgl, bsjs, bsWebGL" />
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="viewport"
+	      content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi" />
+	<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+	<style>body {
+		margin: 0;
+		padding: 0;
+		font-size: 11px
+	}</style>
+	<script src="../binaryReader.js"></script>
+	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+
+</head>
+<body>
+<svg style="position:absolute;z-index:1">
+	<rect width="300" height="100" fill="#223344"></rect>
+	<rect width="150" height="150" fill="#223654"></rect>
+	<image xlink:href="assets/t1.jpg" x="0" y="0" height="50px" width="50px" />
+</svg>
+<script>
+	bs.debug(0)
+	bs(function () {
+		bs.require(function () {
+			bs.GL.init('#glCanvas', '../shaders.js', init)
+			function init() {
+
+				//파서테스트
+				//svg파서 개발을 위한 초기 테스트
+				bs.GL['parserSVG'] = (function () {
+					function checkColor(fill) {
+						var t = fill ? fill : '#fff'
+						// rgb일떄 그냥 명시적 색상일떄도 고려해야함
+						return t
+					}
+
+					return function (svg) {
+
+						var i, t0 = svg.childNodes, len = t0.length, t1 = [], t3, t2
+						for (i = 0; i < len; i++) t0[i].nodeType != 3 ? t1.push(t0[i]) : 0
+						var container = bs.GL.Mesh('rect').S('material', '#eee')
+						i = t1.length
+						while (i--) {
+							t2 = t1[i]
+							t3 = t2.tagName
+							console.log(t1[i], t2.getAttribute('width'))
+							if (t3 == 'rect' || t3 == 'image') bs.GL.Mesh('rect').S(
+									'pivotX', -t2.width.baseVal.value / 2, 'pivotY', +t2.height.baseVal.value / 2,
+									'scaleX', t2.width.baseVal.value, 'scaleY', t2.height.baseVal.value,
+									'material', t3 == 'rect' ? checkColor(t2.getAttribute('fill')) : t2.getAttribute('xlink:href') + ',B',
+									'<', container)
+						}
+						return container
+					}
+				})();
+
+				//////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////
+				var svgRect = bs.Dom('svg')[0]
+				bs.GL.parserSVG(svgRect).S('<', bs.GL)
+				//////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////
+
+				var time = 0, ms = Math.sin, mc = Math.cos
+				bs.ANI.ani({
+					ANI: function () {
+						time += 0.003
+						var list = bs.GL.S('children'), i = list.length, t0, t1, j
+						while (i--) {
+							t0 = list[i]
+							j = t0.children.length
+							while (j--) t1 = t0.children[j], t1.rotationZ += 0.001 * 15, t1.rotationY += 0.001 * 15
+						}
+					}
+				})
+			}
+		}, '../gl.js')
+
+	})
+</script>
+</body>
+</html>
