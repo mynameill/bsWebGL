@@ -17,6 +17,7 @@ tutorial sample - http://projectbs.github.io/bsWebGL/camp/
 </pre>
 
 update List
+
     2014.08.08
     . bs.GL.Mesh('#id')  id가있는놈을 검색할수있음!
     . MeshType@ID로 메쉬생성가능 bs.GL.Mesh('box@testID')
