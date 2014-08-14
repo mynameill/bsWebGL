@@ -30,6 +30,7 @@
 	<ellipse cx="210" cy="45" rx="170" ry="15" fill="#cc2244" />
 	<image xlink:href="../showcase/assets/t1.jpg" x="0" y="0" height="50px" width="50px" />
 	<polygon points="200,10 250,190 160,210" fill="#cce244" />
+	<line x1="0" y1="0" x2="200" y2="200" stroke="#cc2244" stroke-width="3" />
 </svg>
 <script>
 	bs.debug(0)
@@ -50,10 +51,15 @@
 						// rgb일떄 그냥 명시적 색상일떄도 고려해야함
 						return t
 					}
+					function checkLineColor(stroke) {
+						var t = stroke ? stroke : '#fff'
+						// rgb일떄 그냥 명시적 색상일떄도 고려해야함
+						return t
+					}
 
 					return function (svg) {
 
-						var i, j = 0, t0 = svg.childNodes, len = t0.length, t1 = [], t3, t2
+						var i, j = 0, t0 = svg.childNodes, len = t0.length, t1 = [], t3, t2, t4, t5
 						for (i = 0; i < len; i++) t0[i].nodeType != 3 ? t1.push(t0[i]) : 0
 						var container = bs.GL.Mesh('rect').S('material', '#eee')
 						i = t1.length
@@ -85,12 +91,13 @@
 										'zSort', 0
 								)
 							} else if (t3 == 'polygon') {
-								var t4 = t2.getAttribute('points').split(' ')
+								t4 = t2.getAttribute('points').split(' ')
 								var vs = []
 								console.log(t4)
 								for (var ii = 0; ii < t4.length; ii++) {
-									vs.push(t4[ii].split(',')[0])
-									vs.push(-t4[ii].split(',')[1])
+									t5 = t4[ii].split(',')
+									vs.push(t5[0])
+									vs.push(-t5[1])
 									vs.push(0)
 								}
 								bs.GL.makeBufferSet('polygon' + t2.getAttribute('points'), vs, [], [])
@@ -98,6 +105,18 @@
 										'material', checkColor(t2.getAttribute('fill')),
 										'<', container,
 										'zSort', 0
+								)
+							} else if (t3 == 'line') {
+								var vs = []
+								var _x1 = t2.getAttribute('x1'),_x2 =t2.getAttribute('x2'),_y1=t2.getAttribute('y1'),_y2=t2.getAttribute('y2')
+								vs.push(_x1),vs.push(-_y1),vs.push(0)
+								vs.push(_x2),vs.push(-_y2),vs.push(0)
+								bs.GL.makeBufferSet('line_'+_x1+_y1+_x2+_y2, vs, [], [])
+								bs.GL.Mesh('line_'+_x1+_y1+_x2+_y2).S(
+										'material', checkLineColor(t2.getAttribute('stroke')),
+										'<', container,
+										'zSort', 0,
+										'renderMode','LINES'
 								)
 							}
 						}
