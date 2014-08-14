@@ -99,6 +99,17 @@
 				UTIL.makeBufferSet('rect',vs=[ -0.5,-0.5,0.0,0.5,-0.5,0.0,0.5,0.5,0.0,-0.5,0.5,0.0], is=[0,1,2,0,2,3], cs=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0])
 				UTIL.makeBufferSet('tri',vs=[0,0.5,0,-0.5,-0.5,0,0.5,-0.5,0], is=[0,1,2], cs=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0])
 				UTIL.makeBufferSet('box',vs=[-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5], is=[0,1,2,0,2,3,4,5,6,4,6,7,8,9,10,8,10,11,12,13,14,12,14,15,16,17,18,16,18,19,20,21,22,20,22,23], cs=[0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,1.0,0.0,1.0])
+				vs=[],is=[],cs=[]
+				function makeCircle(seg) {
+					var radius = 0.5, segment = seg, per = PI * 2 / segment, i
+					for (i = 0; i < segment; i++) {
+						vs.push(0), vs.push(0), vs.push(0), vs.push(mS(per * i) * radius), vs.push(mC(per * i) * radius), vs.push(0), vs.push(mS(per * (i + 1)) * radius), vs.push(mC(per * (i + 1)) * radius), vs.push(0),
+						is.push(0, i * 3 + 1, i * 3 + 2),
+						cs.push(0.5), cs.push(0.5), cs.push((mS(per * i) + 1) / 2), cs.push((mC(per * i) + 1) / 2), cs.push((mS(per * (i + 1)) + 1) / 2), cs.push((mC(per * (i + 1)) + 1) / 2)
+						UTIL.makeBufferSet('circle', vs, is, cs)
+					}
+				}
+				makeCircle(64)
 				//TODO 이걸 LOD적용할수있도록 자동화해야됨 -_-;;
                 //TODO 자동화이외에 외부파일을 부를수있도록도 해야곘고...
                 //TODO 각 기본오브젝트의 특성(width,height,corner 등등을 기술할수 있도록 해야함
@@ -457,7 +468,7 @@
 	RENDER :
 	(function(){
 		var M, T, TN, P, PID, gt, VB, UVB, IB, VNB, VBVNB, ctl, rmode, pList, renderPass, dColor=new Float32Array( 4 ), aColor=new Float32Array( 4 ), sColor=new Float32Array( 4 );
-        var p_src, p_normal, pVB, pUVB, pIB, pVNB, pVBVNB, p_backFace, p_parentMTX;
+        var p_src, p_normal, pVB, pUVB, pIB, pVNB, pVBVNB, p_backFace, p_parentMTX,p_zSort;
 		var dVB, dVNB, dUVB, dIB, dVBVNB, d_P;
 		var squaredDistance = function(a, b) { var x = b[0] - a[0],y = b[1] - a[1],z = b[2] - a[2];return x*x + y*y + z*z;}
 		draw=function( $list, $num, $parentMTX ){
@@ -471,6 +482,7 @@
 				if( gt == 'particle' ) pList.push( t0 )
 				else{
 					if(t0.visible ){
+						p_zSort == t0.zSort ? 0 : (p_zSort=t0.zSort ,gl.depthMask(p_zSort))
 						// TODO LOD 실험중
 						t0.useLOD ? (
 							dst2 = sqrt(dst([t0.x,t0.y,t0.z],camPosition)),dst3=parseInt(dst2/t0.distanceLOD), dst3 = dst3 >= 5 ? 5 : dst3,
@@ -525,7 +537,7 @@
 					gl.uniform1i( P.uSamC, 0 ), gl.activeTexture( gl.TEXTURE0 ), gl.bindTexture( gl.TEXTURE_CUBE_MAP, M.texture ),
 					gl.bindBuffer( G_AB, VB ), gl.vertexAttribPointer( P.aVer, 3, G_FLOAT, 0, 0, 0 ), gl.bindBuffer( G_EAB, IB ), gl.drawElements( gl[t0.renderMode], IB.num, gl.UNSIGNED_SHORT, 0 ), D_tri+=8 ) : 0;
 			if( list.length == 0 ) return;
-			i=GL.children.length, gl.enable( gl.BLEND ), gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA ), gl.enable( gl.DEPTH_TEST ), gl.depthFunc( gl.LESS )
+			i=GL.children.length, gl.enable( gl.BLEND ), gl.blendFunc( gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA ), gl.enable( gl.DEPTH_TEST ), gl.depthFunc( gl.LESS ),	gl.depthMask( 1 )
 			draw( list, i, parentMTX ), p_src=null, p_normal=null, gl.depthMask( 0 ), i=pList.length, D_par=i, D_parType=0
 			if( i > 0 ){// TODO 이것도 텍스쳐랑 컬러랑 분기시켜야하..,TODO 지오메트리 파티클을 지원해야하나;;;// 거리에 따른 포인트 크기 도 계산해야됨...어찌하지;;
 				var pTList={}, pT, kList, check, pv
@@ -543,7 +555,7 @@
 						gl.drawArrays( gl.POINTS, 0, VB.num )
 				}
 			}
-			gl.depthMask( true ), pVB=pVNB=pIB=pVBVNB=null
+			gl.depthMask( 1 ), pVB=pVNB=pIB=pVBVNB=null
 			if( GL.PostEffect.use ){
 				gl.bindFramebuffer( gl.FRAMEBUFFER, null ), gl.clear( gl.COLOR_BUFFER_BIT ),
 					gl.useProgram( P=Ps['last'] ), gl.uniformMatrix4fv( P.uPerspectMTX, 0, mat4.create() ), gl.uniformMatrix4fv( P.uCameraMTX, 0, mat4.create() ),

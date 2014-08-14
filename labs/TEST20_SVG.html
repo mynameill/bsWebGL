@@ -21,10 +21,13 @@
 
 </head>
 <body>
-<svg style="position:absolute;z-index:1">
+<svg style="position:absolute;z-index:1" height="500">
 	<rect width="300" height="100" fill="#223344"></rect>
 	<rect width="150" height="150" fill="#223654"></rect>
+	<circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="#aa2244" />
+	<ellipse cx="200" cy="80" rx="100" ry="50" stroke="black" stroke-width="3" fill="#aa2244" />
 	<image xlink:href="assets/t1.jpg" x="0" y="0" height="50px" width="50px" />
+	<polygon points="200,10 250,190 160,210" fill="#cce244" />
 </svg>
 <script>
 	bs.debug(0)
@@ -32,6 +35,10 @@
 		bs.require(function () {
 			bs.GL.init('#glCanvas', '../shaders.js', init)
 			function init() {
+
+
+//				bs.GL.Mesh('circle').S('<',bs.GL,'scaleX',100,'scaleY',100,'material','assets/t2.jpg,BL')
+//				bs.GL.Mesh('circle').S('<',bs.GL,'scaleX',100,'scaleY',100,'material','#fff','renderMode','LINES')
 
 				//파서테스트
 				//svg파서 개발을 위한 초기 테스트
@@ -44,19 +51,53 @@
 
 					return function (svg) {
 
-						var i, t0 = svg.childNodes, len = t0.length, t1 = [], t3, t2
+						var i, j = 0, t0 = svg.childNodes, len = t0.length, t1 = [], t3, t2
 						for (i = 0; i < len; i++) t0[i].nodeType != 3 ? t1.push(t0[i]) : 0
 						var container = bs.GL.Mesh('rect').S('material', '#eee')
 						i = t1.length
 						while (i--) {
-							t2 = t1[i]
+							t2 = t1[j++]
 							t3 = t2.tagName
 							console.log(t1[i], t2.getAttribute('width'))
 							if (t3 == 'rect' || t3 == 'image') bs.GL.Mesh('rect').S(
-									'pivotX', -t2.width.baseVal.value / 2, 'pivotY', +t2.height.baseVal.value / 2,
+									'pivotX', t2.width.baseVal.value / 2, 'pivotY', -t2.height.baseVal.value / 2,
 									'scaleX', t2.width.baseVal.value, 'scaleY', t2.height.baseVal.value,
 									'material', t3 == 'rect' ? checkColor(t2.getAttribute('fill')) : t2.getAttribute('xlink:href') + ',B',
-									'<', container)
+									'<', container,
+									'zSort', 0
+							)
+							else if (t3 == 'circle') {
+								bs.GL.Mesh('circle').S(
+										'x', t2.getAttribute('cx'), 'y', -t2.getAttribute('cy'),
+										'scaleX', t2.getAttribute('r') * 2, 'scaleY', t2.getAttribute('r') * 2,
+										'material', checkColor(t2.getAttribute('fill')),
+										'<', container,
+										'zSort', 0
+								)
+							} else if (t3 == 'ellipse') {
+								bs.GL.Mesh('circle').S(
+										'x', t2.getAttribute('cx'), 'y', -t2.getAttribute('cy'),
+										'scaleX', t2.getAttribute('rx') * 2, 'scaleY', t2.getAttribute('ry') * 2,
+										'material', checkColor(t2.getAttribute('fill')),
+										'<', container,
+										'zSort', 0
+								)
+							} else if (t3 == 'polygon') {
+								var t4 = t2.getAttribute('points').split(' ')
+								var vs = []
+								console.log(t4)
+								for(var ii=0; ii<t4.length; ii++){
+									vs.push(t4[ii].split(',')[0])
+									vs.push(-t4[ii].split(',')[1])
+									vs.push(0)
+								}
+								bs.GL.makeBufferSet('polygon'+t2.getAttribute('points'), vs, [], [])
+								bs.GL.Mesh('polygon'+t2.getAttribute('points')).S(
+										'material', checkColor(t2.getAttribute('fill')),
+										'<', container,
+										'zSort', 0
+								)
+							}
 						}
 						return container
 					}
@@ -77,7 +118,7 @@
 						while (i--) {
 							t0 = list[i]
 							j = t0.children.length
-							while (j--) t1 = t0.children[j], t1.rotationZ += 0.001 * 15, t1.rotationY += 0.001 * 15
+//							while (j--) t1 = t0.children[j], t1.rotationZ += 0.001 * 15, t1.rotationY += 0.001 * 15
 						}
 					}
 				})
