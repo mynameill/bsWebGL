@@ -98,10 +98,10 @@
 							if (type != 'rect' && type != 'image' && type != 'circle' && type != 'ellipse') {
 								var name = type + (etc == '' ? '' : t1.getAttribute(etc));
 								bs.GL.makeBufferSet(name, vs, is, []), mesh = bs.GL.Mesh(name).S('zSort', 0, '<', container),
-								type == 'path' ? mesh.S('renderMode', 'TRIANGLE_FAN', 'material', checkColor(t1.getAttribute('fill'))) :
-								type == 'polyline' ? mesh.S('renderMode', 'LINE_STRIP', 'material', checkColor(t1.getAttribute('stroke'))) :
-								type == 'polygon' ? mesh.S('material', checkColor(t1.getAttribute('fill'))) :
-								type == 'line' ? mesh.S('renderMode', 'LINES', 'material', checkColor(t1.getAttribute('stroke'))) : 0
+												type == 'path' ? mesh.S('renderMode', 'TRIANGLE_FAN', 'material', checkColor(t1.getAttribute('fill'))) :
+												type == 'polyline' ? mesh.S('renderMode', 'LINE_STRIP', 'material', checkColor(t1.getAttribute('stroke'))) :
+												type == 'polygon' ? mesh.S('material', checkColor(t1.getAttribute('fill'))) :
+												type == 'line' ? mesh.S('renderMode', 'LINES', 'material', checkColor(t1.getAttribute('stroke'))) : 0
 							} else mesh.S('material', type == 'image' ? t1.getAttribute('xlink:href') + ',B' : checkColor(t1.getAttribute('fill')), 'zSort', 0, '<', container)
 						}
 						return container
@@ -122,7 +122,7 @@
 						while (i--) {
 							t0 = list[i]
 							j = t0.children.length
-							t0.rotationZ += 0.001 * 15
+//							t0.rotationZ += 0.001 * 15
 //							while (j--) t1 = t0.children[j],t1.rotationZ += 0.001 * 15
 						}
 					}

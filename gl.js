@@ -477,7 +477,8 @@
 			var G_FLOAT=gl.FLOAT, G_AB=gl.ARRAY_BUFFER, G_EAB=gl.ELEMENT_ARRAY_BUFFER, G_BPE=Float32Array.BYTES_PER_ELEMENT, G_TEX2D=gl.TEXTURE_2D, G_TEX0=gl.TEXTURE0;
 			var dst = squaredDistance, dst2 =0,dst3,camPosition = [GL.controller.data.x,GL.controller.data.y,GL.controller.data.z]
 			P= null;
-			while(i--){
+				while(i--){
+				gl.lineWidth(5)
 				t0=t[j++], dVB=dVNB=dIB=dVBVNB=dUVB=d_P=0, renderPass=1, gt=t0.geoType, (p_backFace != t0.backFace) ? t0.backFace ? gl.enable( gl.CULL_FACE ) : gl.disable( gl.CULL_FACE ) : 0, p_backFace=t0.backFace
 				if( gt == 'particle' ) pList.push( t0 )
 				else{
@@ -513,6 +514,7 @@
 						}else gl.uniform3fv( P.uColor, [M._r/255, M._g/255, M._b/255] ),
 								TN && TN.loaded ? (gl.uniform1i( P.uUseNormal, 1 ), gl.uniform1i( P.uSamN, 1 ),dUVB ? ( d_P ? gl.enableVertexAttribArray( P.aTexC ) : 0, gl.bindBuffer( G_AB, UVB ), gl.vertexAttribPointer( P.aTexC, 2, G_FLOAT, 0, 0, 0 )) : 0,(p_normal != TN ? (gl.activeTexture( gl.TEXTURE1 ), gl.bindTexture( G_TEX2D, TN )) : 0), p_normal=TN) : gl.uniform1i( P.uUseNormal, 0 )
 						renderPass ? (D_tri += IB.num / 3, IB.num != 0 ? ( gl.bindBuffer(G_EAB, IB), gl.drawElements(gl[rmode], IB.num, gl.UNSIGNED_SHORT, 0)) : (VB = VBs[gt], gl.uniform1f(P.uPointSize, t0.pointSize), gl.bindBuffer(G_AB, VB), gl.drawArrays(gl[rmode], 0, VB.num))) : 0
+						t0.renderMode2 ? (rmode=t0.renderMode2, VB = VBs[gt], gl.uniform1f(P.uPointSize, t0.pointSize), gl.bindBuffer(G_AB, VB), gl.drawArrays(gl[rmode], 0, VB.num)):0
 						// TODO 부모매트릭스와 자기 매트릭스 캐시해야됨
 						t1=t0.children, t1.length ? (result=mClone( $parentMTX ), mIden( rot ), mIden( pos ), rot=mMul( rot, mXRot( -t0.rotationX ) ), rot=mMul( rot, mYRot( -t0.rotationY ) ), rot=mMul( rot, mZRot( -t0.rotationZ ) ), mTran( pos, pos, [t0.x, t0.y, t0.z] ), draw( t1, t1.length, mMul( mMul( rot, result ), pos ) )) : 0
 					}

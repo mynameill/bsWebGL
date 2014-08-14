@@ -39,7 +39,7 @@
 	bs.GL._shaderData._MAKE_VERTEX=''+
 		' mat4 rot = rotationMTX(uR);\n'+' mat4 pos = positionMTX(uP);\n'+
 		' mat4 pivot = positionMTX(uPivot);\n'+
-		' mat4 mv = uParentMTX*pos *rot*pivot*scaleMTX(uS) ;\n'+
+		' mat4 mv = uParentMTX*pos *pivot*rot*scaleMTX(uS) ;\n'+
 		' vec4 vertex =  mv *vec4(aVer, 1.0);\n'
 
 	bs.GL._shaderData._BASE_VERTEX_LIGHT_CAL=''+
