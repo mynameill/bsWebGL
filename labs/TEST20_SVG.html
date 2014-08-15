@@ -25,13 +25,15 @@
 	<rect width="300" height="100" fill="#223344" />
 	<path d="M150 0 L75 200 L225 200 L525 300" fill="#11cc44" />
 	<rect width="150" height="150" fill="#22f654"></rect>
-	<circle cx="50" cy="50" r="80" stroke="black" stroke-width="3" fill="blue" />
+	<rect x="200" y="200" width="150" height="150" fill="purple" opacity="0.5"></rect>
+	<circle cx="50" cy="50" r="80" stroke="black" stroke-width="3" fill="blue"  />
 	<circle cx="150" cy="150" r="30" stroke="black" stroke-width="3" fill="rgb(0,100,125)" />
 	<ellipse cx="240" cy="100" rx="220" ry="30" fill="#aa2244" />
 	<ellipse cx="220" cy="70" rx="190" ry="20" fill="#bb2244" />
-	<ellipse cx="210" cy="45" rx="170" ry="15" fill="#cc2244" />
+	<ellipse cx="210" cy="45" rx="170" ry="15" fill="rgb(0,100,125)" />
 	<image xlink:href="../showcase/assets/t1.jpg" x="0" y="0" height="50px" width="50px" />
-	<polygon points="200,10 250,190 160,210" fill="#cce244" />
+	<image xlink:href="../showcase/assets/t1.jpg" x="100" y="100" height="50px" width="50px" />
+	<polygon points="200,10 250,190 160,210" fill="#cce244" opacity="0.5" />
 	<polyline points="20,20 40,25 60,40 80,120 120,140 200,180" stroke="#ffee44" style="fill:none" />
 	<line x1="0" y1="0" x2="200" y2="200" stroke="#cc2244" stroke-width="3" />
 
@@ -46,21 +48,18 @@
 				//파서테스트
 				//svg파서 개발을 위한 초기 테스트
 				bs.GL['parserSVG'] = (function () {
-					var t0, t1,t2, colorNameed = {aliceblue: '#F0F8FF', antiquewhite: '#FAEBD7', aqua: '#00FFFF', aquamarine: '#7FFFD4', azure: '#F0FFFF', beige: '#F5F5DC', bisque: '#FFE4C4', black: '#000000', blanchedalmond: '#FFEBCD', blue: '#0000FF', blueviolet: '#8A2BE2', brown: '#A52A2A', burlywood: '#DEB887', cadetblue: '#5F9EA0', chartreuse: '#7FFF00', chocolate: '#D2691E', coral: '#FF7F50', cornflowerblue: '#6495ED', cornsilk: '#FFF8DC', crimson: '#DC143C', cyan: '#00FFFF', darkblue: '#00008B', darkcyan: '#008B8B', darkgoldenrod: '#B8860B', darkgray: '#A9A9A9', darkgrey: '#A9A9A9', darkgreen: '#006400', darkkhaki: '#BDB76B', darkmagenta: '#8B008B', darkolivegreen: '#556B2F', darkorange: '#FF8C00', darkorchid: '#9932CC', darkred: '#8B0000', darksalmon: '#E9967A', darkseagreen: '#8FBC8F', darkslateblue: '#483D8B', darkslategray: '#2F4F4F', darkslategrey: '#2F4F4F', darkturquoise: '#00CED1', darkviolet: '#9400D3', deeppink: '#FF1493', deepskyblue: '#00BFFF', dimgray: '#696969', dimgrey: '#696969', dodgerblue: '#1E90FF', firebrick: '#B22222', floralwhite: '#FFFAF0', forestgreen: '#228B22', fuchsia: '#FF00FF', gainsboro: '#DCDCDC', ghostwhite: '#F8F8FF', gold: '#FFD700', goldenrod: '#DAA520', gray: '#808080', grey: '#808080', green: '#008000', greenyellow: '#ADFF2F', honeydew: '#F0FFF0', hotpink: '#FF69B4', indianred: '#CD5C5C', indigo: '#4B0082', ivory: '#FFFFF0', khaki: '#F0E68C', lavender: '#E6E6FA', lavenderblush: '#FFF0F5', lawngreen: '#7CFC00', lemonchiffon: '#FFFACD', lightblue: '#ADD8E6', lightcoral: '#F08080', lightcyan: '#E0FFFF', lightgoldenrodyellow: '#FAFAD2', lightgray: '#D3D3D3', lightgrey: '#D3D3D3', lightgreen: '#90EE90', lightpink: '#FFB6C1', lightsalmon: '#FFA07A', lightseagreen: '#20B2AA', lightskyblue: '#87CEFA', lightslategray: '#778899', lightslategrey: '#778899', lightsteelblue: '#B0C4DE', lightyellow: '#FFFFE0', lime: '#00FF00', limegreen: '#32CD32', linen: '#FAF0E6', magenta: '#FF00FF', maroon: '#800000', mediumaquamarine: '#66CDAA', mediumblue: '#0000CD', mediumorchid: '#BA55D3', mediumpurple: '#9370D8', mediumseagreen: '#3CB371', mediumslateblue: '#7B68EE', mediumspringgreen: '#00FA9A', mediumturquoise: '#48D1CC', mediumvioletred: '#C71585', midnightblue: '#191970', mintcream: '#F5FFFA', mistyrose: '#FFE4E1', moccasin: '#FFE4B5', navajowhite: '#FFDEAD', navy: '#000080', oldlace: '#FDF5E6', olive: '#808000', olivedrab: '#6B8E23', orange: '#FFA500', orangered: '#FF4500', orchid: '#DA70D6', palegoldenrod: '#EEE8AA', palegreen: '#98FB98', paleturquoise: '#AFEEEE', palevioletred: '#D87093', papayawhip: '#FFEFD5', peachpuff: '#FFDAB9', peru: '#CD853F', pink: '#FFC0CB', plum: '#DDA0DD', powderblue: '#B0E0E6', purple: '#800080', rebeccapurple: '#663399', red: '#FF0000', rosybrown: '#BC8F8F', royalblue: '#4169E1', saddlebrown: '#8B4513', salmon: '#FA8072', sandybrown: '#F4A460', seagreen: '#2E8B57', seashell: '#FFF5EE', sienna: '#A0522D', silver: '#C0C0C0', skyblue: '#87CEEB', slateblue: '#6A5ACD', slategray: '#708090', slategrey: '#708090', snow: '#FFFAFA', springgreen: '#00FF7F', steelblue: '#4682B4', tan: '#D2B48C', teal: '#008080', thistle: '#D8BFD8', tomato: '#FF6347', turquoise: '#40E0D0', violet: '#EE82EE', wheat: '#F5DEB3', white: '#FFFFFF', whitesmoke: '#F5F5F5', yellow: '#FFFF00', yellowgreen: '#9ACD32"'};
+					var f0, f1, f2,  colorNamed = {aliceblue: '#F0F8FF', antiquewhite: '#FAEBD7', aqua: '#00FFFF', aquamarine: '#7FFFD4', azure: '#F0FFFF', beige: '#F5F5DC', bisque: '#FFE4C4', black: '#000000', blanchedalmond: '#FFEBCD', blue: '#0000FF', blueviolet: '#8A2BE2', brown: '#A52A2A', burlywood: '#DEB887', cadetblue: '#5F9EA0', chartreuse: '#7FFF00', chocolate: '#D2691E', coral: '#FF7F50', cornflowerblue: '#6495ED', cornsilk: '#FFF8DC', crimson: '#DC143C', cyan: '#00FFFF', darkblue: '#00008B', darkcyan: '#008B8B', darkgoldenrod: '#B8860B', darkgray: '#A9A9A9', darkgrey: '#A9A9A9', darkgreen: '#006400', darkkhaki: '#BDB76B', darkmagenta: '#8B008B', darkolivegreen: '#556B2F', darkorange: '#FF8C00', darkorchid: '#9932CC', darkred: '#8B0000', darksalmon: '#E9967A', darkseagreen: '#8FBC8F', darkslateblue: '#483D8B', darkslategray: '#2F4F4F', darkslategrey: '#2F4F4F', darkturquoise: '#00CED1', darkviolet: '#9400D3', deeppink: '#FF1493', deepskyblue: '#00BFFF', dimgray: '#696969', dimgrey: '#696969', dodgerblue: '#1E90FF', firebrick: '#B22222', floralwhite: '#FFFAF0', forestgreen: '#228B22', fuchsia: '#FF00FF', gainsboro: '#DCDCDC', ghostwhite: '#F8F8FF', gold: '#FFD700', goldenrod: '#DAA520', gray: '#808080', grey: '#808080', green: '#008000', greenyellow: '#ADFF2F', honeydew: '#F0FFF0', hotpink: '#FF69B4', indianred: '#CD5C5C', indigo: '#4B0082', ivory: '#FFFFF0', khaki: '#F0E68C', lavender: '#E6E6FA', lavenderblush: '#FFF0F5', lawngreen: '#7CFC00', lemonchiffon: '#FFFACD', lightblue: '#ADD8E6', lightcoral: '#F08080', lightcyan: '#E0FFFF', lightgoldenrodyellow: '#FAFAD2', lightgray: '#D3D3D3', lightgrey: '#D3D3D3', lightgreen: '#90EE90', lightpink: '#FFB6C1', lightsalmon: '#FFA07A', lightseagreen: '#20B2AA', lightskyblue: '#87CEFA', lightslategray: '#778899', lightslategrey: '#778899', lightsteelblue: '#B0C4DE', lightyellow: '#FFFFE0', lime: '#00FF00', limegreen: '#32CD32', linen: '#FAF0E6', magenta: '#FF00FF', maroon: '#800000', mediumaquamarine: '#66CDAA', mediumblue: '#0000CD', mediumorchid: '#BA55D3', mediumpurple: '#9370D8', mediumseagreen: '#3CB371', mediumslateblue: '#7B68EE', mediumspringgreen: '#00FA9A', mediumturquoise: '#48D1CC', mediumvioletred: '#C71585', midnightblue: '#191970', mintcream: '#F5FFFA', mistyrose: '#FFE4E1', moccasin: '#FFE4B5', navajowhite: '#FFDEAD', navy: '#000080', oldlace: '#FDF5E6', olive: '#808000', olivedrab: '#6B8E23', orange: '#FFA500', orangered: '#FF4500', orchid: '#DA70D6', palegoldenrod: '#EEE8AA', palegreen: '#98FB98', paleturquoise: '#AFEEEE', palevioletred: '#D87093', papayawhip: '#FFEFD5', peachpuff: '#FFDAB9', peru: '#CD853F', pink: '#FFC0CB', plum: '#DDA0DD', powderblue: '#B0E0E6', purple: '#800080', rebeccapurple: '#663399', red: '#FF0000', rosybrown: '#BC8F8F', royalblue: '#4169E1', saddlebrown: '#8B4513', salmon: '#FA8072', sandybrown: '#F4A460', seagreen: '#2E8B57', seashell: '#FFF5EE', sienna: '#A0522D', silver: '#C0C0C0', skyblue: '#87CEEB', slateblue: '#6A5ACD', slategray: '#708090', slategrey: '#708090', snow: '#FFFAFA', springgreen: '#00FF7F', steelblue: '#4682B4', tan: '#D2B48C', teal: '#008080', thistle: '#D8BFD8', tomato: '#FF6347', turquoise: '#40E0D0', violet: '#EE82EE', wheat: '#F5DEB3', white: '#FFFFFF', whitesmoke: '#F5F5F5', yellow: '#FFFF00', yellowgreen: '#9ACD32"'};
 					function rgbToHex() {
-						var r, g,b;
-						t2 = (t2 = arguments[0]).substr(4, t2.length - 5).split(','), r = +t2[0], g = +t2[1], b = +t2[2]
+						var r, g, b;
+						f2 = (f2 = arguments[0]).substr(4, f2.length - 5).split(','), r = +f2[0], g = +f2[1], b = +f2[2]
 						return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 					}
 					function checkColor() {
-						console.log(arguments[0])
-						if ( t0 =arguments[0]) t0 = (t1 = t0.charAt(0)) == '#' ? t0  : t0.indexOf('rgb')>-1 ? rgbToHex(t0) :colorNameed[t0]
-						else t0 = '#fff'
-						// TODO rgb일떄 그냥 명시적 색상일떄도 고려해야함
+						if (f0 = arguments[0]) f0 = (f1 = f0.charAt(0)) == '#' ? f0 : f0.indexOf('rgb') > -1 ? rgbToHex(f0) : colorNamed[f0]
+						else f0 = '#fff'
 						// TODO 스타일 해석도해야되는구나..
-						return t0
+						return f0
 					}
-
 					return function (svg) {
 						var etc = '', r1 = /^[a-z]|[A-Z]/
 						var i, j = 0, k, k2, t0 = svg.childNodes, len = t0.length, svgChild = [], type, t1, t2, t3
@@ -74,6 +73,7 @@
 							if (type == 'rect' || type == 'image') {
 								etc = '', mesh = bs.GL.Mesh('rect').S(
 										'pivotX', t1.width.baseVal.value / 2, 'pivotY', -t1.height.baseVal.value / 2,
+										'x',t1.getAttribute('x'),'y',-t1.getAttribute('y'),
 										'scaleX', t1.width.baseVal.value, 'scaleY', t1.height.baseVal.value
 								)
 							} else if (type == 'ellipse' || type == 'circle') {
@@ -104,13 +104,13 @@
 //								console.log(vs, is), console.log('버퍼생성', 'path' + t1.getAttribute('d'))
 							}
 							if (type != 'rect' && type != 'image' && type != 'circle' && type != 'ellipse') {
-								var name = type + (etc == '' ? '' : t1.getAttribute(etc));
-								bs.GL.makeBufferSet(name, vs, is, []), mesh = bs.GL.Mesh(name).S('zSort', 0, '<', container),
+								var name = type + (etc == '' ? '' : t1.getAttribute(etc)),tAlpha;
+								bs.GL.makeBufferSet(name, vs, is, []), mesh = bs.GL.Mesh(name).S('zSort', 0, '<', container,'alpha',(tAlpha=t1.getAttribute('opacity')) ? tAlpha: 1),
 												type == 'path' ? mesh.S('renderMode', 'TRIANGLE_FAN', 'material', checkColor(t1.getAttribute('fill'))) :
 												type == 'polyline' ? mesh.S('renderMode', 'LINE_STRIP', 'material', checkColor(t1.getAttribute('stroke'))) :
 												type == 'polygon' ? mesh.S('material', checkColor(t1.getAttribute('fill'))) :
 												type == 'line' ? mesh.S('renderMode', 'LINES', 'material', checkColor(t1.getAttribute('stroke'))) : 0
-							} else mesh.S('material', type == 'image' ? t1.getAttribute('xlink:href') + ',B' : checkColor(t1.getAttribute('fill')), 'zSort', 0, '<', container)
+							} else mesh.S('material', type == 'image' ? t1.getAttribute('xlink:href') + ',B' : checkColor(t1.getAttribute('fill')), 'zSort', 0, '<', container,'alpha',(tAlpha=t1.getAttribute('opacity')) ? tAlpha: 1)
 						}
 						return container
 					}
