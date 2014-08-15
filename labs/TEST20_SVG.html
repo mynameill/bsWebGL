@@ -65,7 +65,7 @@
 
 					return function (svg) {
 						var etc = '', r1 = /^[a-z]|[A-Z]/
-						var i, j = 0, k, k2, t0 = svg.childNodes, len = t0.length, len2, svgChild = [], type, t1, t2, t3
+						var i, j = 0, k, k2, t0 = svg.childNodes, len = t0.length, len2, svgChild = [], type, t1, t2, t3, t4, t4p, t5
 						for (i = 0; i < len; i++) (t0[i].nodeType != 3 && t0[i].nodeType != 8) ? svgChild.push(t0[i]) : 0
 						var container = bs.GL.Mesh('rect').S('material', '#eee')
 						var hasC = 0
@@ -97,51 +97,49 @@
 								etc = 'd', t2 = t1.getAttribute('d').split(' ')
 								hasC = 0
 								for (k = 0, len = chunks.length; k < len; k++) {
-									action = chunks[k].key.toUpperCase()
+									t4 = chunks[k], t4p = t4.point
+									action = t4.key.toUpperCase()
 									if (action == 'C') {
 										hasC = 1
-										var result = []
-										var cp = [
-											{x: chunks[k - 1].point[0], y: chunks[k - 1].point[1]},
-											{x: chunks[k].point[0], y: chunks[k].point[1]},
-											{x: chunks[k].point[2], y: chunks[k].point[3]},
-											{x: chunks[k].point[4], y: chunks[k].point[5]}
+										var result = [], cp = [
+											{x: chunks[k - 1].point[chunks[k - 1].point.length - 2], y: chunks[k - 1].point[chunks[k - 1].point.length - 1]},
+											{x: t4p[0], y: t4p[1]},
+											{x: t4p[2], y: t4p[3]},
+											{x: t4p[4], y: t4p[5]}
 										]
-										for (k2 = 0; k2 < divideNum; k2++) result[k2] = PointOnCubicBezier(cp, k2 * 1.0 / ( divideNum - 1 ));
-										for (var k2 = 0; k2 < result.length; k2++)  vs.push(result[k2].x), vs.push(-result[k2].y), vs.push(result[k2].z)
+										for (k2 = 0; k2 < divideNum; k2++) result[k2] = cubicBezier(cp, k2 * 1.0 / ( divideNum - 1 ));
+										for (k2 = 0, len2 = result.length; k2 < len2; k2++) t5 = result[k2], vs.push(t5[0]), vs.push(-t5[1]), vs.push(t5[2])
 									}
 									else {
-										for (k2 = 0, len2 = chunks[k].point.length; k2 < len2; k2++) {
-											if (action == 'M' || action == 'L') vs.push((k2 % 2 == 1 ? -1 : 1) * chunks[k].point[k2]), k2 == chunks[k].point.length - 1 ? vs.push(0) : 0
+										for (k2 = 0, len2 = t4p.length; k2 < len2; k2++) {
+											if (action == 'M' || action == 'L') vs.push((k2 % 2 == 1 ? -1 : 1) * t4p[k2]), k2 == t4p.length - 1 ? vs.push(0) : 0
 										}
 									}
 								}
 							}
 							if (type != 'rect' && type != 'image' && type != 'circle' && type != 'ellipse') {
 								var name = type + (etc == '' ? '' : t1.getAttribute(etc)), tAlpha;
-								bs.GL.makeBufferSet(name, vs, is, []), mesh = bs.GL.Mesh(name).S('zSort', 0, '<', container, 'alpha', (tAlpha = t1.getAttribute('opacity')) ? tAlpha : 1),
-												type == 'path' ? (
-												hasC ? mesh.S('renderMode', 'LINE_STRIP', 'material', checkColor(t1.getAttribute('stroke'))) : mesh.S('renderMode', 'TRIANGLE_FAN', 'material', checkColor(t1.getAttribute('fill')))
-												) :
+								bs.GL.makeBufferSet(name, vs, is, []),
+										mesh = bs.GL.Mesh(name).S('zSort', 0, '<', container, 'alpha', (tAlpha = t1.getAttribute('opacity')) ? tAlpha : 1),
+												type == 'path' ? (hasC ? mesh.S('renderMode', 'LINE_STRIP', 'material', checkColor(t1.getAttribute('stroke'))) : mesh.S('renderMode', 'TRIANGLE_FAN', 'material', checkColor(t1.getAttribute('fill')))) :
 												type == 'polyline' ? mesh.S('renderMode', 'LINE_STRIP', 'material', checkColor(t1.getAttribute('stroke'))) :
 												type == 'polygon' ? mesh.S('material', checkColor(t1.getAttribute('fill'))) :
 												type == 'line' ? mesh.S('renderMode', 'LINES', 'material', checkColor(t1.getAttribute('stroke'))) : 0
 							} else mesh.S('material', type == 'image' ? t1.getAttribute('xlink:href') + ',B' : checkColor(t1.getAttribute('fill')), 'zSort', 0, '<', container, 'alpha', (tAlpha = t1.getAttribute('opacity')) ? tAlpha : 1)
 						}
 
-						function PointOnCubicBezier(cp, t) {
-							var ax, bx, cx;
-							var ay, by, cy;
+						function cubicBezier(cp, t) {
+							var ax, bx, cx, ay, by, cy;
 							var tSquared, tCubed;
-							var result = {};
+							var result = [];
 							/* 다항식 계수를 계산한다 */
 							cx = 3.0 * (cp[1].x - cp[0].x), bx = 3.0 * (cp[2].x - cp[1].x) - cx, ax = cp[3].x - cp[0].x - cx - bx,
 									cy = 3.0 * (cp[1].y - cp[0].y), by = 3.0 * (cp[2].y - cp[1].y) - cy, ay = cp[3].y - cp[0].y - cy - by,
 								/* 매개변수 값 t에서 곡선 점을 계산한다 */
-									tSquared = t * t, tCubed = tSquared * t;
-							result.x = (ax * tCubed) + (bx * tSquared) + (cx * t) + cp[0].x,
-									result.y = (ay * tCubed) + (by * tSquared) + (cy * t) + cp[0].y,
-									result.z = 0
+									tSquared = t * t, tCubed = tSquared * t,
+									result.push((ax * tCubed) + (bx * tSquared) + (cx * t) + cp[0].x),
+									result.push((ay * tCubed) + (by * tSquared) + (cy * t) + cp[0].y),
+									result.push(0)
 							return result;
 						}
 
