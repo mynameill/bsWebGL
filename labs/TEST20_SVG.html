@@ -45,6 +45,7 @@
 		bs.require(function () {
 			bs.GL.init('#glCanvas', '../shaders.js', init)
 			function init() {
+				bs.GL.controller.S('distance',1000)
 				//파서테스트
 				//svg파서 개발을 위한 초기 테스트
 				bs.GL['parserSVG'] = (function () {
