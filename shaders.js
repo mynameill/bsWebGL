@@ -210,6 +210,8 @@
 	}
 	addShader(bitmap)
 
+
+
 	var video={
 		UUId:'video',useLight:0,pid:9,
 		attribute:['vec3_aVer','vec2_aTexC'],
@@ -457,6 +459,24 @@
 			' if(alpha<0.1) discard;'
 	}
 	addShader(text)
+
+	var canvas={
+		UUId:'canvas',useLight:0,pid:10,
+		attribute:['vec3_aVer','vec2_aTexC'],
+		v_uniform:[],
+		f_uniform:['sampler2D_uSam'],
+		varying : ['vec2_vTexC','float_vAlpha'],
+		vFunc:''+
+			' gl_PointSize = uPointSize;\n'+
+			' vTexC = aTexC;\n'+
+			' vAlpha = uAlpha;\n'+
+			' gl_Position = uPerspectMTX * uCameraMTX * vertex;',
+		fFunc:''+
+			'vec4 src = texture2D(uSam, vec2(vTexC.s, vTexC.t));\n'+
+			' float alpha = src.a;\n'
+//			' if(alpha<0.1) discard;'
+	}
+	addShader(canvas)
 
 	var sky={
 		UUId:'sky',useLight:0,pid:100,

@@ -250,7 +250,7 @@
 		GL={
 			init:(function(){
 				function _init( id, endCallBack, failCallback ){
-					var i,keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,preserveDrawingBuffer:1*/};
+					var i,keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,*/preserveDrawingBuffer:1};
 					if( cvs ) return console.log( '중복초기화 방지' );
 					cvs=document.getElementById( id.substr( 1, id.length-1 ) ),i=keys.length
 					while( i-- ) if( gl=cvs.getContext( keys[i], keys2 ) ) break
@@ -280,11 +280,13 @@
 					Environment:{uL:1, useCube:1, uN:1}, Cube:{uL:0, useCube:1}, CubeLight:{uL:1, useCube:1, uN:1}, Sky:{useCube:1}
 				}
 				t0.Text={}
+				t0.Canvas={}
+
 				for( k in t0 ){ // LINEAR_MIPMAP_LINEAR, NEAREST_MIPMAP_LINEAR, LINEAR_MIPMAP_NEAREST, NEAREST_MIPMAP_NEAREST,NEAREST,LINEAR 못외우것음 -_-
 					(function(){
 						i=uniforms.length
 						while( i-- ) t0[k][uniforms[i]] ? 0 : (t0[k][uniforms[i]]=0)
-						var pk=k.charAt( 0 ).toLowerCase()+k.substr( 1, k.length-1 ), mat=t0[k], uL=mat['uL'], uN=mat['uN'], t5=mat['video'] ? 1 : (mat['text'] ? 2 : 0)
+						var pk=k.charAt( 0 ).toLowerCase()+k.substr( 1, k.length-1 ), mat=t0[k], uL=mat['uL'], uN=mat['uN'], t5=mat['video'] ? 1 : (mat['text'] ? 2 : mat['canvas'] ? 2 : 0)
 						mat['uC'] ? (mat=function(){this._color='#ffffff', this._r=255, this._g=255, this._b=255, this.program=Ps[pk]}, fn=mat.prototype=new t, fn['color']=sMethod.prototype['color']) :
 						mat['uD'] ? (mat=function(){ this.texture=this.textureNormal=null, this.program=Ps[pk]}, fn=mat.prototype=new t, fn['src']=function( src ){ this.texture=UTIL.makeTexture( src, 'REPEAT', 'LINEAR', 'LINEAR_MIPMAP_NEAREST', t5 )}) :
 						mat['useCube'] ? (mat=function(){this.texture=null, this.program=Ps[pk]}, fn=mat.prototype=new t, fn['src']=function( src ){ this.texture=UTIL.makeTexture( src )}) : 0
@@ -323,6 +325,19 @@
 				etc.fn = fn
 				var textFn='text,size,color,align,textBaseline,lineHeight,fontWeight,font,fontStyle,bgColor,useBgColor'.split( ',' ), i=textFn.length
 				while(i--) (function(){var k=textFn[i], k2='_'+k;fn[k]=function(v){if(v!=undefined) this[k2]=v, this._draw(this._text);else return this[k2]}})()
+				etc=t0['Canvas']=function(){
+					this.program=Ps['canvas'], this.texture=gl.createTexture(), this.texture.loaded=0,
+					this.texture.canvas=document.createElement( 'canvas' ), this.texture.context=this.texture.canvas.getContext( "2d" )
+					this.src=function(t){this.texture.canvas=t[0], this.texture.context=t[1],this._draw()}
+					this._updateTexture=function( t ){
+						gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.bindTexture( gl.TEXTURE_2D, t ), gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, t.canvas ),
+							gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ),
+							gl.bindTexture( gl.TEXTURE_2D, null ), t.loaded=1
+						// TODO 밉맵생성에 대해서 고민...좀..
+					}
+				}, fn=etc.prototype=new t,fn['_draw']=function(){
+					this._updateTexture( this.texture )
+				}
 				return function( k ){ return new t0[k.charAt( 0 ).toUpperCase()+k.substr( 1, k.length-1 )]()}
 			})(),
 			Mesh:(function(){
