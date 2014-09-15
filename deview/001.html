@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+
+<script>
+	bs(function(){
+
+		bs.require(function () {
+			bs.GL.init('#glCanvas', 'http://projectbs.github.io/bsWebGL/shaders.js', init)
+			function init() {
+				var skyMap = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
+				bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
+
+				bs.GL.controller.distance=1000
+
+				// src, type, callback
+				bs.GL.parserOBJ('test2.obj', 'head', function () {
+//					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/environ/right.jpg,BL', 'scaleX', 1.1, 'scaleY', 1.1, 'scaleZ', 1.1, 'z', 0, 'id', 'idTest','renderMode','POINTS')
+					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/environ/right.jpg,BL', 'scaleX', 1.1, 'scaleY', 1.1, 'scaleZ', 1.1, 'z', 0, 'id', 'idTest')
+
+				})
+			}
+		}, 'http://projectbs.github.io/bsWebGL/gl.js')
+
+
+	})
+</script>
+</body>
+</html>

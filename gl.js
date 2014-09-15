@@ -332,6 +332,7 @@
 					this._updateTexture=function( t ){
 						gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.bindTexture( gl.TEXTURE_2D, t ), gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, t.canvas ),
 							gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ),
+
 							gl.bindTexture( gl.TEXTURE_2D, null ), t.loaded=1
 						// TODO 밉맵생성에 대해서 고민...좀..
 					}
@@ -403,7 +404,7 @@
 				},
 				ISO=function(){
 					var t=new camera(), t0, t1, dx, dy, rTilt=PI/2, rPan=PI/2, mx=GL.mobile ? 'mx0' : 'mx', my=GL.mobile ? 'my0' : 'my';
-					t.distance=500, t.speed=1, t.speedDelay=0.05, t.tilt=PI/2, t.pan=PI/2,
+					t.distance=1000, t.speed=1, t.speedDelay=0.05, t.tilt=PI/2, t.pan=PI/2,
 					t._updateDrag=function( $e ){ this.mouseDowned*this.enable ? (dx=$e[mx], dy= -$e[my], this.tilt+=(dx)/GL._w*PI*this.speed, this.pan+=(dy)/GL._h/2*PI*this.speed ) : 0},
 					t.update=function( mtx ){
 						this.perspectiveUpdate( mtx ), t0=this.cameraMTX=mat4.identity( t.cameraMTX ), t1=this.distance
@@ -453,7 +454,7 @@
 		GL['parserOBJ']=function(src,type,callback){
 			bs.get(function(data){
 				// TODO 파서는 나중에 좀더 파자.............잘몰것다 -_-// TODO 다중 재질 어케파싱할건가에 대한 고려필요// TODO 애니메이션 어케파싱할건가에 대한 고려...
-				console.log(data)
+//				console.log(data)
 				var v=[], n=[], c=[], _hi={}, _index=0, _v=[], _n=[], _c=[], _i=[], t0=data.split('\n'), i=0, j, len, len2,t1;
 				len=t0.length
 				while(len--){ t1=t0[i],i++
