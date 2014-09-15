@@ -19,11 +19,14 @@
 				bs.GL.controller.distance=2000
 
 				// src, type, callback
-				bs.GL.parserOBJ('test3.obj', 'head', function () {
-//					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/environ/right.jpg,BL', 'scaleX', 1.1, 'scaleY', 1.1, 'scaleZ', 1.1, 'z', 0, 'id', 'idTest','renderMode','POINTS')
-					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/environ/right.jpg,BL', 'scaleX', 1.1, 'scaleY', 1.1, 'scaleZ', 1.1, 'z', 0, 'id', 'idTest')
+				bs.GL.parserOBJ('frame.obj', 'head', function () {
+					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/environ/right.jpg,BL')
+					bs.GL.parserOBJ('window.obj', 'window', function () {
+						bs.GL.Mesh('window').S('<', bs.GL, 'material', '#fff','alpha',0.1)
 
+					})
 				})
+
 			}
 		}, 'http://projectbs.github.io/bsWebGL/gl.js')
 
