@@ -34,9 +34,29 @@
 
 				// src, type, callback
 				bs.GL.parserOBJ('frame.obj', 'head', function () {
-					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/environ/right.jpg,BL')
+					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/t1.jpg,BL')
 					bs.GL.parserOBJ('window.obj', 'window', function () {
 						bs.GL.Mesh('window').S('<', bs.GL, 'material', '#fff','alpha',0.1)
+
+					})
+					bs.GL.parserOBJ('sofa.obj', 'sofa', function () {
+						bs.GL.Mesh('sofa').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('table1.obj', 'table1', function () {
+						bs.GL.Mesh('table1').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('table2.obj', 'table2', function () {
+						bs.GL.Mesh('table2').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('coutain.obj', 'coutain', function () {
+						bs.GL.Mesh('coutain').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('obj1.obj', 'obj1', function () {
+						bs.GL.Mesh('obj1').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
 
 					})
 				})
