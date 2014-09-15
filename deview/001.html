@@ -16,7 +16,7 @@
 				var skyMap = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
 				bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
 
-				bs.GL.controller.distance=1000
+				bs.GL.controller.distance=2000
 
 				// src, type, callback
 				bs.GL.parserOBJ('test3.obj', 'head', function () {
