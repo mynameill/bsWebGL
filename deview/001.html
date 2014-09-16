@@ -34,7 +34,7 @@
 
 				// src, type, callback
 				bs.GL.parserOBJ('frame.obj', 'head', function () {
-					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/t1.jpg,BL')
+					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/t3.jpg,BL')
 					bs.GL.parserOBJ('window.obj', 'window', function () {
 						bs.GL.Mesh('window').S('<', bs.GL, 'material', '#fff','alpha',0.1)
 
@@ -51,12 +51,36 @@
 						bs.GL.Mesh('table2').S('<', bs.GL, 'material',  'assets/table2.jpg,BL')
 
 					})
+					bs.GL.parserOBJ('table3.obj', 'table3', function () {
+						bs.GL.Mesh('table3').S('<', bs.GL, 'material',  'assets/table2.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('tv.obj', 'tv', function () {
+						bs.GL.Mesh('tv').S('<', bs.GL, 'material',  'assets/table2.jpg,BL')
+
+					})
 					bs.GL.parserOBJ('coutain.obj', 'coutain', function () {
 						bs.GL.Mesh('coutain').S('<', bs.GL, 'material',  'assets/coutain.jpg,BL')
 
 					})
+					bs.GL.parserOBJ('coutain2.obj', 'coutain2', function () {
+						bs.GL.Mesh('coutain2').S('<', bs.GL, 'material',  'assets/coutain.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('coutain3.obj', 'coutain3', function () {
+						bs.GL.Mesh('coutain3').S('<', bs.GL, 'material',  'assets/coutain.jpg,BL')
+
+					})
 					bs.GL.parserOBJ('obj1.obj', 'obj1', function () {
 						bs.GL.Mesh('obj1').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
+						bs.GL.Mesh('winFrame').S('<', bs.GL, 'material',  'assets/sofa.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('floor1.obj', 'floor1', function () {
+						bs.GL.Mesh('floor1').S('<', bs.GL, 'material',  'assets/floor1.jpg,BL')
 
 					})
 				})
