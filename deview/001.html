@@ -25,12 +25,12 @@
 	bs(function(){
 
 		bs.require(function () {
-			bs.GL.init('#glCanvas', 'http://projectbs.github.io/bsWebGL/shaders.js', init)
+			bs.GL.init('#glCanvas', '../shaders.js', init)
 			function init() {
 				var skyMap = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
 				bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
 
-				bs.GL.controller.distance=2000
+				bs.GL.controller.distance=1200
 
 				// src, type, callback
 				bs.GL.parserOBJ('frame.obj', 'head', function () {
@@ -55,6 +55,10 @@
 						bs.GL.Mesh('table3').S('<', bs.GL, 'material',  'assets/table2.jpg,BL')
 
 					})
+					bs.GL.parserOBJ('table4.obj', 'table4', function () {
+						bs.GL.Mesh('table4').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
+
+					})
 					bs.GL.parserOBJ('tv.obj', 'tv', function () {
 						bs.GL.Mesh('tv').S('<', bs.GL, 'material',  'assets/table2.jpg,BL')
 
@@ -68,11 +72,15 @@
 
 					})
 					bs.GL.parserOBJ('coutain3.obj', 'coutain3', function () {
-						bs.GL.Mesh('coutain3').S('<', bs.GL, 'material',  'assets/coutain.jpg,BL')
+						bs.GL.Mesh('coutain3').S('<', bs.GL, 'material',  'assets/coutain3.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('coutain_top.obj', 'coutain_top', function () {
+						bs.GL.Mesh('coutain_top').S('<', bs.GL, 'material',  'assets/coutain_top.jpg,BL')
 
 					})
 					bs.GL.parserOBJ('obj1.obj', 'obj1', function () {
-						bs.GL.Mesh('obj1').S('<', bs.GL, 'material',  'assets/t1.jpg,BL')
+						bs.GL.Mesh('obj1').S('<', bs.GL, 'material',  'assets/obj1.jpg,BL')
 
 					})
 					bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
@@ -86,7 +94,7 @@
 				})
 
 			}
-		}, 'http://projectbs.github.io/bsWebGL/gl.js')
+		}, '../gl.js')
 
 
 	})

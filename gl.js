@@ -399,7 +399,7 @@
 				var mC=Math.cos, mS=Math.sin, PI=Math.PI;
 				camera.prototype={
 					data:{x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0},d3:new Float32Array( 3 ),
-					fov:55, near:0.1, far:15000, cameraMTX:mat4.create(),mouseDowned:0, enable:1,
+					fov:55, near:100, far:15000, cameraMTX:mat4.create(),mouseDowned:0, enable:1,
 					S:sMethod.prototype.S,perspectiveUpdate:function( mtx ){ mat4.perspective(this.fov, GL._w/GL._h, this.near, this.far, mtx);if(!this.enable) return},_updateDrag:function(){},
 				},
 				ISO=function(){
