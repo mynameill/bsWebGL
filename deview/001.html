@@ -131,16 +131,18 @@
 					})
 
 					setTimeout(function(){
-						bs.GL.Mesh('frame').S('<', bs.GL, 'material', 'assets/t3.jpg,BL')
-						bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
-							bs.GL.Mesh('winFrame').S('<', bs.GL, 'material',  '#fff, L')
-
-						})
-
 						bs.GL.parserOBJ('window.obj', 'window', function () {
 							bs.GL.Mesh('window').S('<', bs.GL, 'material', '#fff','alpha',0.1)
 
 						})
+						bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
+							bs.GL.Mesh('winFrame').S('<', bs.GL, 'material',  '#fff, L')
+
+						})
+						bs.GL.Mesh('frame').S('<', bs.GL, 'material', 'assets/t3.jpg,BL')
+
+
+
 					},1000)
 				})
 
