@@ -35,20 +35,12 @@
 				})
 				var skyMap = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
 				bs.GL.S('skybox', bs.GL.SkyBox().S('material', skyMap))
-
-				bs.GL.controller.distance=1200
+//				bs.GL.backgroundColor('#000000')
+				bs.GL.controller.distance=1500
 
 				// src, type, callback
-				bs.GL.parserOBJ('frame.obj', 'head', function () {
-					bs.GL.Mesh('head').S('<', bs.GL, 'material', 'assets/t3.jpg,BL')
-					bs.GL.parserOBJ('window.obj', 'window', function () {
-						bs.GL.Mesh('window').S('<', bs.GL, 'material', '#fff','alpha',0.1)
+				bs.GL.parserOBJ('frame.obj', 'frame', function () {
 
-					})
-					bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
-						bs.GL.Mesh('winFrame').S('<', bs.GL, 'material',  '#fff, L')
-
-					})
 					bs.GL.parserOBJ('sofa.obj', 'sofa', function () {
 						bs.GL.Mesh('sofa').S('<', bs.GL, 'material',  'assets/sofa.jpg,BL')
 
@@ -67,6 +59,10 @@
 					})
 					bs.GL.parserOBJ('table4.obj', 'table4', function () {
 						bs.GL.Mesh('table4').S('<', bs.GL, 'material',  'assets/table4.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('table5.obj', 'table5', function () {
+						bs.GL.Mesh('table5').S('<', bs.GL, 'material',  'assets/table5.jpg,BL')
 
 					})
 					bs.GL.parserOBJ('tv.obj', 'tv', function () {
@@ -101,8 +97,26 @@
 						bs.GL.Mesh('artwall2').S('<', bs.GL, 'material',  'assets/artwall2.jpg,BL')
 					})
 
+					bs.GL.parserOBJ('k1.obj', 'k1', function () {
+						bs.GL.Mesh('k1').S('<', bs.GL, 'material',  'assets/k1.jpg,BL')
+					})
 
+					bs.GL.parserOBJ('bed1_1.obj', 'bed1_1', function () {
+						bs.GL.Mesh('bed1_1').S('<', bs.GL, 'material',  'assets/bed1_1.jpg,BL')
 
+					})
+					bs.GL.parserOBJ('bed1_2.obj', 'bed1_2', function () {
+						bs.GL.Mesh('bed1_2').S('<', bs.GL, 'material',  'assets/bed1_2.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('bed1_3.obj', 'bed1_3', function () {
+						bs.GL.Mesh('bed1_3').S('<', bs.GL, 'material',  'assets/bed1_3.jpg,BL')
+
+					})
+					bs.GL.parserOBJ('bed1_4.obj', 'bed1_4', function () {
+						bs.GL.Mesh('bed1_4').S('<', bs.GL, 'material',  'assets/bed1_4.jpg,BL')
+
+					})
 					bs.GL.parserOBJ('floor1.obj', 'floor1', function () {
 						bs.GL.Mesh('floor1').S('<', bs.GL, 'material',  'assets/floor1.jpg,BL')
 					})
@@ -116,7 +130,18 @@
 						bs.GL.Mesh('floor4').S('<', bs.GL, 'material',  'assets/floor4.jpg,BL')
 					})
 
+					setTimeout(function(){
+						bs.GL.Mesh('frame').S('<', bs.GL, 'material', 'assets/t3.jpg,BL')
+						bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
+							bs.GL.Mesh('winFrame').S('<', bs.GL, 'material',  '#fff, L')
 
+						})
+
+						bs.GL.parserOBJ('window.obj', 'window', function () {
+							bs.GL.Mesh('window').S('<', bs.GL, 'material', '#fff','alpha',0.1)
+
+						})
+					},1000)
 				})
 
 			}
