@@ -39,6 +39,10 @@
 						bs.GL.Mesh('window').S('<', bs.GL, 'material', '#fff','alpha',0.1)
 
 					})
+					bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
+						bs.GL.Mesh('winFrame').S('<', bs.GL, 'material',  '#fff, L')
+
+					})
 					bs.GL.parserOBJ('sofa.obj', 'sofa', function () {
 						bs.GL.Mesh('sofa').S('<', bs.GL, 'material',  'assets/sofa.jpg,BL')
 
@@ -83,14 +87,30 @@
 						bs.GL.Mesh('obj1').S('<', bs.GL, 'material',  'assets/obj1.jpg,BL')
 
 					})
-					bs.GL.parserOBJ('winFrame.obj', 'winFrame', function () {
-						bs.GL.Mesh('winFrame').S('<', bs.GL, 'material',  'assets/sofa.jpg,BL')
 
+					bs.GL.parserOBJ('artwall.obj', 'artwall', function () {
+						bs.GL.Mesh('artwall').S('<', bs.GL, 'material',  'assets/artwall.png,BL')
 					})
+					bs.GL.parserOBJ('artwall2.obj', 'artwall2', function () {
+						bs.GL.Mesh('artwall2').S('<', bs.GL, 'material',  'assets/artwall2.jpg,BL')
+					})
+
+
+
 					bs.GL.parserOBJ('floor1.obj', 'floor1', function () {
 						bs.GL.Mesh('floor1').S('<', bs.GL, 'material',  'assets/floor1.jpg,BL')
-
 					})
+					bs.GL.parserOBJ('floor2.obj', 'floor2', function () {
+						bs.GL.Mesh('floor2').S('<', bs.GL, 'material',  'assets/floor2.jpg,BL')
+					})
+					bs.GL.parserOBJ('floor3.obj', 'floor3', function () {
+						bs.GL.Mesh('floor3').S('<', bs.GL, 'material',  'assets/floor3.jpg,BL')
+					})
+					bs.GL.parserOBJ('floor4.obj', 'floor4', function () {
+						bs.GL.Mesh('floor4').S('<', bs.GL, 'material',  'assets/floor4.jpg,BL')
+					})
+
+
 				})
 
 			}
