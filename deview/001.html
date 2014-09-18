@@ -36,7 +36,7 @@
 //				} )
 				var skyMap = bs.GL.Material( 'sky' ).S( 'src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"] )
 				bs.GL.S( 'skybox', bs.GL.SkyBox().S( 'material', skyMap ) )
-//				bs.GL.backgroundColor('#000000')
+				bs.GL.backgroundColor('#eee')
 				bs.GL.controller.distance = 1500
 				bs.GL.directionalLight.S( 'intensity', 0.5 )
 				bs.GL.ambientLight.S( 'color', '#666' )
@@ -46,27 +46,35 @@
 					var list = 'out,winFrame,'
 					list += 'frame_room1_1,frame_room1_2,frame_room2_1,frame_room3_1,'
 					list += 'floor1,floor2,floor3,floor4,floor5,floor_etc,'
-					list += 'kit_1,kit_2,kit_3,kit_4,kit_5,kit_6,kit_7,'
-					list += 'bath1,bath2,bath3,bath4,bath5,bath6,bath7,bath8,bath9,bath10,bath11,bath12,bath13,bath14,'
-					list += 'dress_frame,'
+					list += 'kit_1,kit_2,kit_3,kit_4,kit_5,kit_6,kit_7,kit_8,'
+					list += 'bath1,bath2,bath3,bath4,bath5,bath6,bath7,bath8,bath9,bath10,bath11,bath12,bath13,bath14,bath15,'
+					list += 'dress_frame,dress_obj,'
 					list += 'door_frame,door_frame2,door_frame3,'
-					list += 'frame_living1,frame_living2,frame_living3,frame_living4,frame_living5,frame_living6,'
-					list += 'bed1_1,bed1_2,bed1_3,bed1_4,bed1_5,bed1_6,bed1_7,bed1_frame,bed1_frame2,'
+					list += 'frame_living1,frame_living2,frame_living3,frame_living4,frame_living5,frame_living6,frame_living7,frame_living8,'
+					list += 'bed1_1,bed1_2,bed1_3,bed1_4,bed1_5,bed1_6,bed1_7,bed1_8,bed1_frame,bed1_frame2,'
 					list += 'bed2_1,bed2_2,bed2_3,bed2_frame,bed2_frame,bed2_frame2,'
 					list += 'bed3_1,bed3_2,bed3_3,bed3_4,bed3_5,bed3_6,bed3_7,bed3_frame,bed3_frame2,'
 					list += 'sofa,table1,table2,table3,table4,table5,tv,coutain,coutain2,coutain3,coutain_top,obj1,artwall,artwall2,k1'
 					list = list.split( ',' )
 
-					var len = list.length
-					while( len-- ){
-						(function() {
-							var str = list[len]
-							bs.GL.parserOBJ( 'assets/obj/' + str + '.obj', str, function() {
-								bs.GL.Mesh( str ).S( '<', bs.GL, 'material', 'assets/' + str + '.jpg,BL' )
+					var objLoad = function($list,$type){
+						var len = $list.length
+						while( len-- ){
+							(function() {
+								var str = $list[len]
+								bs.GL.parserOBJ( 'assets/obj/' + str + '.obj', str, function() {
+									bs.GL.Mesh( str ).S( '<', bs.GL, 'material', 'assets/' + str + '.'+$type )
 
-							} )
-						})()
+								} )
+							})()
+						}
 					}
+
+					objLoad(list,'jpg,BL')
+					var list = 'rug1,rug2,rug3'.split(',')
+					objLoad(list,'png,B')
+
+
 
 					setTimeout( function() {
 
@@ -79,7 +87,7 @@
 							bs.GL.Mesh( 'top' ).S( '<', bs.GL, 'material', '#000' )
 
 						} )
-//						bs.GL.Mesh( 'frame' ).S( '<', bs.GL, 'material', 'assets/t3.jpg,BL' )
+
 
 					}, 1000 )
 				} )
