@@ -20,7 +20,7 @@
 	<script src="http://projectbs.github.io/bsJS/bsjs.0.6.js"></script>
 </head>
 <body>
-
+<div id='check' style="position:absolute;top:0px;left:0px;z-index:10000;width:300px;height:300px;overflow-y:scroll"></div>
 <script>
 	bs( function() {
 
@@ -62,7 +62,7 @@
 				function loadChecker( $list ) {
 					bs.get( function() {
 						len++
-						if( len < list.length ) console.log( 'assets/obj/' + $list[len] + '.obj' ), loadChecker( $list )
+						if( len < list.length ) bs.Dom('#check').S('+html','assets/obj/' + $list[len] + '.obj<br>'+'assets/map/' + $list[len]+'.jpg<br>'),console.log( 'assets/obj/' + $list[len] + '.obj' ), loadChecker( $list )
 						else{
 							console.log( '완료' )
 							objLoad( $list, 'jpg,BL' ),
@@ -86,13 +86,6 @@
 					}
 				}
 
-//				bs.GL.parserOBJ( 'assets/obj/window.obj', 'window', function() {
-//					bs.GL.Mesh( 'window' ).S( '<', bs.GL, 'material', '#fff', 'alpha', 0.1 )
-//				} )
-//				bs.GL.parserOBJ( 'assets/obj/top.obj', 'top', function() {
-//					bs.GL.Mesh( 'top' ).S( '<', bs.GL, 'material', '#000' )
-//
-//				})
 
 			}
 		}, '../gl.js' )
