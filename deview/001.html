@@ -39,7 +39,7 @@
 				var skyMap = bs.GL.Material( 'sky' ).S( 'src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"] )
 				bs.GL.S( 'skybox', bs.GL.SkyBox().S( 'material', skyMap ) )
 				bs.GL.backgroundColor( '#eee' )
-				bs.GL.controller.distance = 1500
+				bs.GL.controller.distance = 1300
 				bs.GL.directionalLight.S( 'intensity', 0.5 )
 				bs.GL.ambientLight.S( 'color', '#666' )
 
@@ -68,7 +68,14 @@
 						else{
 							var str = $list[len]
 							if( str ){
-								bs.Dom( '#per' ).S( 'html', len * 2 + '/' + list.length * 2 ), bs.Dom( '#check' ).S( '+html', 'assets/obj/' + $list[len] + '.obj<br>' + 'assets/map/' + $list[len] + '.jpg<br>' ), console.log( 'assets/obj/' + $list[len] + '.obj' ), loadChecker( $list )
+								bs.Dom( '#per' ).S(
+										'html', len * 2 + '/' + list.length * 2
+												+ '<br>triangle : ' + bs.GL.debug.triangles
+												+ '<br>num Object : ' + bs.GL.children.length
+								),
+								bs.Dom( '#check' ).S( '+html', 'assets/obj/' + $list[len] + '.obj<br>' + 'assets/map/' + $list[len] + '.jpg<br>'
+								), console.log( 'assets/obj/' + $list[len] + '.obj' ), loadChecker( $list )
+
 								bs.GL.parserOBJ( 'assets/obj/' + str + '.obj', str, function() {
 									bs.GL.Mesh( str ).S( '<', bs.GL, 'material', 'assets/map/' + str + '.' + 'jpg,BL' )
 								} )
