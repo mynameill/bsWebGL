@@ -260,6 +260,11 @@
 							gl.viewport( 0, 0, w, h ), UTIL.mkFrameBuffer( 'pre', w, h, 1.0, 1.0 ), UTIL.mkFrameBuffer( 'mouse', w/15, h/15, 1/15, 1/15 )
 						}),
 						(function tick(){debuger.render(), render(), requestAnimationFrame( tick )})(),(function tick(){if( GL.controller ) GL.controller.update( perspectMTX );requestAnimationFrame( tick )})(),
+//						(function tick(){debuger.render(), render(), requestAnimationFrame( tick )})(),
+//					setInterval(function(){
+//						if( GL.controller ) GL.controller.update( perspectMTX );
+//					},16),
+
 						GL.backgroundColor('#000'),endCallBack()
 					else console.log( 'WEBGL을 지원하지 않는 브라우져입니다' ), failCallback ? failCallback() : 0
 				}
@@ -395,7 +400,7 @@
 				return function( _k ){ return new Particle( _k )}
 			})(),
 			Controller:(function(){
-				var camera=function(){},ISO,NONE;
+				var camera=function(){},ISO,NONE,PVR;
 				var mC=Math.cos, mS=Math.sin, PI=Math.PI;
 				camera.prototype={
 					data:{x:0, y:0, z:0, rotationX:0, rotationY:0, rotationZ:0},d3:new Float32Array( 3 ),
@@ -405,26 +410,51 @@
 				ISO=function(){
 					var t=new camera(), t0, t1, dx, dy, rTilt=PI/2, rPan=PI/2, mx=GL.mobile ? 'mx0' : 'mx', my=GL.mobile ? 'my0' : 'my';
 					t.distance=1000, t.speed=1, t.speedDelay=0.05, t.tilt=PI/2, t.pan=PI/2,
+						t.cx = 0, t.cy=0, t.cz=0
 					t._updateDrag=function( $e ){ this.mouseDowned*this.enable ? (dx=$e[mx], dy= -$e[my], this.tilt+=(dx)/GL._w*PI*this.speed, this.pan+=(dy)/GL._h/2*PI*this.speed ) : 0},
 					t.update=function( mtx ){
 						this.perspectiveUpdate( mtx ), t0=this.cameraMTX=mat4.identity( t.cameraMTX ), t1=this.distance
 						rPan+=(this.pan-rPan)*this.speedDelay*2, rTilt+=(this.tilt-rTilt)*this.speedDelay // 짐벌락 보정해야됨 - 왜 라디안값이 이따우지-_-
-						this.d3[0]=this.data.x=t1*mS( rPan )*mC( rTilt ), this.d3[1]=this.data.y=t1*mC( rPan ), this.d3[2]=this.data.z=t1*mS( rPan )*mS( rTilt ), mat4.translate( t0, t0, this.d3 ), mat4.lookAt( t0, this.d3, [0, 0, 0], [0, 1, 0] )
+						this.d3[0]=this.data.x=t1*mS( rPan )*mC( rTilt ), this.d3[1]=this.data.y=t1*mC( rPan ), this.d3[2]=this.data.z=t1*mS( rPan )*mS( rTilt ),
+
+						mat4.translate( t0, t0, this.d3 ), mat4.lookAt( t0, this.d3, [0, 0, 0], [0, 1, 0] )
+
 						this.data.rotationX= -Math.atan2( t0[6], t0[10] ), this.data.rotationY=Math.asin( t0[2] ), this.data.rotationZ= -Math.atan2( t0[1], t0[0] )
 					}
 					return t
 				},
+				PVR=function(){
+						var t=new camera(), t0, t1, dx, dy, rTilt=PI/2, rPan=PI/2, mx=GL.mobile ? 'mx0' : 'mx', my=GL.mobile ? 'my0' : 'my';
+						t.distance=1000, t.speed=1, t.speedDelay=0.05, t.tilt=PI/2, t.pan=PI/2,
+							t.cx = 0, t.cy=0, t.cz=0
+						t._updateDrag=function( $e ){ this.mouseDowned*this.enable ? (dx=$e[mx], dy= -$e[my], this.tilt+=(dx)/GL._w*PI*this.speed, this.pan+=(dy)/GL._h/2*PI*this.speed ) : 0},
+							t.update=function( mtx ){
+								this.perspectiveUpdate( mtx ), t0=this.cameraMTX=mat4.identity( t.cameraMTX ), t1=this.distance
+								rPan+=(this.pan-rPan)*this.speedDelay*2, rTilt+=(this.tilt-rTilt)*this.speedDelay // 짐벌락 보정해야됨 - 왜 라디안값이 이따우지-_-
+								this.d3[0]=this.data.x=t1*mS( rPan )*mC( rTilt ), this.d3[1]=this.data.y=t1*mC( rPan ), this.d3[2]=this.data.z=t1*mS( rPan )*mS( rTilt ),
+
+									mat4.translate( t0, t0, this.d3 ), mat4.lookAt( t0, this.d3, [0, 0, 0], [0, 1, 0] )
+								this.d3[0]+=this.cx,
+									this.d3[1]+=this.cy,
+									this.d3[2]+=this.cz,
+									mat4.translate( t0, t0, this.d3 ),
+									this.data.rotationX= -Math.atan2( t0[6], t0[10] ), this.data.rotationY=Math.asin( t0[2] ), this.data.rotationZ= -Math.atan2( t0[1], t0[0] )
+							}
+						return t
+					},
 				NONE=function(){
 					var t=new camera(), t0;
+					t.cx = 0, t.cy=0, t.cz=0
 						t.update=function( mtx ){
-							this.perspectiveUpdate( mtx ), t0=this.cameraMTX=mat4.identity( this.cameraMTX ), this.d3[0]=this.data.x, this.d3[1]=this.data.y, this.d3[2]=this.data.z,
-							mat4.rotateX( t0, t0, this.data.rotationX ), mat4.rotateY( t0, t0, this.data.rotationY ), mat4.rotateZ( t0, t0, this.data.rotationZ ), mat4.translate( t0, t0, d3 )
+							this.perspectiveUpdate( mtx ), t0=this.cameraMTX=mat4.identity( this.cameraMTX ), this.d3[0]=this.x, this.d3[1]=this.y, this.d3[2]=this.z,
+							mat4.rotateX( t0, t0, this.data.rotationX ), mat4.rotateY( t0, t0, this.data.rotationY ), mat4.rotateZ( t0, t0, this.data.rotationZ ), mat4.translate( t0, t0, this.d3 )
 							this.cameraMTX=t0
 						}
 					return t
 				}
 				return function( k ){ //var SIMPLE // 프리카메라//var WALK // 워킹 액션//var AUTOCAM // 3D파일에서 카메라 애니메이션을 추출 마치 비디오처럼!
 					if( k == 'ISO' ) return new ISO();
+					else if( k == 'PVR' ) return new PVR();
 					else if( k == 'NONE' ) return new NONE();
 					else console.log( '지원하지 않는 타입입니다.' )
 				}
