@@ -444,10 +444,10 @@
 					},
 				NONE=function(){
 					var t=new camera(), t0;
-					t.cx = 0, t.cy=0, t.cz=0
+					t.x = t.y= t.z = 0
 						t.update=function( mtx ){
 							this.perspectiveUpdate( mtx ), t0=this.cameraMTX=mat4.identity( this.cameraMTX ), this.d3[0]=this.x, this.d3[1]=this.y, this.d3[2]=this.z,
-							mat4.rotateX( t0, t0, this.data.rotationX ), mat4.rotateY( t0, t0, this.data.rotationY ), mat4.rotateZ( t0, t0, this.data.rotationZ ), mat4.translate( t0, t0, this.d3 )
+							mat4.rotateX( t0, t0, this.data.rotationX ), mat4.rotateY( t0, t0, this.data.rotationY ), mat4.rotateZ( t0, t0, this.data.rotationZ ),mat4.translate( t0, t0, this.d3 ),
 							this.cameraMTX=t0
 						}
 					return t
