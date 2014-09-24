@@ -250,7 +250,7 @@
 		GL={
 			init:(function(){
 				function _init( id, endCallBack, failCallback ){
-					var i,keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,*/antialias:1,antialiasing:1,preserveDrawingBuffer:1};
+					var i,keys='webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2={/*premultipliedAlpha:0,stencil:1,*/antialias:1,preserveDrawingBuffer:1};
 					if( cvs ) return console.log( '중복초기화 방지' );
 					cvs=document.getElementById( id.substr( 1, id.length-1 ) ),i=keys.length
 					while( i-- ) if( gl=cvs.getContext( keys[i], keys2 ) ) break
