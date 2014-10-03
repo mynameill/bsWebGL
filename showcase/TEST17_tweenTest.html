@@ -72,6 +72,7 @@
 				bs.ANI.ani({
 					ANI: function () {
 						time += 0.01
+						bs.GL.controller.tilt +=0.01
 						bs.GL.directionalLight.x = Math.sin(time) == 0 ? 0.01 : ms(time), bs.GL.directionalLight.y = mc(time) == 0 ? 0.01 : mc(time), bs.GL.directionalLight.z = -1
 					}
 				})
