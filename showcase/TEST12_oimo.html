@@ -40,7 +40,7 @@
 			var world, ground, bodys = [], meshs = []
 			bs.GL.init('#glCanvas', '../shaders.js', init)
 			function init() {
-				bs.Dom('<button id="add" style="position:absolute;height:100px;top:60px;left:10px">추가하기</button>').S('<', 'body')
+				bs.Dom('<button id="add" style="position:absolute;height:60px;top:60px;left:10px">추가하기</button>').S('<', 'body')
 				var mobile = bs.GL.mobile, max = mobile ? 50 : 500, mat = bs.GL.Material('bitmapLight').S('src', 'assets/t1.jpg')
 				bs.Dom('#add').S('down', function () {
 					bs.GL.Mesh('box').S('<', bs.GL, 'scaleX', 10000, 'scaleY', 1, 'scaleZ', 10000, 'y', -500, 'material', mat)
@@ -48,6 +48,7 @@
 					var i = 10
 					while (i--) addBox()
 				})
+
 
 				var map = bs.GL.Material('sky').S('src', ["assets/environ/right.jpg", "assets/environ/left.jpg", "assets/environ/bottom.jpg", "assets/environ/top.jpg", "assets/environ/front.jpg", "assets/environ/back.jpg"])
 				bs.GL.S('skybox', bs.GL.SkyBox().S('material', map))
