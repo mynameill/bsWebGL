@@ -68,12 +68,13 @@
 					}, true
 			)
 
+
 			bs.ANI.ani({
 				ANI:function(){
-					stage0.__bgColor.r = Math.random()
-					stage1.__bgColor.r = Math.random()
-					stage2.__bgColor.r = Math.random()
-					stage3.__bgColor.r = Math.random()
+					stage0._bgColor.r = Math.random()
+					stage1._bgColor.r = Math.random()
+					stage2._bgColor.r = Math.random()
+					stage3._bgColor.r = Math.random()
 				}
 			})
 
@@ -99,7 +100,7 @@
 						'>',bs.Dom('<button>false</button>' ).S(
 								'@idx',i,
 								'down',function(){
-									stageList[this.idx].background('#000'),
+									stageList[this.idx].S('background','#000'),
 									stageList[this.idx].rendering = 0
 								},'this'
 						)

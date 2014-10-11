@@ -5,7 +5,7 @@
 	var glList = [], uuid = 0, GL = function() {
 		this.__uuid = uuid++
 		this.renderMode = 'webgl', this.rendering = 1
-		this.__bgColor={r:Math.random(),g:Math.random(),b:Math.random()}
+		this._bgColor={r:Math.random(),g:Math.random(),b:Math.random()}
 		this.init.apply( this, arguments ? arguments : [] )
 		glList.push( this )
 	}, trim = /^\s*|\s*$/g, GLfn = GL.prototype, fn
@@ -26,6 +26,21 @@
 			GLfn[t0] = v( glCLS, fn ), GLfn[t0].fn = fn
 		} ),
 		GL.fn = fn, GL.cls = GLfn.cls, GL.obj = GLfn.obj,
+		GLfn.S = function(){
+			var i=0, j=arguments.length, k, v;
+			while( i < j ){
+				k=arguments[i++];
+				if( i == j ){
+					if( k == 'this' ) return this;
+					return typeof this[k] == 'function' ? this[k]() : this[k]
+				}
+				else{
+					v=arguments[i++]
+					if( v === null ) delete this[k];
+					typeof this[k] == 'function' ? this[k](v) : this[k]=v
+				}
+			}
+		},
 		// CORE
 		fn( 'init', function() {
 			var gl, keys = 'webgl,experimental-webgl,webkit-3d,moz-webgl'.split( ',' ), keys2 = {antialias: 1}, arg = arguments[0] ? arguments[0] : [], i = 1, j = arg.length, check = arg[0], t0, t1
@@ -42,7 +57,7 @@
 			var t0, r, g, b, r1=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r2=/^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
 			return function( v ) {
 				(t0 = r1.exec( v )) ? (r = parseInt( t0[1], 16 ), g = parseInt( t0[2], 16 ), b = parseInt( t0[3], 16 )) : (t0 = r2.exec( v ), r = parseInt( t0[1] + t0[1], 16 ), g = parseInt( t0[2] + t0[2], 16 ), b = parseInt( t0[3] + t0[3], 16 ))
-				this.__bgColor.r = r, this.__bgColor.g = g, this.__bgColor.b = b, this.__bgColor.hex = t0
+				this._bgColor.r = r, this._bgColor.g = g, this._bgColor.b = b, this._bgColor.hex = t0
 			}
 		})() ),
 		fn( 'background', function( v ) { this.hex_rgb( v ), this.renderMode == 'webgl' ? this.render_gl() : this.render_2d() } ),
@@ -51,7 +66,7 @@
 		fn( 'render_gl', function() {
 			if( !this.rendering ) return
 			var gl = this.__gl
-			gl.clearColor( this.__bgColor.r, this.__bgColor.g, this.__bgColor.b, 1 )
+			gl.clearColor( this._bgColor.r, this._bgColor.g, this._bgColor.b, 1 )
 			gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT )
 		} ),
 		fn( 'render_2d', function() {
