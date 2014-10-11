@@ -34,6 +34,7 @@
 			var stage1 = new bs.GL( null, 'preserveDrawingBuffer', 1 )
 			var stage2 = new bs.GL( bs.Dom( '<canvas></canvas>' ) )
 			var stage3 = new bs.GL( bs.Dom( '<canvas></canvas>' ), 'preserveDrawingBuffer', 1 )
+			var stage4 = new bs.GL()
 
 
 			bsTest( 'bs.GL:stage',
@@ -67,7 +68,15 @@
 						return result
 					}, true
 			)
-
+			bsTest( 'bs.GL:background',
+					function() {
+						stage4.S('background','#fff')
+						var result = (stage4._bgColor.r+stage4._bgColor.b+stage4._bgColor.g)== 255*3
+						stage4.S('background','#000000')
+						var result2 = (stage4._bgColor.r+stage4._bgColor.b+stage4._bgColor.g)== 0
+						return result && result2
+					}, true
+			)
 
 			bs.ANI.ani({
 				ANI:function(){
