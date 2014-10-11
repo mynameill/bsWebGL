@@ -58,6 +58,14 @@
 			stage1.OBJTEST.test()
 			console.log( stage1.Testcls() )
 
+			bs.ANI.ani( {
+				ANI: function() {
+					stage0.__bgColor.r = Math.random()
+					stage1.__bgColor.r = Math.random()
+					stage2.__bgColor.r = Math.random()
+					stage3.__bgColor.r = Math.random()
+				}
+			} )
 			var top = 77, height = 150, left = 8
 			bs.WIN.sizer( function( w, h ) {
 				stage0.cvs.S( '<', 'body', 'top', top + (height + 5) * 0, 'width', w - left * 2, 'height', height, 'left', left )
@@ -81,7 +89,8 @@
 						'>', bs.Dom( '<button>false</button>' ).S(
 								'@idx', i,
 								'down', function() {
-									stageList[this.idx].rendering = 0
+									stageList[this.idx].background( '#000' ),
+											stageList[this.idx].rendering = 0
 								}, 'this'
 						)
 				)

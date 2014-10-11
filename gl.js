@@ -265,7 +265,7 @@
 //						if( GL.controller ) GL.controller.update( perspectMTX );
 //					},16),
 
-						GL.backgroundColor('#000'),endCallBack()
+						GL.__bgColor('#000'),endCallBack()
 					else console.log( 'WEBGL을 지원하지 않는 브라우져입니다' ), failCallback ? failCallback() : 0
 				}
 				return function( id, shaderSrc, endCallBack, failCallback ){
@@ -472,7 +472,7 @@
 			makeBufferSet:UTIL.makeBufferSet,makeTexture:UTIL.makeTexture,
 			skyBox:null,controller:null,directionalLight:null, ambientLight:null,
 			children:[],debug:debuger,mobile:mobile,mat4:mat4,
-            backgroundColor:(function(){
+            __bgColor:(function(){
                 var t0,r,g,b;
                 return function(v){
                     (t0=hex.exec( v )) ? (r=parseInt( t0[1], 16 ), g=parseInt( t0[2], 16 ), b=parseInt( t0[3], 16 )) : (t0=hex_s.exec( v ), r=parseInt( t0[1]+t0[1], 16 ), g=parseInt( t0[2]+t0[2], 16 ), b=parseInt( t0[3]+t0[3], 16 ))
