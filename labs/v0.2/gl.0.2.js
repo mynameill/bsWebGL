@@ -4,7 +4,6 @@
 	'use strict';
 	var glList = [], uuid = 0, GL = function() {
 		this.__uuid = uuid++
-		this._bgColor = {r: Math.random(), g: Math.random(), b: Math.random()},
 		this.init.apply( this, arguments ? arguments : [] )
 		glList.push( this )
 	}, trim = /^\s*|\s*$/g, GLfn = GL.prototype, fn
@@ -50,7 +49,10 @@
 			t0 = (check ? check.instanceOf == bs.Dom ? check : bs.Dom( '<canvas></canvas>' ) : bs.Dom( '<canvas></canvas>' )), t1 = t0[0]
 			t0.S( 'position', 'absolute' )
 			while( i-- ) if( gl = t1.getContext( keys[i], keys2 ) ) break
-			if( gl ) this.cvs = t0, this.__gl = gl
+			if( gl ) {
+				this.cvs = t0, this.__gl = gl
+				this._bgColor = {r: Math.random(), g: Math.random(), b: Math.random()}
+			}
 			else return console.log( 'fail gl initialize' )
 		} ),
 		/////////////////////////////////////////////////////////
