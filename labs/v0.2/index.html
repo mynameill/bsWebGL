@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>001_디텍팅_심화</title>
+	<meta name="keywords" content="redcamel, webgl, bsjs, bsWebGL" />
+	<meta name="description" content="redcamel, webgl, bsjs, bsWebGL" />
+	<meta charset="utf-8" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="viewport"
+	      content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi" />
+	<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+	<style>body {
+		margin: 10;
+		padding: 10;
+		background: #333;
+		color: #fff;
+		font-size: 12px;
+	}</style>
+	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+</head>
+<body>
+<div id="testUI">
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</div>
+<script>
+	bs.debug( 1 )
+	bs( function() {
+		bs.require( function() {
+			var stage0 = new bs.GL()
+			var stage1 = new bs.GL( null, 'preserveDrawingBuffer', 1 )
+			var stage2 = new bs.GL( bs.Dom( '<canvas></canvas>' ) )
+			var stage3 = new bs.GL( bs.Dom( '<canvas></canvas>' ), 'preserveDrawingBuffer', 1 )
+
+			var top=77,height=150,left=8
+			bs.WIN.sizer( function( w, h ) {
+				stage0.cvs.S( '<', 'body', 'top', top+(height+5)*0, 'width', w - left*2, 'height', height, 'left', left )
+				stage1.cvs.S( '<', 'body', 'top', top+(height+5)*1, 'width', w - left*2, 'height', height, 'left', left )
+				stage2.cvs.S( '<', 'body', 'top', top+(height+5)*2, 'width', w - left*2, 'height', height, 'left', left )
+				stage3.cvs.S( '<', 'body', 'top', top+(height+5)*3, 'width', w - left*2, 'height', height, 'left', left )
+
+			} )
+			bs.Css('li' ).S('padding',10,'background','#555','display','inline-block')
+			bs.Css('button' ).S('padding',3,'margin',3)
+			var t0 = bs.Dom( '#testUI li' ), i = t0.length, stageList = [stage0, stage1, stage2, stage3]
+			while( i-- ){
+				bs.Dom( t0[i] ).S(
+						'>', bs.Dom( '<div>stage' + i + '. rendering</div>' ),
+						'>', bs.Dom( '<button>true</button>' ).S(
+								'@idx', i,
+								'down', function() {
+									stageList[this.idx].rendering = 1
+								}, 'this'
+						),
+						'>', bs.Dom( '<button>false</button>' ).S(
+								'@idx', i,
+								'down', function() {
+									stageList[this.idx].rendering = 0
+								}, 'this'
+						)
+				)
+			}
+		}, 'gl.0.2.js' )
+
+	} )
+</script>
+</body>
+</html>
