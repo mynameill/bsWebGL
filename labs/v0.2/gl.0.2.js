@@ -4,6 +4,7 @@
 	'use strict';
 	var glList = [], uuid = 0, GL = function() {
 		this.__uuid = uuid++
+		this._bgColor = {r: Math.random(), g: Math.random(), b: Math.random()},
 		this.init.apply( this, arguments ? arguments : [] )
 		glList.push( this )
 	}, trim = /^\s*|\s*$/g, GLfn = GL.prototype, fn
@@ -24,7 +25,7 @@
 			GLfn[t0] = v( glCLS, fn ), GLfn[t0].fn = fn
 		} ),
 		GL.fn = fn, GL.cls = GLfn.cls, GL.obj = GLfn.obj,
-		GLfn.renderMode = 'webgl', GLfn.rendering = 1, GLfn._bgColor = {r: Math.random(), g: Math.random(), b: Math.random()},
+		GLfn.renderMode = 'webgl', GLfn.rendering = 1
 		GLfn.S = function() {
 			var i = 0, j = arguments.length, k, v;
 			while( i < j ){
