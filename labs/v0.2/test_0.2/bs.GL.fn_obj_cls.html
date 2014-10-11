@@ -27,7 +27,7 @@
 
 			var stage = new bs.GL()
 			var testSTR = 'FN_TEST'
-			stage.fn( testSTR, function() {
+			bs.GL.fn( testSTR, function() {
 				return 100
 			} )
 			bsTest( 'stage.fn:run',
@@ -44,7 +44,7 @@
 			)
 			////////////////////////////////////////////////////////////////////////////////////////////////
 			var testSTR = 'obj_test'
-			stage.obj( testSTR, {name: '테스트성공'} )
+			bs.GL.obj( testSTR, {name: '테스트성공'} )
 			console.log( stage.OBJ_TEST )
 			bsTest( 'stage.obj:run',
 					function() {
@@ -60,7 +60,7 @@
 			)
 			////////////////////////////////////////////////////////////////////////////////////////////////
 			var testSTR = 'testCls'
-			stage.cls( testSTR, function( cls, fn ) {
+			bs.GL.cls( testSTR, function( cls, fn ) {
 				fn.NEW = function() {
 					this.name = '생성자재정의테스트'
 				}

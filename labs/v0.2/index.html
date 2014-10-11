@@ -32,21 +32,42 @@
 	bs.debug( 1 )
 	bs( function() {
 		bs.require( function() {
+
+			bs.GL.fn( 'test', function() {
+				console.log( 'fn이추가!' )
+			} )
+			bs.GL.obj( 'objTest', {
+				test: function() {console.log( 'obj가추가!!' )}
+			} )
+
+			bs.GL.cls( 'testcls', function( cls, fn ) {
+				fn.NEW = function() {
+					console.log( '클래스가추가!' )
+				}
+				return function() {
+					return new cls( arguments )
+				}
+			} )
+
 			var stage0 = new bs.GL()
 			var stage1 = new bs.GL( null, 'preserveDrawingBuffer', 1 )
 			var stage2 = new bs.GL( bs.Dom( '<canvas></canvas>' ) )
 			var stage3 = new bs.GL( bs.Dom( '<canvas></canvas>' ), 'preserveDrawingBuffer', 1 )
 
-			var top=77,height=150,left=8
+			stage0.test()
+			stage1.OBJTEST.test()
+			console.log( stage1.Testcls() )
+
+			var top = 77, height = 150, left = 8
 			bs.WIN.sizer( function( w, h ) {
-				stage0.cvs.S( '<', 'body', 'top', top+(height+5)*0, 'width', w - left*2, 'height', height, 'left', left )
-				stage1.cvs.S( '<', 'body', 'top', top+(height+5)*1, 'width', w - left*2, 'height', height, 'left', left )
-				stage2.cvs.S( '<', 'body', 'top', top+(height+5)*2, 'width', w - left*2, 'height', height, 'left', left )
-				stage3.cvs.S( '<', 'body', 'top', top+(height+5)*3, 'width', w - left*2, 'height', height, 'left', left )
+				stage0.cvs.S( '<', 'body', 'top', top + (height + 5) * 0, 'width', w - left * 2, 'height', height, 'left', left )
+				stage1.cvs.S( '<', 'body', 'top', top + (height + 5) * 1, 'width', w - left * 2, 'height', height, 'left', left )
+				stage2.cvs.S( '<', 'body', 'top', top + (height + 5) * 2, 'width', w - left * 2, 'height', height, 'left', left )
+				stage3.cvs.S( '<', 'body', 'top', top + (height + 5) * 3, 'width', w - left * 2, 'height', height, 'left', left )
 
 			} )
-			bs.Css('li' ).S('padding',10,'background','#555','display','inline-block')
-			bs.Css('button' ).S('padding',3,'margin',3)
+			bs.Css( 'li' ).S( 'padding', 10, 'background', '#555', 'display', 'inline-block' )
+			bs.Css( 'button' ).S( 'padding', 3, 'margin', 3 )
 			var t0 = bs.Dom( '#testUI li' ), i = t0.length, stageList = [stage0, stage1, stage2, stage3]
 			while( i-- ){
 				bs.Dom( t0[i] ).S(
