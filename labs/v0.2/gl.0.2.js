@@ -4,8 +4,6 @@
 	'use strict';
 	var glList = [], uuid = 0, GL = function() {
 		this.__uuid = uuid++
-		this.renderMode = 'webgl', this.rendering = 1
-		this._bgColor = {r: Math.random(), g: Math.random(), b: Math.random()}
 		this.init.apply( this, arguments ? arguments : [] )
 		glList.push( this )
 	}, trim = /^\s*|\s*$/g, GLfn = GL.prototype, fn
@@ -26,6 +24,7 @@
 			GLfn[t0] = v( glCLS, fn ), GLfn[t0].fn = fn
 		} ),
 		GL.fn = fn, GL.cls = GLfn.cls, GL.obj = GLfn.obj,
+		GLfn.renderMode = 'webgl', GLfn.rendering = 1, GLfn._bgColor = {r: Math.random(), g: Math.random(), b: Math.random()},
 		GLfn.S = function() {
 			var i = 0, j = arguments.length, k, v;
 			while( i < j ){
@@ -82,8 +81,8 @@
 			return new cls( arguments )
 		}
 	} ),
-	/////////////////////////////////////////////////////////
-	// EXTEND
+		/////////////////////////////////////////////////////////
+		// EXTEND
 		fn( 'background', function( v ) { this.hex_rgb( v ), this.renderMode == 'webgl' ? this.render_gl() : this.render_2d() } ),
 		fn( 'hex_rgb', (function() {
 			var t0, r, g, b, r1 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r2 = /^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
