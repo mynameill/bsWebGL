@@ -27,6 +27,17 @@
 	<li></li>
 	<li></li>
 	<li></li>
+	<div style="display:inline-block">
+		<div >
+			<label>stage3 - width</label>
+			<input type="text" value="300" id="stage3W">
+		</div>
+		<div>
+			<label>stage3 - height</label>
+			<input type="text" value="150" id="stage3H">
+		</div>
+	</div>
+
 </div>
 <script>
 	bs.debug( 1 )
@@ -58,6 +69,7 @@
 			stage1.OBJTEST.test()
 			console.log( stage1.Testcls() )
 
+
 			bs.ANI.ani( {
 				ANI: function() {
 					stage0._bgColor.r = Math.random()
@@ -71,9 +83,10 @@
 				stage0.cvs.S( '<', 'body', 'top', top + (height + 5) * 0, 'width', w - left * 2, 'height', height, 'left', left )
 				stage1.cvs.S( '<', 'body', 'top', top + (height + 5) * 1, 'width', w - left * 2, 'height', height, 'left', left )
 				stage2.cvs.S( '<', 'body', 'top', top + (height + 5) * 2, 'width', w - left * 2, 'height', height, 'left', left )
-				stage3.cvs.S( '<', 'body', 'top', top + (height + 5) * 3, 'width', w - left * 2, 'height', height, 'left', left )
-
+				stage3.cvs.S( '<', 'body', 'top', top + (height + 5) * 3,  'left', left )
 			} )
+
+
 			bs.Css( 'li' ).S( 'padding', 10, 'background', '#555', 'display', 'inline-block' )
 			bs.Css( 'button' ).S( 'padding', 3, 'margin', 3 )
 			var t0 = bs.Dom( '#testUI li' ), i = t0.length, stageList = [stage0, stage1, stage2, stage3]
@@ -95,6 +108,15 @@
 						)
 				)
 			}
+			bs.Dom('#stage3W' ).S('change',function(){
+				stage3.S('width',1*bs.Dom('#stage3W' ).S('@value'))
+				stage3.S('height',1*bs.Dom('#stage3H' ).S('@value'))
+				console.log(stage3.S('width'))
+			})
+			bs.Dom('#stage3H' ).S('change',function(){
+				stage3.S('width',1*bs.Dom('#stage3W' ).S('@value'))
+				stage3.S('height',1*bs.Dom('#stage3H' ).S('@value'))
+			})
 		}, 'gl.0.2.js' )
 
 	} )

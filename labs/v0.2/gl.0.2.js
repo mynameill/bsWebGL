@@ -25,21 +25,21 @@
 		} ),
 		GL.fn = fn, GL.cls = GLfn.cls, GL.obj = GLfn.obj,
 		GLfn.renderMode = 'webgl', GLfn.rendering = 1
-		GLfn.S = function() {
-			var i = 0, j = arguments.length, k, v;
-			while( i < j ){
-				k = arguments[i++];
-				if( i == j ){
-					if( k == 'this' ) return this;
-					return typeof this[k] == 'function' ? this[k]() : this[k]
-				}
-				else{
-					v = arguments[i++]
-					if( v === null ) delete this[k];
-					typeof this[k] == 'function' ? this[k]( v ) : this[k] = v
-				}
+	GLfn.S = function() {
+		var i = 0, j = arguments.length, k, v;
+		while( i < j ){
+			k = arguments[i++];
+			if( i == j ){
+				if( k == 'this' ) return this;
+				return typeof this[k] == 'function' ? this[k]() : this[k]
 			}
-		},
+			else{
+				v = arguments[i++]
+				if( v === null ) delete this[k];
+				typeof this[k] == 'function' ? this[k]( v ) : this[k] = v
+			}
+		}
+	},
 		/////////////////////////////////////////////////////////
 		// CORE
 		fn( 'init', function() {
@@ -49,9 +49,10 @@
 			t0 = (check ? check.instanceOf == bs.Dom ? check : bs.Dom( '<canvas></canvas>' ) : bs.Dom( '<canvas></canvas>' )), t1 = t0[0]
 			t0.S( 'position', 'absolute' )
 			while( i-- ) if( gl = t1.getContext( keys[i], keys2 ) ) break
-			if( gl ) {
+			if( gl ){
 				this.cvs = t0, this.__gl = gl
 				this._bgColor = {r: Math.random(), g: Math.random(), b: Math.random()}
+				this._width = 300, this._height = 300
 			}
 			else return console.log( 'fail gl initialize' )
 		} ),
@@ -87,6 +88,17 @@
 		/////////////////////////////////////////////////////////
 		// EXTEND
 		fn( 'background', function( v ) { this.hex_rgb( v ), this.renderMode == 'webgl' ? this.render_gl() : this.render_2d() } ),
+		// 프로퍼티 입력장치도 맹그러야하나..
+		fn( 'width', function( v ) {
+				if( v ) this.cvs.S( 'width', v )
+				else return this.cvs.S( 'width' )
+			}
+		),
+		fn( 'height', function( v ) {
+				if( v ) this.cvs.S( 'height', v )
+				else return this.cvs.S( 'height' )
+			}
+		),
 		fn( 'hex_rgb', (function() {
 			var t0, r, g, b, r1 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r2 = /^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
 			return function( v ) {
