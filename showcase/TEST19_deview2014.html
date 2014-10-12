@@ -61,7 +61,7 @@
 				} )
 				var skyMap = bs.GL.Material( 'sky' ).S( 'src', ["deview2014/assets/environ/right.jpg", "deview2014/assets/environ/left.jpg", "deview2014/assets/environ/bottom.jpg", "deview2014/assets/environ/top.jpg", "deview2014/assets/environ/front.jpg", "deview2014/assets/environ/back.jpg"] )
 				bs.GL.S( 'skybox', bs.GL.SkyBox().S( 'material', skyMap ) )
-				bs.GL._bgColor( '#eee' )
+				bs.GL._background( '#eee' )
 
 				var c1 = bs.GL.Controller( 'ISO' )
 				var c2 = bs.GL.Controller( 'PVR' )
