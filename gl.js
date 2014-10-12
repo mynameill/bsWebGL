@@ -265,7 +265,7 @@
 //						if( GL.controller ) GL.controller.update( perspectMTX );
 //					},16),
 
-						GL._bgColor('#000'),endCallBack()
+						GL._background('#000'),endCallBack()
 					else console.log( 'WEBGL을 지원하지 않는 브라우져입니다' ), failCallback ? failCallback() : 0
 				}
 				return function( id, shaderSrc, endCallBack, failCallback ){
@@ -309,7 +309,7 @@
 				etc=t0['Text']=function(){
 					this.program=Ps['text'], this.texture=gl.createTexture(), this.texture.loaded=0, this.texture.canvas=document.createElement( 'canvas' ), this.texture.context=this.texture.canvas.getContext( "2d" )
 					this._lineHeight=35, this.maxWidth=512, this.maxHeight=512,
-					this._align='left', this._color='#000000', this._bgColor='#ffff80', this._useBgColor=0, this._size=12, this._drawY=this._size, this._text=' ', this._textBaseline='top', this._fontWeight='', this._font, this._fontStyle='normal'
+					this._align='left', this._color='#000000', this._background='#ffff80', this._useBgColor=0, this._size=12, this._drawY=this._size, this._text=' ', this._textBaseline='top', this._fontWeight='', this._font, this._fontStyle='normal'
 					this._updateTexture=function( t ){
 						gl.pixelStorei( gl.UNPACK_FLIP_Y_WEBGL, true ), gl.bindTexture( gl.TEXTURE_2D, t ), gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, t.canvas ),
 						gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR ), gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR ), gl.bindTexture( gl.TEXTURE_2D, null ), t.loaded=1
@@ -317,7 +317,7 @@
 					}
 				}, fn=etc.prototype=new t,fn['class']=sMethod.prototype.class, fn['_draw']=function(){
 					var ctx=this.texture.context, cvs=this.texture.canvas, drawText=this._text, tmp='', tmp2=[], splits=drawText.split( ' ' ), result=[], i=splits.length, j=0, pop
-					ctx.clearRect( 0, 0, this.maxWidth, this.maxHeight ), this.texture.loaded=0, cvs.width=this.maxWidth, cvs.height=this.maxHeight, this._useBgColor ? (ctx.rect( 0, 0, this.maxWidth, this.maxHeight ), ctx.fillStyle=this._bgColor, ctx.fill()) : 0,
+					ctx.clearRect( 0, 0, this.maxWidth, this.maxHeight ), this.texture.loaded=0, cvs.width=this.maxWidth, cvs.height=this.maxHeight, this._useBgColor ? (ctx.rect( 0, 0, this.maxWidth, this.maxHeight ), ctx.fillStyle=this._background, ctx.fill()) : 0,
 					ctx.font=this._fontStyle+' '+this._fontWeight+' '+this._size+"px "+this._font, ctx.fillStyle=this._color, ctx.textAlign=this._align, ctx.textBaseline=this._textBaseline
 					while( i-- ){ // TODO 줄바꿈 처리를 어디까지 가져갈것인가!
 						tmp2.push( splits[j] ), tmp+=splits[j++]
@@ -472,7 +472,7 @@
 			makeBufferSet:UTIL.makeBufferSet,makeTexture:UTIL.makeTexture,
 			skyBox:null,controller:null,directionalLight:null, ambientLight:null,
 			children:[],debug:debuger,mobile:mobile,mat4:mat4,
-            _bgColor:(function(){
+            _background:(function(){
                 var t0,r,g,b;
                 return function(v){
                     (t0=hex.exec( v )) ? (r=parseInt( t0[1], 16 ), g=parseInt( t0[2], 16 ), b=parseInt( t0[3], 16 )) : (t0=hex_s.exec( v ), r=parseInt( t0[1]+t0[1], 16 ), g=parseInt( t0[2]+t0[2], 16 ), b=parseInt( t0[3]+t0[3], 16 ))
