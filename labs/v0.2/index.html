@@ -141,7 +141,7 @@
                         } else return shader.name = k, shader
                     }),
                     bs.GL.fn('make_vshader', function (k, v) {
-                        var str = 'precision mediump float;' +
+                        var str = 'precision highp float;' +
                                 'attribute vec3 aVertexPosition;' +
                                 'void main(void) {' +
                                 v +
@@ -149,7 +149,7 @@
                         this.VS[k] = this['compile_shader'](k, str, 'v')
                     }),
                     bs.GL.fn('make_fshader', function (k, v) {
-                        var str = 'precision mediump float;' +
+                        var str = 'precision highp float;' +
                                 'void main(void) {' +
                                 v +
                                 '}'
@@ -204,6 +204,15 @@
                         Math.random() - 0.5, Math.random() - 0.5, 0.0
             ], 3, 6)
 
+            stage3.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
+            stage3.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
+            stage3.make_program('color', 'vTest', 'fTest')
+            stage3.make_geomety('random', [
+                0.5, 0.5, 0.0,
+                -0.5, 0.5, 0.0,
+                0.5, -0.5, 0.0,
+                -0.5, -0.5, 0.0
+            ], 3, 4)
 
         }, 'gl.0.2.js')
 

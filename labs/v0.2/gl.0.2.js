@@ -49,12 +49,12 @@
 			while (i < j) keys2[arg[i++]] = arg[i]
 			i = keys.length;
 			t0 = (check ? check.instanceOf == bs.Dom ? check : bs.Dom('<canvas></canvas>') : bs.Dom('<canvas></canvas>')), t1 = t0[0]
-			t0.S('position', 'absolute')
+			t0.S('position', 'absolute', 'width', 300, 'height', 150)
 			while (i--) if (gl = t1.getContext(keys[i], keys2)) break
 			if (gl) {
 				this.cvs = t0, this.__gl = gl
 				this._background = {r: Math.random(), g: Math.random(), b: Math.random()}
-
+				this.viewportWidth = t0.S('width'), this.viewportHeight = t0.S('height')
 			}
 			else return console.log('fail gl initialize')
 		}),
@@ -63,8 +63,9 @@
 		fn('render_gl', function () {
 			if (!this.rendering) return
 			var gl = this.__gl, p, buffer
-			gl.clearColor(this._background.r, this._background.g, this._background.b, 1)
+			gl.viewport(0, 0, this.viewportWidth, this.viewportHeight);
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+			gl.clearColor(this._background.r, this._background.g, this._background.b, 1)
 			if (p = this.currentProgram) {
 				gl.bindBuffer(gl.ARRAY_BUFFER, buffer = this.currentGeo);
 				gl.vertexAttribPointer(p.vertexPositionAttr, buffer.size, gl.FLOAT, false, 0, 0);
@@ -104,7 +105,7 @@
 		fn('width', (function () {
 				GLfn._width = 300
 				return function (v) {
-					if (v) this.cvs.S('width', v)
+					if (v) this.cvs.S('width', this.viewportWidth = v)
 					else return this.cvs.S('width')
 				}
 			})()
@@ -112,7 +113,7 @@
 		fn('height', (function () {
 				GLfn._height = 150
 				return function (v) {
-					if (v) this.cvs.S('height', v)
+					if (v) this.cvs.S('height', this.viewportHeight = v)
 					else return this.cvs.S('height')
 				}
 			})()
