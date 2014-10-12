@@ -1,133 +1,213 @@
 ﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
-	<title>v0.2 labs</title>
-	<meta name="keywords" content="redcamel, webgl, bsjs, bsWebGL" />
-	<meta name="description" content="redcamel, webgl, bsjs, bsWebGL" />
-	<meta charset="utf-8" />
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="format-detection" content="telephone=no" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="viewport"
-	      content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi" />
-	<link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
-	<style>body {
-		margin: 10;
-		padding: 10;
-		background: #333;
-		color: #fff;
-		font-size: 12px;
-	}</style>
-	<script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
+    <title>v0.2 labs</title>
+    <meta name="keywords" content="redcamel, webgl, bsjs, bsWebGL"/>
+    <meta name="description" content="redcamel, webgl, bsjs, bsWebGL"/>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="viewport"
+          content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=0.5,target-densitydpi=medium-dpi"/>
+    <link rel="shortcut icon" href="http://redcamel.github.io/red/red/favicon/favicon.ico" type="image/x-icon">
+    <style>body {
+        margin: 10;
+        padding: 10;
+        background: #333;
+        color: #fff;
+        font-size: 12px;
+    }</style>
+    <script src="http://projectbs.github.io/bsJS/bsjs.0.5.js"></script>
 </head>
 <body>
 <div id="testUI">
-	<li></li>
-	<li></li>
-	<li></li>
-	<li></li>
-	<div style="display:inline-block">
-		<div >
-			<label>stage3 - width</label>
-			<input type="text" value="300" id="stage3W">
-		</div>
-		<div>
-			<label>stage3 - height</label>
-			<input type="text" value="150" id="stage3H">
-		</div>
-	</div>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <div style="display:inline-block">
+        <div>
+            <label>stage3 - width</label>
+            <input type="text" value="300" id="stage3W">
+        </div>
+        <div>
+            <label>stage3 - height</label>
+            <input type="text" value="150" id="stage3H">
+        </div>
+    </div>
 
 </div>
 <script>
-	bs.debug( 1 )
-	bs( function() {
-		bs.require( function() {
+    bs.debug(1)
+    bs(function () {
+        bs.require(function () {
 
-			bs.GL.fn( 'test', function() {
-				console.log( 'fn이추가!' )
-			} )
-			bs.GL.obj( 'objTest', {
-				test: function() {console.log( 'obj가추가!!' )}
-			} )
+            bs.GL.fn('test', function () {
+                console.log('fn이추가!')
+            })
+            bs.GL.obj('objTest', {
+                test: function () {
+                    console.log('obj가추가!!')
+                }
+            })
 
-			bs.GL.cls( 'testcls', function( cls, fn ) {
-				fn.NEW = function() {
-					console.log( '클래스가추가!' )
-				}
-				return function() {
-					return new cls( arguments )
-				}
-			} )
+            bs.GL.cls('testcls', function (cls, fn) {
+                fn.NEW = function () {
+                    console.log('클래스가추가!')
+                }
+                return function () {
+                    return new cls(arguments)
+                }
+            })
 
-			var stage0 = new bs.GL()
-			var stage1 = new bs.GL( null, 'preserveDrawingBuffer', 1 )
-			var stage2 = new bs.GL( bs.Dom( '<canvas></canvas>' ) )
-			var stage3 = new bs.GL( bs.Dom( '<canvas></canvas>' ), 'preserveDrawingBuffer', 1 )
-
-			stage0.test()
-			stage1.OBJTEST.test()
-			console.log( stage1.Testcls() )
+            var stage0 = new bs.GL()
+            var stage1 = new bs.GL(null, 'preserveDrawingBuffer', 1)
+            var stage2 = new bs.GL(bs.Dom('<canvas></canvas>'))
+            var stage3 = new bs.GL(bs.Dom('<canvas></canvas>'), 'preserveDrawingBuffer', 1)
 
 
-			bs.ANI.ani( {
-				ANI: function() {
-					stage0._bgColor.r = Math.random()
-					stage0._bgColor.g = Math.random()
-					stage0._bgColor.b = Math.random()
-					stage1._bgColor.r = Math.random()
-					stage1._bgColor.g = Math.random()
-					stage1._bgColor.b = Math.random()
-					stage2._bgColor.r = Math.random()
-					stage2._bgColor.g = Math.random()
-					stage2._bgColor.b = Math.random()
-					stage3._bgColor.r = Math.random()
-					stage3._bgColor.g = Math.random()
-					stage3._bgColor.b = Math.random()
-				}
-			} )
-			var top = 77, height = 150, left = 8
-			bs.WIN.sizer( function( w, h ) {
-				stage0.cvs.S( '<', 'body', 'top', top + (height + 5) * 0, 'width', w - left * 2, 'height', height, 'left', left )
-				stage1.cvs.S( '<', 'body', 'top', top + (height + 5) * 1, 'width', w - left * 2, 'height', height, 'left', left )
-				stage2.cvs.S( '<', 'body', 'top', top + (height + 5) * 2, 'width', w - left * 2, 'height', height, 'left', left )
-				stage3.cvs.S( '<', 'body', 'top', top + (height + 5) * 3,  'left', left )
-			} )
+            stage0.test()
+            stage1.OBJTEST.test()
+            console.log(stage1.Testcls())
 
 
-			bs.Css( 'li' ).S( 'padding', 10, 'background', '#555', 'display', 'inline-block' )
-			bs.Css( 'button' ).S( 'padding', 3, 'margin', 3 )
-			var t0 = bs.Dom( '#testUI li' ), i = t0.length, stageList = [stage0, stage1, stage2, stage3]
-			while( i-- ){
-				bs.Dom( t0[i] ).S(
-						'>', bs.Dom( '<div>stage' + i + '. rendering</div>' ),
-						'>', bs.Dom( '<button>true</button>' ).S(
-								'@idx', i,
-								'down', function() {
-									stageList[this.idx].rendering = 1
-								}, 'this'
-						),
-						'>', bs.Dom( '<button>false</button>' ).S(
-								'@idx', i,
-								'down', function() {
-									stageList[this.idx].S('background','#000'),
-											stageList[this.idx].rendering = 0
-								}, 'this'
-						)
-				)
-			}
-			bs.Dom('#stage3W' ).S('change',function(){
-				stage3.S('width',1*bs.Dom('#stage3W' ).S('@value'))
-				stage3.S('height',1*bs.Dom('#stage3H' ).S('@value'))
-				console.log(stage3.S('width'))
-			})
-			bs.Dom('#stage3H' ).S('change',function(){
-				stage3.S('width',1*bs.Dom('#stage3W' ).S('@value'))
-				stage3.S('height',1*bs.Dom('#stage3H' ).S('@value'))
-			})
-		}, 'gl.0.2.js' )
+            bs.ANI.ani({
+                ANI: function () {
+                    stage0._background.r = Math.random()
+                    stage0._background.g = Math.random()
+                    stage0._background.b = Math.random()
+                    stage1._background.r = Math.random()
+                    stage1._background.g = Math.random()
+                    stage1._background.b = Math.random()
+                    stage2._background.r = Math.random()
+                    stage2._background.g = Math.random()
+                    stage2._background.b = Math.random()
+                    stage3._background.r = Math.random()
+                    stage3._background.g = Math.random()
+                    stage3._background.b = Math.random()
+                }
+            })
+            var top = 77, height = 150, left = 8
+            bs.WIN.sizer(function (w, h) {
+                stage0.cvs.S('<', 'body', 'top', top + (height + 5) * 0, 'width', w - left * 2, 'height', height, 'left', left)
+                stage1.cvs.S('<', 'body', 'top', top + (height + 5) * 1, 'width', w - left * 2, 'height', height, 'left', left)
+                stage2.cvs.S('<', 'body', 'top', top + (height + 5) * 2, 'width', w - left * 2, 'height', height, 'left', left)
+                stage3.cvs.S('<', 'body', 'top', top + (height + 5) * 3, 'left', left)
+            })
 
-	} )
+
+            bs.Css('li').S('padding', 10, 'background', '#555', 'display', 'inline-block')
+            bs.Css('button').S('padding', 3, 'margin', 3)
+            var t0 = bs.Dom('#testUI li'), i = t0.length, stageList = [stage0, stage1, stage2, stage3]
+            while (i--) {
+                bs.Dom(t0[i]).S(
+                        '>', bs.Dom('<div>stage' + i + '. rendering</div>'),
+                        '>', bs.Dom('<button>true</button>').S(
+                                '@idx', i,
+                                'down', function () {
+                                    stageList[this.idx].rendering = 1
+                                }, 'this'
+                        ),
+                        '>', bs.Dom('<button>false</button>').S(
+                                '@idx', i,
+                                'down', function () {
+                                    stageList[this.idx].S('background', '#000'),
+                                            stageList[this.idx].rendering = 0
+                                }, 'this'
+                        )
+                )
+            }
+            bs.Dom('#stage3W').S('change', function () {
+                stage3.S('width', 1 * bs.Dom('#stage3W').S('@value'))
+                stage3.S('height', 1 * bs.Dom('#stage3H').S('@value'))
+                console.log(stage3.S('width'))
+            })
+            bs.Dom('#stage3H').S('change', function () {
+                stage3.S('width', 1 * bs.Dom('#stage3W').S('@value'))
+                stage3.S('height', 1 * bs.Dom('#stage3H').S('@value'))
+            }),
+
+                /////////////////////////////////////////////////////////////
+                // 프로그램생성테스트
+
+                    bs.GL.fn('compile_shader', function (k, str, type) {
+                        var gl = this.__gl, shader = (type == 'v' ? gl.createShader(gl.VERTEX_SHADER) : gl.createShader(gl.FRAGMENT_SHADER));
+                        gl.shaderSource(shader, str), gl.compileShader(shader)
+                        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                            alert(gl.getShaderInfoLog(shader));
+                            return null;
+                        } else return shader.name = k, shader
+                    }),
+                    bs.GL.fn('make_vshader', function (k, v) {
+                        var str = 'precision mediump float;' +
+                                'attribute vec3 aVertexPosition;' +
+                                'void main(void) {' +
+                                v +
+                                '}'
+                        this.VS[k] = this['compile_shader'](k, str, 'v')
+                    }),
+                    bs.GL.fn('make_fshader', function (k, v) {
+                        var str = 'precision mediump float;' +
+                                'void main(void) {' +
+                                v +
+                                '}'
+                        this.FS[k] = this['compile_shader'](k, str)
+                    }),
+                    bs.GL.fn('make_program', function (k, v, f) {
+                                var gl = this.__gl, program = gl.createProgram();
+                                gl.attachShader(program, this.VS[v]), gl.attachShader(program, this.FS[f]), gl.linkProgram(program);
+                                if (!gl.getProgramParameter(program, gl.LINK_STATUS)) alert("Could not initialise shaders");
+                                else {
+                                    gl.useProgram(this.currentProgram = this.PROGRAMS[k] = program)
+                                    program.vertexPositionAttr = gl.getAttribLocation(program, "aVertexPosition")
+                                    gl.enableVertexAttribArray(program.vertexPositionAttr)
+                                }
+                            }
+                    ),
+                    bs.GL.fn('make_geomety', function (k, v, itemSize, numItems) {
+                        var gl = this.__gl, buffer = gl.createBuffer();
+                        gl.bindBuffer(gl.ARRAY_BUFFER, this.currentGeo = this.GEO[k] = buffer),
+                                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW),
+                                buffer.size = itemSize, buffer.num = numItems
+                    })
+
+            stage0.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
+            stage0.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
+            stage0.make_program('color', 'vTest', 'fTest')
+            stage0.make_geomety('tri', [
+                0.0, 1.0, 0.0,
+                -1.0, -1.0, 0.0,
+                1.0, -1.0, 0.0
+            ], 3, 3)
+
+            stage1.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
+            stage1.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
+            stage1.make_program('color', 'vTest', 'fTest')
+            stage1.make_geomety('rect', [
+                0.5, 0.5, 0.0,
+                -0.5, 0.5, 0.0,
+                0.5, -0.5, 0.0,
+                -0.5, -0.5, 0.0
+            ], 3, 4)
+
+            stage2.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
+            stage2.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
+            stage2.make_program('color', 'vTest', 'fTest')
+            stage2.make_geomety('random', [
+                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
+                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
+                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
+                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
+                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
+                        Math.random() - 0.5, Math.random() - 0.5, 0.0
+            ], 3, 6)
+
+
+        }, 'gl.0.2.js')
+
+    })
 </script>
 </body>
 </html>

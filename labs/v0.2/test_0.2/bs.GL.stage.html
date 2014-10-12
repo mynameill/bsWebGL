@@ -71,27 +71,27 @@
 			bsTest( 'bs.GL:background',
 					function() {
 						stage4.S('background','#fff')
-						var result = (stage4._bgColor.r+stage4._bgColor.b+stage4._bgColor.g)== 255*3
+						var result = (stage4._background.r+stage4._background.b+stage4._background.g)== 255*3
 						stage4.S('background','#000000')
-						var result2 = (stage4._bgColor.r+stage4._bgColor.b+stage4._bgColor.g)== 0
+						var result2 = (stage4._background.r+stage4._background.b+stage4._background.g)== 0
 						return result && result2
 					}, true
 			)
 
 			bs.ANI.ani({
 				ANI:function(){
-					stage0._bgColor.r = Math.random()
-					stage0._bgColor.g = Math.random()
-					stage0._bgColor.b = Math.random()
-					stage1._bgColor.r = Math.random()
-					stage1._bgColor.g = Math.random()
-					stage1._bgColor.b = Math.random()
-					stage2._bgColor.r = Math.random()
-					stage2._bgColor.g = Math.random()
-					stage2._bgColor.b = Math.random()
-					stage3._bgColor.r = Math.random()
-					stage3._bgColor.g = Math.random()
-					stage3._bgColor.b = Math.random()
+					stage0._background.r = Math.random()
+					stage0._background.g = Math.random()
+					stage0._background.b = Math.random()
+					stage1._background.r = Math.random()
+					stage1._background.g = Math.random()
+					stage1._background.b = Math.random()
+					stage2._background.r = Math.random()
+					stage2._background.g = Math.random()
+					stage2._background.b = Math.random()
+					stage3._background.r = Math.random()
+					stage3._background.g = Math.random()
+					stage3._background.b = Math.random()
 				}
 			})
 
