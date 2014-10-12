@@ -130,65 +130,8 @@
                 /////////////////////////////////////////////////////////////
                 // 프로그램생성테스트
 
-                    bs.GL.fn('compile_shader', function (k, str, type) {
-                        var gl = this.__gl, shader = (type == 'v' ? gl.createShader(gl.VERTEX_SHADER) : gl.createShader(gl.FRAGMENT_SHADER));
-                        gl.shaderSource(shader, str), gl.compileShader(shader)
-                        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                            alert(gl.getShaderInfoLog(shader));
-                            return null;
-                        } else return shader.name = k, shader
-                    }),
-                    bs.GL.fn('make_vshader', function (k, v) {
-                        var str = 'precision highp float;' +
-                                'attribute vec3 aVertexPosition;' +
-                                'void main(void) {' +
-                                v +
-                                '}'
-                        this.VS[k] = this['compile_shader'](k, str, 'v')
-                    }),
-                    bs.GL.fn('make_fshader', function (k, v) {
-                        var str = 'precision highp float;' +
-                                'void main(void) {' +
-                                v +
-                                '}'
-                        this.FS[k] = this['compile_shader'](k, str)
-                    }),
-                    bs.GL.fn('make_program', function (k, v, f) {
-                                var gl = this.__gl, program = gl.createProgram();
-                                gl.attachShader(program, this.VS[v]), gl.attachShader(program, this.FS[f]), gl.linkProgram(program);
-                                if (!gl.getProgramParameter(program, gl.LINK_STATUS)) alert("Could not initialise shaders");
-                                else {
-                                    gl.useProgram(this.currentProgram = this.PROGRAMS[k] = program)
-                                    program.vertexPositionAttr = gl.getAttribLocation(program, "aVertexPosition")
-                                    gl.enableVertexAttribArray(program.vertexPositionAttr)
-                                }
-                            }
-                    ),
-                    bs.GL.fn('make_geomety', function (k, v, itemSize, numItems) {
-                        var gl = this.__gl, buffer = gl.createBuffer();
-                        gl.bindBuffer(gl.ARRAY_BUFFER, this.currentGeo = this.GEO[k] = buffer),
-                                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(v), gl.STATIC_DRAW),
-                                buffer.size = itemSize, buffer.num = numItems
-                    })
 
-            stage0.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
-            stage0.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
-            stage0.make_program('color', 'vTest', 'fTest')
-            stage0.make_geomety('tri', [
-                0.0, 1.0, 0.0,
-                -1.0, -1.0, 0.0,
-                1.0, -1.0, 0.0
-            ], 3, 3)
 
-            stage1.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
-            stage1.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
-            stage1.make_program('color', 'vTest', 'fTest')
-            stage1.make_geomety('rect', [
-                0.5, 0.5, 0.0,
-                -0.5, 0.5, 0.0,
-                0.5, -0.5, 0.0,
-                -0.5, -0.5, 0.0
-            ], 3, 4)
 
             stage2.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
             stage2.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
@@ -202,15 +145,12 @@
                         Math.random() - 0.5, Math.random() - 0.5, 0.0
             ], 3, 6)
 
-            stage3.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
-            stage3.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
-            stage3.make_program('color', 'vTest', 'fTest')
-            stage3.make_geomety('random', [
-                0.5, 0.5, 0.0,
-                -0.5, 0.5, 0.0,
-                0.5, -0.5, 0.0,
-                -0.5, -0.5, 0.0
-            ], 3, 4)
+
+	        stage0.currentGeo = stage0.GEO['rect']
+	        stage1.currentGeo = stage1.GEO['tri']
+	        stage2.currentGeo = stage2.GEO['random']
+
+
 
         }, 'gl.0.2.js')
 
