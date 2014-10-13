@@ -93,6 +93,10 @@
                 stage1.cvs.S('<', 'body', 'top', top + (height + 5) * 1, 'width', w - left * 2, 'height', height, 'left', left)
                 stage2.cvs.S('<', 'body', 'top', top + (height + 5) * 2, 'width', w - left * 2, 'height', height, 'left', left)
                 stage3.cvs.S('<', 'body', 'top', top + (height + 5) * 3, 'left', left)
+//	            stage0.S('<', 'body', 'top', top + (height + 5) * 0)
+//	            stage1.S('<', 'body', 'top', top + (height + 5) * 1)
+//	            stage2.S('<', 'body', 'top', top + (height + 5) * 2)
+//	            stage3.S('<', 'body', 'top', top + (height + 5) * 3)
             })
 
 
@@ -133,23 +137,11 @@
 
 
 
-            stage2.make_vshader('vTest', 'gl_Position = vec4(aVertexPosition, 1.0);')
-            stage2.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
-            stage2.make_program('color', 'vTest', 'fTest')
-            stage2.make_geomety('random', [
-                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
-                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
-                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
-                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
-                        Math.random() - 0.5, Math.random() - 0.5, 0.0,
-                        Math.random() - 0.5, Math.random() - 0.5, 0.0
-            ], 3, 6)
 
 
 	        stage0.currentGeo = stage0.GEO['rect']
 	        stage1.currentGeo = stage1.GEO['tri']
-	        stage2.currentGeo = stage2.GEO['random']
-
+	        stage2.currentGeo = stage2.GEO['tri']
 
 
         }, 'gl.0.2.js')
