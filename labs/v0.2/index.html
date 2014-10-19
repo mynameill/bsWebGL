@@ -87,16 +87,12 @@
                     stage3._background.b = Math.random()
                 }
             })
-            var top = 77, height = 150, left = 8
+            var top = 77, height = 300, left = 8
             bs.WIN.sizer(function (w, h) {
-                stage0.cvs.S('<', 'body', 'top', top + (height + 5) * 0, 'width', w - left * 2, 'height', height, 'left', left)
-                stage1.cvs.S('<', 'body', 'top', top + (height + 5) * 1, 'width', w - left * 2, 'height', height, 'left', left)
-                stage2.cvs.S('<', 'body', 'top', top + (height + 5) * 2, 'width', w - left * 2, 'height', height, 'left', left)
-                stage3.cvs.S('<', 'body', 'top', top + (height + 5) * 3, 'left', left)
-//	            stage0.S('<', 'body', 'top', top + (height + 5) * 0)
-//	            stage1.S('<', 'body', 'top', top + (height + 5) * 1)
-//	            stage2.S('<', 'body', 'top', top + (height + 5) * 2)
-//	            stage3.S('<', 'body', 'top', top + (height + 5) * 3)
+                stage0.S('<', 'body', 'top', top + (height + 5) * 0, 'width', w - left * 2, 'height', height, 'left', left)
+                stage1.S('<', 'body', 'top', top + (height + 5) * 1, 'width', w - left * 2, 'height', height, 'left', left)
+                stage2.S('<', 'body', 'top', top + (height + 5) * 2, 'width', w - left * 2, 'height', height, 'left', left)
+                stage3.S('<', 'body', 'top', top + (height + 5) * 3, 'left', left)
             })
 
 
