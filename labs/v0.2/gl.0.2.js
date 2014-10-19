@@ -61,7 +61,6 @@
 				this.cvs = t0, this.__gl = gl
 				//base property
 				this._background = {r: Math.random(), g: Math.random(), b: Math.random()}
-				this.cvs.width = this._width = 300, this.cvs.height = this._height = 150
 				var t0 = '<,top,left,width,height'.split(','), i = t0.length
 				while (i--) {
 					(function () {
@@ -76,6 +75,7 @@
 							})
 					})()
 				}
+				this.S('width',300,'height',150)
 				//test
 				this.make_vshader('vTest', 'gl_Position = uPMatrix * uMvMatrix * vec4(aVertexPosition, 1.0);')
 				this.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
