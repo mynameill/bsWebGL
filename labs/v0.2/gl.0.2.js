@@ -59,8 +59,24 @@
 			if (gl) {
 				t0.S('position', 'absolute')
 				this.cvs = t0, this.__gl = gl
+				//base property
 				this._background = {r: Math.random(), g: Math.random(), b: Math.random()}
 				this.cvs.width = this._width = 300, this.cvs.height = this._height = 150
+				var t0 = '<,top,left,width,height'.split(','), i = t0.length
+				while (i--) {
+					(function () {
+						var t1 = t0[i], t2 = (t1 == 'width' || t1 == 'height') ? 1 : 0;
+						t2 ? fn(t1, function (v) {
+							if (v) this['_' + t1] = v, this.cvs.S('@' + t1, v), this.__gl.viewport(0, 0, this._width, this._height);
+							else return this['_' + t1]
+						}) :
+							fn(t1 = t0[i], function (v) {
+								if (v) this.cvs.S(t1, v)
+								else return this.cvs.S(t1)
+							})
+					})()
+				}
+				//test
 				this.make_vshader('vTest', 'gl_Position = uPMatrix * uMvMatrix * vec4(aVertexPosition, 1.0);')
 				this.make_fshader('fTest', 'gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);')
 				this.make_program('color', 'vTest', 'fTest')
@@ -128,7 +144,7 @@
 			var gl = this.__gl, p, buffer;
 			if (!this.rendering) return
 
-			gl.clearColor(this._background.r, this._background.g, this._background.b, 1),gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+			gl.clearColor(this._background.r, this._background.g, this._background.b, 1), gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 			if ((p = this.currentProgram) && (buffer = this.currentGeo)) {
 				var pMatrix = mat4.create(), mvMatrix = mat4.create();
 				gl.bindBuffer(gl.ARRAY_BUFFER, buffer),
@@ -169,35 +185,14 @@
 		fn('background', function (v) {
 			this.hex_rgb(v), this.renderMode == 'webgl' ? this.render_gl() : this.render_2d()
 		}),
-		fn('width', function (v) {
-			if (v) this['_width'] = v, this.cvs.S('@width', v),this.__gl.viewport(0, 0, this._width, this._height);
-			else return this['_width']
-		}),
-		fn('height', function (v) {
-			if (v) this['_height'] = v, this.cvs.S('@height', v),this.__gl.viewport(0, 0, this._width, this._height);
-			else return this['_height']
-		}),
-		fn('<', function (v) {
-			if (v) this.cvs.S('<', v)
-			else return this.cvs.S('<')
-		}),
-		fn('top', function (v) {
-			if (v) this.cvs.S('top', v)
-			else return this.cvs.S('top')
-		}),
-		fn('left', function (v) {
-			if (v) this.cvs.S('left', v)
-			else return this.cvs.S('left')
-		})
-
-	// 프로퍼티 입력장치도 맹그러야하나..
-	fn('hex_rgb', (function () {
-		var t0, r, g, b, r1 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r2 = /^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
-		return function (v) {
-			(t0 = r1.exec(v)) ? (r = parseInt(t0[1], 16), g = parseInt(t0[2], 16), b = parseInt(t0[3], 16)) : (t0 = r2.exec(v), r = parseInt(t0[1] + t0[1], 16), g = parseInt(t0[2] + t0[2], 16), b = parseInt(t0[3] + t0[3], 16))
-			this._background.r = r, this._background.g = g, this._background.b = b, this._background.hex = t0
-		}
-	})())
+		// 프로퍼티 입력장치도 맹그러야하나..
+		fn('hex_rgb', (function () {
+			var t0, r, g, b, r1 = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i, r2 = /^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
+			return function (v) {
+				(t0 = r1.exec(v)) ? (r = parseInt(t0[1], 16), g = parseInt(t0[2], 16), b = parseInt(t0[3], 16)) : (t0 = r2.exec(v), r = parseInt(t0[1] + t0[1], 16), g = parseInt(t0[2] + t0[2], 16), b = parseInt(t0[3] + t0[3], 16))
+				this._background.r = r, this._background.g = g, this._background.b = b, this._background.hex = t0
+			}
+		})())
 
 	return exports.GL = bs.GL = GL
 })();
